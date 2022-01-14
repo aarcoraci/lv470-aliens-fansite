@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import * as THREE from 'three';
+import { Vector3 } from 'three';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 let width = window.innerWidth;
@@ -10,25 +11,58 @@ const farPlane = 1000;
 const fov = 75;
 
 let scene: THREE.Scene;
-let renderer: THREE.Renderer;
-let camera: THREE.PerspectiveCamera;
+let renderer: THREE.WebGLRenderer;
+let camera: THREE.OrthographicCamera;
+let d = 3;
 
 const createScene = (targetDomElement: Element) => {
   const aspect = width / height;
   scene = new THREE.Scene();
   scene.add(createGround());
-  camera = new THREE.PerspectiveCamera(fov, aspect, nearPlane, farPlane);
-  camera.position
+  scene.add(createBox());
+  scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+
+
+  scene.add(new THREE.AmbientLight(0x4000ff));
+  const light = new THREE.PointLight(0xffffff, 6, 40);
+  light.castShadow = true;
+  light.position.set(10, 20, 15);
+  scene.add(light);
+
+  camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
+  camera.position.set(20, 20, 20)
+  camera.lookAt(scene.position)
   renderer = new THREE.WebGLRenderer();
+  renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
-  camera.position.z = 5;
 }
 
 const createGround = (): THREE.Mesh => {
-  const geometry = new THREE.PlaneGeometry(2, 2);
-  const material = new THREE.MeshBasicMaterial({ color: 0x2f4458 });
+  const geometry = new THREE.PlaneGeometry(5, 5);
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x555555,
+    specular: 0xffffff,
+    shininess: 50,
+    side: THREE.DoubleSide
+  });
   const ground = new THREE.Mesh(geometry, material);
+  ground.receiveShadow = true;
+  ground.rotateX(Math.PI / 2);
+  return ground;
+}
+
+const createBox = (): THREE.Mesh => {
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshPhongMaterial({
+    color: 0x555555,
+    specular: 0xffffff,
+    shininess: 50,
+    side: THREE.DoubleSide
+  });
+  const ground = new THREE.Mesh(geometry, material);
+  ground.position.y = 0.5;
+  ground.castShadow = true;
   return ground;
 }
 
@@ -36,7 +70,7 @@ const handleResize = () => {
   width = window.innerWidth;
   height = window.innerHeight;
   renderer.setSize(width, height);
-  camera.aspect = width / height;
+  // camera.aspect = width / height;
   camera.updateProjectionMatrix();
 }
 
