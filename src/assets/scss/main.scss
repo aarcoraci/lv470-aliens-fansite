@@ -2,6 +2,7 @@
 @import "./partials/utils/reset";
 @import "normalize.css";
 
+@import "./partials/variables/colors";
 @import "./partials/utils/breakpoints";
 @import "./partials/utils/typography";
 @import "./partials/fonts";
@@ -9,6 +10,11 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  background-color: $color-white;
+  color: $color-black;
 }
 
 h1,
