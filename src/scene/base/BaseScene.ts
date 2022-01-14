@@ -4,15 +4,15 @@ export default abstract class BaseScene {
   readonly elements: [BaseDrawableElement];
   constructor(parameters) {}
 
-  initialize() {}
+  initialize(): void {}
 
-  draw() {
+  draw(): void {
     this.elements.forEach((element) => {
       element.draw();
     });
   }
 
-  dispose() {
+  dispose(): void {
     this.elements.forEach((element) => {
       element.dispose();
     });
