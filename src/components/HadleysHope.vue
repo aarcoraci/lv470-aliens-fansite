@@ -2,6 +2,9 @@
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+
+const loader = new GLTFLoader();
 
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -20,8 +23,10 @@ const createScene = (targetDomElement: Element) => {
   scene = new THREE.Scene();
   scene.add(createGround());
   scene.add(createBox());
-  scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
+  loadModels(scene);
+
+  scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
   scene.add(new THREE.AmbientLight(0x4000ff));
   const light = new THREE.PointLight(0xffffff, 6, 40);
@@ -66,11 +71,23 @@ const createBox = (): THREE.Mesh => {
   return ground;
 }
 
+const loadModels = (scene: THREE.Scene) => {
+  loader.load('./models/ambient.gltf', function (gltf) {
+    scene.add(gltf.scene);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
+
 const handleResize = () => {
   width = window.innerWidth;
   height = window.innerHeight;
+  const aspect = width / height;
+
   renderer.setSize(width, height);
-  // camera.aspect = width / height;
+  camera.left = -d * aspect;
+  camera.right = d * aspect;
+  // camera.aspect = aspect;
   camera.updateProjectionMatrix();
 }
 

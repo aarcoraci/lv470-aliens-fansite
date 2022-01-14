@@ -1,0 +1,9 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: httpd:latest
+    ports:
+      - 8888:80
+    volumes:
+      - ./dist/:/usr/local/apache2/htdocs/
