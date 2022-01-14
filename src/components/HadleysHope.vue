@@ -5,29 +5,36 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let scene;
-let renderer;
-let camera;
+const nearPlane = 0.1;
+const farPlane = 1000;
+const fov = 75;
 
-//	const geometry = new THREE.BoxGeometry();
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-
+let scene: THREE.Scene;
+let renderer: THREE.Renderer;
+let camera: THREE.PerspectiveCamera;
 
 const createScene = (targetDomElement: Element) => {
+  const aspect = width / height;
   scene = new THREE.Scene();
-  scene.add(cube);
-  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+  scene.add(createGround());
+  camera = new THREE.PerspectiveCamera(fov, aspect, nearPlane, farPlane);
+  camera.position
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
   camera.position.z = 5;
 }
 
+const createGround = (): THREE.Mesh => {
+  const geometry = new THREE.PlaneGeometry(2, 2);
+  const material = new THREE.MeshBasicMaterial({ color: 0x2f4458 });
+  const ground = new THREE.Mesh(geometry, material);
+  return ground;
+}
+
 const handleResize = () => {
-  width = window.innerHeight;
-  height = window.innerWidth;
+  width = window.innerWidth;
+  height = window.innerHeight;
   renderer.setSize(width, height);
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
@@ -35,21 +42,18 @@ const handleResize = () => {
 
 const animate = () => {
   requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
   renderer.render(scene, camera);
 }
 
-
 onMounted(() => {
-  document.addEventListener("resize", handleResize);
+  window.addEventListener("resize", handleResize);
   const targetSceneElement = document.querySelector("#main-scene");
   createScene(targetSceneElement);
   animate();
 })
 
 onBeforeUnmount(() => {
-  document.removeEventListener("resize", handleResize);
+  window.removeEventListener("resize", handleResize);
 })
 //createScene();
 
