@@ -1,0 +1,60 @@
+@mixin typo-h1 {
+  font-size: 56px;
+  line-height: 72px;
+  letter-spacing: -0.4px;
+
+  @include respond-to("medium") {
+    font-size: 80px;
+    line-height: 96px;
+    letter-spacing: -1.6px;
+  }
+}
+
+@mixin typo-h2 {
+  font-size: 48px;
+  line-height: 56px;
+
+  @include respond-to("medium") {
+    font-size: 64px;
+    line-height: 80px;
+  }
+}
+
+@mixin typo-h3 {
+  font-size: 32px;
+  line-height: 48px;
+
+  @include respond-to("medium") {
+    font-size: 48px;
+    line-height: 64px;
+  }
+}
+
+@mixin typo-h4 {
+  font-size: 24px;
+  line-height: 32px;
+
+  @include respond-to("medium") {
+    font-size: 32px;
+    line-height: 48px;
+  }
+}
+
+@mixin typo-h5 {
+  font-size: 18px;
+  line-height: 24px;
+
+  @include respond-to("medium") {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}
+
+@mixin typo-paragraph {
+  font-size: 14px;
+  line-height: 22px;
+  @include respond-to("medium") {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}

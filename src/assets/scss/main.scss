@@ -1,0 +1,41 @@
+// reset and normalize
+@import "./partials/utils/reset";
+@import "normalize.css";
+
+@import "./partials/utils/breakpoints";
+@import "./partials/utils/typography";
+@import "./partials/fonts";
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @include font-general;
+}
+
+h1 {
+  @include typo-h1;
+}
+h2 {
+  @include typo-h2;
+}
+h3 {
+  @include typo-h3;
+}
+h4 {
+  @include typo-h4;
+}
+h5 {
+  @include typo-h5;
+}
+
+p {
+  @include typo-paragraph;
+}

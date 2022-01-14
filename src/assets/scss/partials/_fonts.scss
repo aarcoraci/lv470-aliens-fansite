@@ -1,0 +1,33 @@
+@font-face {
+  font-family: Thedus-Condensed;
+  src: url("./fonts/Thedus-Condensed.otf") format("opentype");
+}
+
+@font-face {
+  font-family: Thedus-CondensedLight;
+  src: url("./fonts/Thedus-CondensedLight.otf");
+}
+
+@font-face {
+  font-family: Thedus-StencilCondensed;
+  src: url("./fonts/Thedus-StencilCondensed.otf");
+}
+
+@font-face {
+  font-family: Thedus-StencilWide;
+  src: url("./fonts/Thedus-StencilWide.otf");
+}
+
+@font-face {
+  font-family: Thedus-Wide;
+  src: url("./fonts/Thedus-Wide.otf");
+}
+
+@font-face {
+  font-family: Thedus-WideLight;
+  src: url("./fonts/Thedus-WideLight.otf");
+}
+
+@mixin font-general {
+  font-family: Thedus-CondensedLight, Arial, Helvetica, sans-serif;
+}
