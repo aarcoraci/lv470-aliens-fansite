@@ -1,12 +1,15 @@
 import BaseDrawableElement from "./BaseDrawableElement";
 
-export default abstract class BaseScene implements BaseDrawableElement {
+export default abstract class BaseScene extends BaseDrawableElement {
   readonly elements: [BaseDrawableElement];
-  constructor(parameters) {}
+
+  constructor() {
+    super();
+  }
 
   initialize(): void {}
 
-  draw(): void {
+  override draw(): void {
     this.elements.forEach((element) => {
       element.draw();
     });

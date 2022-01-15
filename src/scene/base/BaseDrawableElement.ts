@@ -1,4 +1,4 @@
-export default interface BaseDrawableElement {
-  draw(): void;
-  dispose(): void;
+export default abstract class BaseDrawableElement {
+  draw(): void {}
+  dispose(): void {}
 }
