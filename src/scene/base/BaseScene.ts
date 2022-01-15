@@ -4,8 +4,8 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import BaseBuilding from "./BaseBuilding";
 
 abstract class BaseScene {
-  readonly buildings: BaseBuilding[] = [];
   readonly scene: Scene = new Scene();
+  buildings: BaseBuilding[] = [];
 
   load(loader: GLTFLoader): void {}
 

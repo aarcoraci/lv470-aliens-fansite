@@ -10,7 +10,19 @@ abstract class BaseBuilding {
 
   update(): void {}
 
-  dispose(): void {}
+  dispose(): void {
+    if (this.mesh != null) {
+      this.mesh.geometry.dispose();
+
+      if (this.mesh.material instanceof Array) {
+        // for better memory management and performance
+        this.mesh.material.forEach((m) => m.dispose());
+      } else {
+        // for better memory management and performance
+        this.mesh.material.dispose();
+      }
+    }
+  }
 }
 
 export default BaseBuilding;

@@ -26,8 +26,7 @@ const createScene = (targetDomElement: Element) => {
 
   hadleysHope.load(loader);
 
-  createLights(hadleysHope.scene);
-  hadleysHope.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
+  // hadleysHope.scene.fog = new THREE.Fog(0xf7d9aa, 10, 100);
 
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
@@ -39,31 +38,7 @@ const createScene = (targetDomElement: Element) => {
   targetDomElement.appendChild(renderer.domElement);
 }
 
-const createLights = (scene: THREE.Scene): void => {
 
-  // scene.add(new THREE.AmbientLight(0x4000ff));
-  const light = new THREE.PointLight(0xffffff, 5, 40);
-  light.castShadow = true;
-  light.position.set(10, 20, 15);
-  scene.add(light);
-
-  const hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
-  scene.add(hemisphereLight);
-}
-
-
-
-// const loadModels = (scene: THREE.Scene) => {
-//   loader.load('./models/ambient.gltf', function (gltf) {
-//     gltf.scene.traverse(function (node) {
-//       if (node.isObject3D) { node.castShadow = true; node.receiveShadow = true; }
-//     });
-//     gltf.scene.rotateY(Math.PI * .15);
-//     scene.add(gltf.scene);
-//   }, undefined, function (error) {
-//     console.error(error);
-//   });
-// }
 
 const handleResize = () => {
   width = window.innerWidth;
@@ -79,6 +54,7 @@ const handleResize = () => {
 
 const animate = () => {
   requestAnimationFrame(animate);
+  hadleysHope.update();
   renderer.render(hadleysHope.scene, camera);
 }
 
