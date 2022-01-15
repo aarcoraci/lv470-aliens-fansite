@@ -1,4 +1,4 @@
 export default interface BaseDrawableElement {
-  draw: () => {};
-  dispose: () => {};
+  draw(): void;
+  dispose(): void;
 }

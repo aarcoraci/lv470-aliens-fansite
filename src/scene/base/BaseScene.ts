@@ -1,6 +1,6 @@
 import BaseDrawableElement from "./BaseDrawableElement";
 
-export default abstract class BaseScene {
+export default abstract class BaseScene implements BaseDrawableElement {
   readonly elements: [BaseDrawableElement];
   constructor(parameters) {}
 

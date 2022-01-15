@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Vector3 } from 'three';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { createLogger } from 'vite';
 
 const loader = new GLTFLoader();
 
@@ -25,22 +26,31 @@ const createScene = (targetDomElement: Element) => {
   // scene.add(createBox());
 
   loadModels(scene);
+  createLights(scene);
 
   scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
-  scene.add(new THREE.AmbientLight(0x4000ff));
+
+
+  camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
+  camera.position.set(20, 20, 20)
+  camera.lookAt(scene.position)
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.shadowMap.enabled = true;
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  targetDomElement.appendChild(renderer.domElement);
+}
+
+const createLights = (scene: THREE.Scene): void => {
+
+  // scene.add(new THREE.AmbientLight(0x4000ff));
   const light = new THREE.PointLight(0xffffff, 5, 40);
   light.castShadow = true;
   light.position.set(10, 20, 15);
   scene.add(light);
 
-  camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
-  camera.position.set(20, 20, 20)
-  camera.lookAt(scene.position)
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.shadowMap.enabled = true;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  targetDomElement.appendChild(renderer.domElement);
+  const hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, .9);
+  scene.add(hemisphereLight);
 }
 
 const createGround = (): THREE.Mesh => {
