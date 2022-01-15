@@ -1,17 +1,21 @@
+import { Scene } from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+
 import BaseDrawableElement from "./BaseDrawableElement";
 
 export default abstract class BaseScene extends BaseDrawableElement {
   readonly elements: [BaseDrawableElement];
+  readonly scene: Scene = new Scene();
 
-  constructor() {
-    super();
+  override load(loader: GLTFLoader): void {
+    this.elements.forEach((element) => {
+      element.load(loader);
+    });
   }
 
-  initialize(): void {}
-
-  override draw(): void {
+  override update(): void {
     this.elements.forEach((element) => {
-      element.draw();
+      element.update();
     });
   }
 
