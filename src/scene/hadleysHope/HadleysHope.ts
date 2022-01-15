@@ -4,7 +4,7 @@ import AtmosphereProcessor from "./buildings/AtmosphereProcessor";
 import { Mesh, Fog, PointLight, HemisphereLight } from "three";
 
 class HadleysHope extends BaseScene {
-  readonly sceneModel: string = "./models/hadleys.glb";
+  private static SCENE_MODEL_NAME: string = "./models/hadleys.glb";
 
   private pointLight: PointLight;
   private hemisphereLight: HemisphereLight;
@@ -15,18 +15,15 @@ class HadleysHope extends BaseScene {
     this.scene.fog = new Fog(0xf7d9aa, 10, 100);
     this.buildLights();
     loader.load(
-      this.sceneModel,
+      HadleysHope.SCENE_MODEL_NAME,
       (gltf) => {
-        /**
-         * build references to individual buildings
-         */
+        // prepare buildings
         gltf.scene.traverse((node) => {
           if (
             node.isObject3D &&
             node.userData.node_name == AtmosphereProcessor.BUILDING_NAME
           ) {
             this.buildings.push(AtmosphereProcessor.build(node as Mesh));
-            console.log(this.buildings);
           }
         });
 
