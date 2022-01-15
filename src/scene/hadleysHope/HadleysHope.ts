@@ -10,11 +10,11 @@ class HadleysHope extends BaseScene {
     loader.load(
       this.sceneModel,
       (gltf) => {
-        gltf.scene.traverse(function (node) {
-          if (node.isObject3D) {
-            console.log(node);
-          }
-        });
+        // gltf.scene.traverse(function (node) {
+        //   if (node.isObject3D) {
+        //     console.log(node);
+        //   }
+        // });
 
         this.scene.add(gltf.scene);
       },
