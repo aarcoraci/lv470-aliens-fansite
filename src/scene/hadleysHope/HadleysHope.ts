@@ -1,5 +1,7 @@
 import BaseScene from "../base/BaseScene";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import AtmosphereProcessor from "./buildings/AtmosphereProcessor";
+import { Mesh } from "three";
 
 class HadleysHope extends BaseScene {
   readonly sceneModel: string = "./models/hadleys.glb";
@@ -10,11 +12,18 @@ class HadleysHope extends BaseScene {
     loader.load(
       this.sceneModel,
       (gltf) => {
-        // gltf.scene.traverse(function (node) {
-        //   if (node.isObject3D) {
-        //     console.log(node);
-        //   }
-        // });
+        /**
+         * build references to individual buildings
+         */
+        gltf.scene.traverse((node) => {
+          if (
+            node.isObject3D &&
+            node.userData.node_name == AtmosphereProcessor.BUILDING_NAME
+          ) {
+            this.buildings.push(AtmosphereProcessor.build(node as Mesh));
+            console.log(this.buildings);
+          }
+        });
 
         this.scene.add(gltf.scene);
       },

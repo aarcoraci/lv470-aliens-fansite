@@ -1,27 +1,25 @@
 import { Scene } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import BaseDrawableElement from "./BaseDrawableElement";
+import BaseBuilding from "./BaseBuilding";
 
-export default abstract class BaseScene extends BaseDrawableElement {
-  readonly elements: BaseDrawableElement[] = [];
+abstract class BaseScene {
+  readonly buildings: BaseBuilding[] = [];
   readonly scene: Scene = new Scene();
 
-  override load(loader: GLTFLoader): void {
-    this.elements.forEach((element) => {
-      element.load(loader);
-    });
-  }
+  load(loader: GLTFLoader): void {}
 
-  override update(): void {
-    this.elements.forEach((element) => {
+  update(): void {
+    this.buildings.forEach((element) => {
       element.update();
     });
   }
 
   dispose(): void {
-    this.elements.forEach((element) => {
+    this.buildings.forEach((element) => {
       element.dispose();
     });
   }
 }
+
+export default BaseScene;
