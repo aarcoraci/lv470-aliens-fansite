@@ -18,7 +18,7 @@ let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
 let d = 3;
 
-
+let animationRequestId;
 
 const createScene = (targetDomElement: Element) => {
   const aspect = width / height;
@@ -38,8 +38,6 @@ const createScene = (targetDomElement: Element) => {
   targetDomElement.appendChild(renderer.domElement);
 }
 
-
-
 const handleResize = () => {
   width = window.innerWidth;
   height = window.innerHeight;
@@ -53,7 +51,7 @@ const handleResize = () => {
 }
 
 const animate = () => {
-  requestAnimationFrame(animate);
+  animationRequestId = requestAnimationFrame(animate);
   hadleysHope.update();
   renderer.render(hadleysHope.scene, camera);
 }
@@ -66,6 +64,9 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  cancelAnimationFrame(animationRequestId);
+  hadleysHope.dispose();
+  renderer.dispose();
   window.removeEventListener("resize", handleResize);
 })
 //createScene();

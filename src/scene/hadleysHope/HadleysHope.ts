@@ -45,6 +45,8 @@ class HadleysHope extends BaseScene {
       this.scene.remove(b.mesh);
     });
     this.buildings = [];
+
+    console.log("disposed");
   }
 
   private buildLights(): void {
