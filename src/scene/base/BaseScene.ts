@@ -4,7 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import BaseDrawableElement from "./BaseDrawableElement";
 
 export default abstract class BaseScene extends BaseDrawableElement {
-  readonly elements: [BaseDrawableElement];
+  readonly elements: BaseDrawableElement[] = [];
   readonly scene: Scene = new Scene();
 
   override load(loader: GLTFLoader): void {

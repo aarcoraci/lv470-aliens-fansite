@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import * as THREE from 'three';
-import { Vector3 } from 'three';
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { createLogger } from 'vite';
+import HadleysHope from '../scene/hadleysHope/HadleysHope';
 
 const loader = new GLTFLoader();
 
@@ -14,27 +13,26 @@ const nearPlane = 0.1;
 const farPlane = 1000;
 const fov = 75;
 
-let scene: THREE.Scene;
+let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
 let d = 3;
 
+
+
 const createScene = (targetDomElement: Element) => {
   const aspect = width / height;
-  scene = new THREE.Scene();
-  scene.add(createGround());
-  // scene.add(createBox());
+  hadleysHope = new HadleysHope();
 
-  loadModels(scene);
-  createLights(scene);
+  hadleysHope.load(loader);
 
-  scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
-
+  createLights(hadleysHope.scene);
+  hadleysHope.scene.fog = new THREE.Fog(0xf7d9aa, 100, 950);
 
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
   camera.position.set(20, 20, 20)
-  camera.lookAt(scene.position)
+  camera.lookAt(hadleysHope.scene.position)
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -53,45 +51,19 @@ const createLights = (scene: THREE.Scene): void => {
   scene.add(hemisphereLight);
 }
 
-const createGround = (): THREE.Mesh => {
-  const geometry = new THREE.PlaneGeometry(5, 5);
-  const material = new THREE.MeshPhongMaterial({
-    color: 0x555555,
-    specular: 0xffffff,
-    shininess: 50,
-    side: THREE.DoubleSide
-  });
-  const ground = new THREE.Mesh(geometry, material);
-  ground.receiveShadow = true;
-  ground.rotateX(Math.PI / 2);
-  return ground;
-}
 
-const createBox = (): THREE.Mesh => {
-  const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshPhongMaterial({
-    color: 0x555555,
-    specular: 0xffffff,
-    shininess: 50,
-    side: THREE.DoubleSide
-  });
-  const ground = new THREE.Mesh(geometry, material);
-  ground.position.y = 0.5;
-  ground.castShadow = true;
-  return ground;
-}
 
-const loadModels = (scene: THREE.Scene) => {
-  loader.load('./models/ambient.gltf', function (gltf) {
-    gltf.scene.traverse(function (node) {
-      if (node.isObject3D) { node.castShadow = true; node.receiveShadow = true; }
-    });
-    gltf.scene.rotateY(Math.PI * .15);
-    scene.add(gltf.scene);
-  }, undefined, function (error) {
-    console.error(error);
-  });
-}
+// const loadModels = (scene: THREE.Scene) => {
+//   loader.load('./models/ambient.gltf', function (gltf) {
+//     gltf.scene.traverse(function (node) {
+//       if (node.isObject3D) { node.castShadow = true; node.receiveShadow = true; }
+//     });
+//     gltf.scene.rotateY(Math.PI * .15);
+//     scene.add(gltf.scene);
+//   }, undefined, function (error) {
+//     console.error(error);
+//   });
+// }
 
 const handleResize = () => {
   width = window.innerWidth;
@@ -107,7 +79,7 @@ const handleResize = () => {
 
 const animate = () => {
   requestAnimationFrame(animate);
-  renderer.render(scene, camera);
+  renderer.render(hadleysHope.scene, camera);
 }
 
 onMounted(() => {
