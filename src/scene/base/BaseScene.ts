@@ -1,22 +1,22 @@
 import { Scene } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
-import BaseBuilding from "./BaseBuilding";
+import BaseSceneElement from "./BaseSceneElement";
 
 abstract class BaseScene {
   readonly scene: Scene = new Scene();
-  buildings: BaseBuilding[] = [];
+  sceneElements: BaseSceneElement[] = [];
 
   load(loader: GLTFLoader): void {}
 
   update(): void {
-    this.buildings.forEach((element) => {
+    this.sceneElements.forEach((element) => {
       element.update();
     });
   }
 
   dispose(): void {
-    this.buildings.forEach((element) => {
+    this.sceneElements.forEach((element) => {
       element.dispose();
     });
   }

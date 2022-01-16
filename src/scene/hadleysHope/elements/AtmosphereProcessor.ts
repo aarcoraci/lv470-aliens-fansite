@@ -1,7 +1,7 @@
-import { Mesh, MeshPhongMaterial, MeshStandardMaterial } from "three";
-import BaseBuilding from "../../base/BaseBuilding";
+import { Mesh, MeshPhongMaterial } from "three";
+import BaseSceneElement from "../../base/BaseSceneElement";
 
-class AtmosphereProcessor extends BaseBuilding {
+class AtmosphereProcessor extends BaseSceneElement {
   static BUILDING_NAME: string = "atmosphere_processor";
 
   constructor(mesh: Mesh, name: string) {
@@ -10,13 +10,10 @@ class AtmosphereProcessor extends BaseBuilding {
       color: 0x00468b,
     });
     mesh.castShadow = true;
-    // mesh.receiveShadow = true;
     mesh.material.needsUpdate = true;
   }
 
-  override update(): void {
-    // this.mesh.rotation.y += 0.001;
-  }
+  override update(): void {}
 }
 
 export default AtmosphereProcessor;

@@ -1,23 +1,23 @@
 import BaseScene from "../base/BaseScene";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import AtmosphereProcessor from "./buildings/AtmosphereProcessor";
+import AtmosphereProcessor from "./elements/AtmosphereProcessor";
 import {
   Mesh,
-  Fog,
-  PointLight,
-  HemisphereLight,
   AmbientLight,
   SpotLight,
   MeshStandardMaterial,
   DirectionalLight,
 } from "three";
 import HadleysHopeBuildingConstructor from "./BuilgingConstructor";
+import HadleysHopeTerrain from "./elements/HadleysHopeTerrain";
 
 class HadleysHope extends BaseScene {
   private static SCENE_MODEL_NAME: string = "./models/hadleys.glb";
 
   private buildingConstructor: HadleysHopeBuildingConstructor =
     new HadleysHopeBuildingConstructor();
+
+  private terrain?: Mesh;
 
   override load(loader: GLTFLoader): void {
     super.load(loader);
@@ -31,15 +31,11 @@ class HadleysHope extends BaseScene {
         gltf.scene.traverse((node) => {
           if (node.isObject3D) {
             if (node.userData.building) {
-              this.buildings.push(this.buildingConstructor.construct(node));
+              this.sceneElements.push(this.buildingConstructor.construct(node));
             } else if (node.userData.terrain) {
-              const terrainMesh = node as Mesh;
-              terrainMesh.material = new MeshStandardMaterial({
-                color: 0x00468b,
-              });
-              terrainMesh.receiveShadow = true;
-              terrainMesh.castShadow = false;
-              terrainMesh.material.needsUpdate = true;
+              this.sceneElements.push(
+                new HadleysHopeTerrain(node as Mesh, "terrain")
+              );
             }
           }
         });
@@ -54,18 +50,17 @@ class HadleysHope extends BaseScene {
   }
 
   override update(): void {
-    this.buildings.forEach((b) => {
+    this.sceneElements.forEach((b) => {
       b.update();
     });
   }
 
   override dispose(): void {
-    // TODO: really need to test this
     super.dispose();
-    this.buildings.forEach((b) => {
+    this.sceneElements.forEach((b) => {
       this.scene.remove(b.mesh);
     });
-    this.buildings = [];
+    this.sceneElements = [];
   }
 
   private buildLights(): void {

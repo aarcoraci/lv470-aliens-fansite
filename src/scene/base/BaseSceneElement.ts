@@ -1,6 +1,6 @@
 import { Mesh } from "three";
 
-abstract class BaseBuilding {
+abstract class BaseSceneElement {
   name: string;
   mesh: Mesh;
   constructor(mesh: Mesh, name: string) {
@@ -25,4 +25,4 @@ abstract class BaseBuilding {
   }
 }
 
-export default BaseBuilding;
+export default BaseSceneElement;

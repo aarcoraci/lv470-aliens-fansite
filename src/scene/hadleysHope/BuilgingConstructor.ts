@@ -1,12 +1,12 @@
 import SceneBuildingConstructor from "../base/SceneBuildingConstructor";
-import BaseBuilding from "../base/BaseBuilding";
+import BaseSceneElement from "../base/BaseSceneElement";
 import { Mesh, Object3D } from "three";
-import AtmosphereProcessor from "./buildings/AtmosphereProcessor";
+import AtmosphereProcessor from "./elements/AtmosphereProcessor";
 
 class HadleysHopeBuildingConstructor
-  implements SceneBuildingConstructor<BaseBuilding>
+  implements SceneBuildingConstructor<BaseSceneElement>
 {
-  construct(node: Object3D): BaseBuilding {
+  construct(node: Object3D): BaseSceneElement {
     if (node.userData.node_name == AtmosphereProcessor.BUILDING_NAME) {
       return new AtmosphereProcessor(
         node as Mesh,
