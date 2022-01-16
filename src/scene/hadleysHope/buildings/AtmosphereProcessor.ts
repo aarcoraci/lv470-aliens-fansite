@@ -8,6 +8,10 @@ class AtmosphereProcessor extends BaseBuilding {
     const result = new AtmosphereProcessor(mesh, this.BUILDING_NAME);
     return result;
   }
+
+  override update(): void {
+    this.mesh.rotation.y += 0.01;
+  }
 }
 
 export default AtmosphereProcessor;

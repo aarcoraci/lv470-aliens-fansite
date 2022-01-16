@@ -2,9 +2,13 @@ import BaseScene from "../base/BaseScene";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import AtmosphereProcessor from "./buildings/AtmosphereProcessor";
 import { Mesh, Fog, PointLight, HemisphereLight } from "three";
+import HadleysHopeBuildingConstructor from "./BuilgingConstructor";
 
 class HadleysHope extends BaseScene {
   private static SCENE_MODEL_NAME: string = "./models/hadleys.glb";
+
+  private buildingConstructor: HadleysHopeBuildingConstructor =
+    new HadleysHopeBuildingConstructor();
 
   private pointLight: PointLight;
   private hemisphereLight: HemisphereLight;
@@ -19,11 +23,9 @@ class HadleysHope extends BaseScene {
       (gltf) => {
         // prepare buildings
         gltf.scene.traverse((node) => {
-          if (
-            node.isObject3D &&
-            node.userData.node_name == AtmosphereProcessor.BUILDING_NAME
-          ) {
-            this.buildings.push(AtmosphereProcessor.build(node as Mesh));
+          let building = this.buildingConstructor.construct(node);
+          if (building != null) {
+            this.buildings.push(building);
           }
         });
 
@@ -36,6 +38,12 @@ class HadleysHope extends BaseScene {
     );
   }
 
+  override update(): void {
+    this.buildings.forEach((b) => {
+      b.update();
+    });
+  }
+
   override dispose(): void {
     // TODO: really need to test this
     super.dispose();
@@ -45,8 +53,6 @@ class HadleysHope extends BaseScene {
       this.scene.remove(b.mesh);
     });
     this.buildings = [];
-
-    console.log("disposed");
   }
 
   private buildLights(): void {
