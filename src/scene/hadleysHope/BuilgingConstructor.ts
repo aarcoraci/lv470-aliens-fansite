@@ -7,13 +7,11 @@ class HadleysHopeBuildingConstructor
   implements SceneBuildingConstructor<BaseBuilding>
 {
   construct(node: Object3D): BaseBuilding {
-    if (node.isObject3D && node.userData.building) {
-      if (node.userData.node_name == AtmosphereProcessor.BUILDING_NAME) {
-        return new AtmosphereProcessor(
-          node as Mesh,
-          AtmosphereProcessor.BUILDING_NAME
-        );
-      }
+    if (node.userData.node_name == AtmosphereProcessor.BUILDING_NAME) {
+      return new AtmosphereProcessor(
+        node as Mesh,
+        AtmosphereProcessor.BUILDING_NAME
+      );
     }
     return null;
   }

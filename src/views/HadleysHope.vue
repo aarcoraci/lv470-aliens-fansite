@@ -26,6 +26,7 @@ const createScene = (targetDomElement: Element) => {
 
   hadleysHope.load(loader);
 
+
   // hadleysHope.scene.fog = new THREE.Fog(0xf7d9aa, 10, 100);
 
 
@@ -33,6 +34,8 @@ const createScene = (targetDomElement: Element) => {
   camera.position.set(20, 20, 20)
   camera.lookAt(hadleysHope.scene.position)
   renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x141A35);
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
