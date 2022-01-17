@@ -17,6 +17,7 @@ const fov = 75;
 let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
+let perspectiveCamera: THREE.PerspectiveCamera;
 let d = 3;
 
 let animationRequestId;
@@ -28,8 +29,11 @@ const createScene = (targetDomElement: Element) => {
   hadleysHope.load(loader);
 
 
-  // hadleysHope.scene.fog = new THREE.Fog(0xf7d9aa, 10, 100);
-
+  perspectiveCamera = new THREE.PerspectiveCamera(fov, aspect, nearPlane, farPlane);
+  perspectiveCamera.position.z = 0;
+  perspectiveCamera.position.y = 5;
+  perspectiveCamera.position.x = 0;
+  perspectiveCamera.lookAt(0, 0, 0);
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
   camera.position.set(20, 20, 20)
@@ -50,8 +54,11 @@ const handleResize = () => {
   renderer.setSize(width, height);
   camera.left = -d * aspect;
   camera.right = d * aspect;
-  // camera.aspect = aspect;
   camera.updateProjectionMatrix();
+
+  // perspective
+  perspectiveCamera.aspect = aspect;
+  perspectiveCamera.updateProjectionMatrix();
 }
 
 const animate = () => {
