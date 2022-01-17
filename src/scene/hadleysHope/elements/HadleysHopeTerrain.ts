@@ -6,10 +6,11 @@ class HadleysHopeTerrain extends BaseSceneElement {
   static BUILDING_NAME: string = "terrain";
 
   constructor(meshes: Mesh[], name: string) {
-    super(meshes, name);
+    super(name);
     meshes.forEach((mesh) => {
       mesh.material = MaterialFactory.getRegularGroundMAterial();
       mesh.receiveShadow = true;
+      this.meshes.push(mesh);
     });
   }
 }

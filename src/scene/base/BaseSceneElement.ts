@@ -1,10 +1,10 @@
-import { Mesh } from "three";
+import { Material, Mesh } from "three";
 
 abstract class BaseSceneElement {
   name: string;
-  meshes: Mesh[];
-  constructor(mesh: Mesh[] = [], name: string = "") {
-    this.meshes = mesh;
+  meshes: Mesh[] = [];
+
+  constructor(name: string = "") {
     this.name = name;
   }
 

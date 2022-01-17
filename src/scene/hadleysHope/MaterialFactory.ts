@@ -27,6 +27,25 @@ abstract class MaterialFactory {
     });
     return result;
   }
+
+  static getMapBuildingMaterial(doubleSided: Boolean = false): Material {
+    const result = new MeshPhongMaterial({
+      color: SceneColors.BLUE_1,
+      wireframe: true,
+    });
+
+    if (doubleSided) {
+      result.side = DoubleSide;
+    }
+    return result;
+  }
+
+  static getSceneBuildingMaterial(dobuleSided: Boolean = false): Material[] {
+    return [
+      this.getMapBuildingMaterial(dobuleSided),
+      this.getRegularBuildingMaterial(dobuleSided),
+    ];
+  }
 }
 
 export default MaterialFactory;

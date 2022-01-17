@@ -6,11 +6,12 @@ class AtmosphereProcessor extends BaseSceneElement {
   static BUILDING_NAME: string = "atmosphere_processor";
 
   constructor(meshes: Mesh[] = [], name: string = "") {
-    super(meshes, name);
+    super(name);
 
     meshes.forEach((mesh) => {
       mesh.material = MaterialFactory.getRegularBuildingMaterial();
       mesh.castShadow = true;
+      this.meshes.push(mesh);
     });
   }
 

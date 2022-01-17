@@ -18,7 +18,7 @@ class CommsTower extends BaseSceneElement {
   private light: Mesh;
 
   constructor(meshes: Mesh[] = [], name: string = "") {
-    super(meshes, name);
+    super(name);
 
     meshes.forEach((mesh) => {
       if (mesh.userData.node_name == CommsTower.LIGHT_BUILDING_NAME) {
@@ -27,6 +27,7 @@ class CommsTower extends BaseSceneElement {
         this.light = mesh;
         mesh.rotation.z = Math.PI / 3;
         mesh.rotation.y = Math.PI / 2;
+        this.meshes.push(mesh);
       } else {
         mesh.material = MaterialFactory.getRegularBuildingMaterial(true);
         mesh.castShadow = true;
@@ -35,6 +36,7 @@ class CommsTower extends BaseSceneElement {
           mesh.rotation.z = Math.PI / 3;
           mesh.rotation.y = Math.PI / 2;
         }
+        this.meshes.push(mesh);
       }
     });
   }

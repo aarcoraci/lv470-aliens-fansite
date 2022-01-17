@@ -20,7 +20,12 @@ class HadleysHope extends BaseScene {
       HadleysHope.SCENE_MODEL_NAME,
       (gltf) => {
         this.sceneElements = [...this.buildingConstructor.construct(gltf)];
-        this.scene.add(gltf.scene);
+        this.sceneElements.forEach((element) => {
+          element.meshes.forEach((mesh) => {
+            this.scene.add(mesh);
+          });
+        });
+        // this.scene.add(gltf.scene);
       },
       undefined,
       function (error) {
