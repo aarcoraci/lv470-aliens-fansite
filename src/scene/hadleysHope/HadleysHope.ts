@@ -30,6 +30,8 @@ class HadleysHope extends BaseScene {
         // prepare buildings
         gltf.scene.traverse((node) => {
           if (node.isObject3D) {
+            console.log(node);
+
             if (node.userData.building) {
               this.sceneElements.push(this.buildingConstructor.construct(node));
             } else if (node.userData.terrain) {
@@ -80,7 +82,7 @@ class HadleysHope extends BaseScene {
     const dirlight = new DirectionalLight(0xfaedf0);
     dirlight.position.set(4, 3, 2);
     dirlight.castShadow = true;
-    dirlight.intensity = 0.25;
+    dirlight.intensity = 0.55;
     this.scene.add(dirlight);
   }
 }
