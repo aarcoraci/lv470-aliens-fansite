@@ -9,9 +9,9 @@ abstract class BaseScene {
 
   load(loader: GLTFLoader): void {}
 
-  update(): void {
+  update(delta: number): void {
     this.sceneElements.forEach((element) => {
-      element.update();
+      element.update(delta);
     });
   }
 

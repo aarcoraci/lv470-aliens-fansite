@@ -5,6 +5,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
 
 const loader = new GLTFLoader();
+const clock = new THREE.Clock();
 
 let width = window.innerWidth;
 let height = window.innerHeight;
@@ -55,7 +56,7 @@ const handleResize = () => {
 
 const animate = () => {
   animationRequestId = requestAnimationFrame(animate);
-  hadleysHope.update();
+  hadleysHope.update(clock.getDelta());
   renderer.render(hadleysHope.scene, camera);
 }
 

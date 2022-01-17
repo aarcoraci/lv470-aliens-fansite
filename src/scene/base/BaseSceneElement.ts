@@ -2,26 +2,25 @@ import { Mesh } from "three";
 
 abstract class BaseSceneElement {
   name: string;
-  mesh: Mesh;
-  constructor(mesh: Mesh, name: string) {
-    this.mesh = mesh;
+  meshes: Mesh[];
+  constructor(mesh: Mesh[] = [], name: string = "") {
+    this.meshes = mesh;
     this.name = name;
   }
 
-  update(): void {}
+  update(delta: number): void {}
 
   dispose(): void {
-    if (this.mesh != null) {
-      this.mesh.geometry.dispose();
-
-      if (this.mesh.material instanceof Array) {
+    this.meshes.forEach((mesh) => {
+      mesh.geometry.dispose();
+      if (mesh.material instanceof Array) {
         // for better memory management and performance
-        this.mesh.material.forEach((m) => m.dispose());
+        mesh.material.forEach((m) => m.dispose());
       } else {
         // for better memory management and performance
-        this.mesh.material.dispose();
+        mesh.material.dispose();
       }
-    }
+    });
   }
 }
 

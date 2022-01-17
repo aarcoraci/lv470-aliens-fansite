@@ -1,15 +1,7 @@
 import BaseScene from "../base/BaseScene";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import AtmosphereProcessor from "./elements/AtmosphereProcessor";
-import {
-  Mesh,
-  AmbientLight,
-  SpotLight,
-  MeshStandardMaterial,
-  DirectionalLight,
-} from "three";
-import HadleysHopeBuildingConstructor from "./BuilgingConstructor";
-import HadleysHopeTerrain from "./elements/HadleysHopeTerrain";
+import { Mesh, AmbientLight, SpotLight, DirectionalLight } from "three";
+import HadleysHopeBuildingConstructor from "./HadleysHopeBuildingConstructor";
 
 class HadleysHope extends BaseScene {
   private static SCENE_MODEL_NAME: string = "./models/hadleys.glb";
@@ -27,21 +19,7 @@ class HadleysHope extends BaseScene {
     loader.load(
       HadleysHope.SCENE_MODEL_NAME,
       (gltf) => {
-        // prepare buildings
-        gltf.scene.traverse((node) => {
-          if (node.isObject3D) {
-            console.log(node);
-
-            if (node.userData.building) {
-              this.sceneElements.push(this.buildingConstructor.construct(node));
-            } else if (node.userData.terrain) {
-              this.sceneElements.push(
-                new HadleysHopeTerrain(node as Mesh, "terrain")
-              );
-            }
-          }
-        });
-
+        this.sceneElements = [...this.buildingConstructor.construct(gltf)];
         this.scene.add(gltf.scene);
       },
       undefined,
@@ -51,16 +29,19 @@ class HadleysHope extends BaseScene {
     );
   }
 
-  override update(): void {
+  override update(delta: number): void {
     this.sceneElements.forEach((b) => {
-      b.update();
+      b.update(delta);
     });
   }
 
   override dispose(): void {
     super.dispose();
-    this.sceneElements.forEach((b) => {
-      this.scene.remove(b.mesh);
+    this.sceneElements.forEach((sceneElement) => {
+      sceneElement.meshes.forEach((mesh) => {
+        this.scene.remove(mesh);
+      });
+      sceneElement.meshes = [];
     });
     this.sceneElements = [];
   }
