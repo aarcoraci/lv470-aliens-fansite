@@ -6,6 +6,7 @@ import {
   Side,
 } from "three";
 import BaseSceneElement from "../../base/BaseSceneElement";
+import MaterialFactory from "../MaterialFactory";
 
 class CommsTower extends BaseSceneElement {
   static BUILDING_NAME: string = "comms_tower";
@@ -21,24 +22,14 @@ class CommsTower extends BaseSceneElement {
 
     meshes.forEach((mesh) => {
       if (mesh.userData.node_name == CommsTower.LIGHT_BUILDING_NAME) {
-        mesh.material = new MeshStandardMaterial({
-          color: 0xff4000,
-          emissive: 0xff4000,
-          emissiveIntensity: 0.5,
-        });
-
+        mesh.material = MaterialFactory.getRegularAccentRedMaterial();
         mesh.castShadow = false;
-        mesh.material.needsUpdate = true;
         this.light = mesh;
         mesh.rotation.z = Math.PI / 3;
         mesh.rotation.y = Math.PI / 2;
       } else {
-        mesh.material = new MeshPhongMaterial({
-          color: 0x00468b,
-        });
-        mesh.material.side = DoubleSide;
+        mesh.material = MaterialFactory.getRegularBuildingMaterial(true);
         mesh.castShadow = true;
-        mesh.material.needsUpdate = true;
         if (mesh.userData.node_name == CommsTower.ANTENNA_BUILDING_NAME) {
           this.antenna = mesh;
           mesh.rotation.z = Math.PI / 3;

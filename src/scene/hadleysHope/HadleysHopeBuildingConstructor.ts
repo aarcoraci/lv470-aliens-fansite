@@ -1,15 +1,12 @@
 import BaseSceneElement from "../base/BaseSceneElement";
 import { Mesh } from "three";
 import AtmosphereProcessor from "./elements/AtmosphereProcessor";
-import HeadQuarters from "./elements/HeadQuarters";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import HadleysHopeTerrain from "./elements/HadleysHopeTerrain";
 import CommsTower from "./elements/CommsTower";
 
 class HadleysHopeBuildingConstructor {
   construct(gltf: GLTF): BaseSceneElement[] {
-    // find individual elements
-
     const result: BaseSceneElement[] = [];
 
     result.push(this.buildAtmosphereProcessor(gltf));
@@ -17,16 +14,6 @@ class HadleysHopeBuildingConstructor {
     result.push(this.buildCommsTower(gltf));
 
     return result;
-    // if (node.userData.node_name == AtmosphereProcessor.BUILDING_NAME) {
-    //   return new AtmosphereProcessor(
-    //     node as Mesh,
-    //     AtmosphereProcessor.BUILDING_NAME
-    //   );
-    // }
-    // if (node.userData.node_name == HeadQuarters.BUILDING_NAME) {
-    //   return new HeadQuarters(node as Mesh, HeadQuarters.BUILDING_NAME);
-    // }
-    // return null;
   }
 
   private buildCommsTower(gltf: GLTF): CommsTower {
