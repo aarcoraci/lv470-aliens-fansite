@@ -120,10 +120,12 @@ const animateCamera = () => {
         .onUpdate(() => {
           camera.position.copy(position);
           camera.lookAt(hadleysHope.scene.position);
+          updateCamera();
         })
         .onComplete(function () {
           camera.position.copy(targetPosition);
           camera.lookAt(hadleysHope.scene.position);
+          updateCamera();
           new TWEEN.Tween(zoom)
             .easing(TWEEN.Easing.Quadratic.InOut)
             .to(targetZoom, 2200)
@@ -133,46 +135,6 @@ const animateCamera = () => {
             }).start();
         }).start();
     }).start();
-}
-
-const moveAndLookAt = (camera, dstpos, dstlookat, options): void => {
-  options || (options = { duration: 1200 });
-
-  var origpos = new THREE.Vector3().copy(camera.position); // original position
-  var origrot = new THREE.Euler().copy(camera.rotation); // original rotation
-
-  camera.position.set(dstpos.x, dstpos.y, dstpos.z);
-  camera.lookAt(dstlookat);
-  var dstrot = new THREE.Euler().copy(camera.rotation)
-
-  // reset original position and rotation
-  camera.position.set(origpos.x, origpos.y, origpos.z);
-  camera.rotation.set(origrot.x, origrot.y, origrot.z);
-
-  //
-  // Tweening
-  //
-
-  // position
-  new TWEEN.Tween(camera.position).to({
-    x: dstpos.x,
-    y: dstpos.y,
-    z: dstpos.z
-  }, options.duration).easing(TWEEN.Easing.Cubic.InOut).start();
-
-  // rotation (using slerp)
-  (function () {
-    var qa = qa = new THREE.Quaternion().copy(camera.quaternion); // src quaternion
-    var qb = new THREE.Quaternion().setFromEuler(dstrot); // dst quaternion
-    var qm = new THREE.Quaternion();
-    camera.quaternion.set(qm);
-
-    var o = { t: 0 };
-    new TWEEN.Tween(o).to({ t: 1 }, options.duration).onUpdate(function () {
-      THREE.Quaternion.slerp(qa, qb, qm, o.t);
-      camera.quaternion.set(qm.x, qm.y, qm.z, qm.w);
-    }).start();
-  }).call(this);
 }
 </script>
 
