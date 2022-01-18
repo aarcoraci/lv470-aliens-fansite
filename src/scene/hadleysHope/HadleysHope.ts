@@ -1,20 +1,21 @@
 import BaseScene from "../base/BaseScene";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { Mesh, AmbientLight, SpotLight, DirectionalLight } from "three";
-import HadleysHopeBuildingConstructor from "./HadleysHopeBuildingConstructor";
+import { Mesh, AmbientLight, SpotLight, DirectionalLight, Fog } from "three";
+import HadleysHopeSceneConstructor from "./HadleysHopeSceneConstructor";
 
 class HadleysHope extends BaseScene {
   private static SCENE_MODEL_NAME: string = "./models/hadleys.glb";
 
-  private buildingConstructor: HadleysHopeBuildingConstructor =
-    new HadleysHopeBuildingConstructor();
+  private buildingConstructor: HadleysHopeSceneConstructor =
+    new HadleysHopeSceneConstructor();
 
   private terrain?: Mesh;
+
+  loadSceneCallback?: () => void;
 
   override load(loader: GLTFLoader): void {
     super.load(loader);
 
-    // this.scene.fog = new Fog(0xf7d9aa, 10, 100);
     this.buildLights();
     loader.load(
       HadleysHope.SCENE_MODEL_NAME,
@@ -25,7 +26,7 @@ class HadleysHope extends BaseScene {
             this.scene.add(mesh);
           });
         });
-        // this.scene.add(gltf.scene);
+        this.loadSceneCallback?.();
       },
       undefined,
       function (error) {

@@ -14,10 +14,17 @@ abstract class MaterialFactory {
     return result;
   }
 
-  static getRegularAccentRedMaterial(): Material {
+  static getRegularAccentRedMaterial(
+    doubleSided: Boolean = false,
+    color: SceneColors = SceneColors.RED_1
+  ): Material {
     const result = new MeshPhongMaterial({
-      color: SceneColors.RED_1,
+      color: color,
     });
+
+    if (doubleSided) {
+      result.side = DoubleSide;
+    }
     return result;
   }
 
