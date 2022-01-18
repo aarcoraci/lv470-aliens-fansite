@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
+import * as TWEEN from "@tweenjs/tween.js";
+import { Quaternion, Vector3 } from 'three';
 
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
@@ -12,31 +14,33 @@ let height = window.innerHeight;
 
 const nearPlane = 0.1;
 const farPlane = 1000;
-const fov = 50;
+const fov = 45;
 
 let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
 let perspectiveCamera: THREE.PerspectiveCamera;
-let d = 3;
+let d = 10;
 
 let animationRequestId;
 
-const createScene = (targetDomElement: Element) => {
+const createScene = async (targetDomElement: Element) => {
   const aspect = width / height;
   hadleysHope = new HadleysHope();
 
-  hadleysHope.load(loader);
+  await hadleysHope.load(loader);
 
   perspectiveCamera = new THREE.PerspectiveCamera(fov, aspect, nearPlane, farPlane);
-  perspectiveCamera.position.z = 3;
-  perspectiveCamera.position.y = 3;
-  perspectiveCamera.position.x = 5;
-  perspectiveCamera.lookAt(0, 0, 0);
+  perspectiveCamera.position.z = 0;
+  perspectiveCamera.position.y = 20;
+  perspectiveCamera.position.x = 0;
+  perspectiveCamera.lookAt(hadleysHope.scene.position);
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
-  camera.position.set(10, 10, 10)
-  camera.lookAt(hadleysHope.scene.position)
+  camera.position.set(0, 10, 0);
+  camera.lookAt(hadleysHope.scene.position);
+
+
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setClearColor(0x141A35);
@@ -51,25 +55,38 @@ const handleResize = () => {
   const aspect = width / height;
 
   renderer.setSize(width, height);
-  camera.left = -d * aspect;
-  camera.right = d * aspect;
-  camera.updateProjectionMatrix();
+
+  updateCamera();
 
   // perspective
   perspectiveCamera.aspect = aspect;
   perspectiveCamera.updateProjectionMatrix();
 }
 
+
+const updateCamera = () => {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  const aspect = width / height;
+  camera.left = -d * aspect;
+  camera.right = d * aspect;
+  camera.updateProjectionMatrix();
+}
+
+
+
 const animate = () => {
+  camera.updateProjectionMatrix();
+  TWEEN.update();
   animationRequestId = requestAnimationFrame(animate);
   hadleysHope.update(clock.getDelta());
   renderer.render(hadleysHope.scene, camera);
 }
 
-onMounted(() => {
-  window.addEventListener("resize", handleResize);
+onMounted(async () => {
   const targetSceneElement = document.querySelector("#main-scene");
-  createScene(targetSceneElement);
+  await createScene(targetSceneElement);
+  window.addEventListener("resize", handleResize);
   animate();
 })
 
@@ -79,10 +96,113 @@ onBeforeUnmount(() => {
   renderer.dispose();
   window.removeEventListener("resize", handleResize);
 })
-//createScene();
 
+const animateCamera = () => {
+
+  let position = new THREE.Vector3().copy(camera.position);
+  const targetPosition = new THREE.Vector3(10, 10, 10);
+
+  let rotation = { r: 0 };
+  let targetRotation = { r: 1 };
+
+  let zoom = { z: 1 };
+  let targetZoom = { z: 2 };
+
+  new TWEEN.Tween(rotation)
+    .easing(TWEEN.Easing.Cubic.InOut)
+    .to(targetRotation, 1200)
+    .onUpdate(() => {
+      camera.rotation.z += rotation.r * Math.PI / 180;
+    }).onComplete(() => {
+      new TWEEN.Tween(position)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .to(targetPosition, 2200)
+        .onUpdate(() => {
+          camera.position.copy(position);
+          camera.lookAt(hadleysHope.scene.position);
+        })
+        .onComplete(function () {
+          camera.position.copy(targetPosition);
+          camera.lookAt(hadleysHope.scene.position);
+          new TWEEN.Tween(zoom)
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .to(targetZoom, 2200)
+            .onUpdate(() => {
+              camera.zoom = zoom.z;
+              updateCamera();
+            }).start();
+        }).start();
+    }).start();
+}
+
+const moveAndLookAt = (camera, dstpos, dstlookat, options): void => {
+  options || (options = { duration: 1200 });
+
+  var origpos = new THREE.Vector3().copy(camera.position); // original position
+  var origrot = new THREE.Euler().copy(camera.rotation); // original rotation
+
+  camera.position.set(dstpos.x, dstpos.y, dstpos.z);
+  camera.lookAt(dstlookat);
+  var dstrot = new THREE.Euler().copy(camera.rotation)
+
+  // reset original position and rotation
+  camera.position.set(origpos.x, origpos.y, origpos.z);
+  camera.rotation.set(origrot.x, origrot.y, origrot.z);
+
+  //
+  // Tweening
+  //
+
+  // position
+  new TWEEN.Tween(camera.position).to({
+    x: dstpos.x,
+    y: dstpos.y,
+    z: dstpos.z
+  }, options.duration).easing(TWEEN.Easing.Cubic.InOut).start();
+
+  // rotation (using slerp)
+  (function () {
+    var qa = qa = new THREE.Quaternion().copy(camera.quaternion); // src quaternion
+    var qb = new THREE.Quaternion().setFromEuler(dstrot); // dst quaternion
+    var qm = new THREE.Quaternion();
+    camera.quaternion.set(qm);
+
+    var o = { t: 0 };
+    new TWEEN.Tween(o).to({ t: 1 }, options.duration).onUpdate(function () {
+      THREE.Quaternion.slerp(qa, qb, qm, o.t);
+      camera.quaternion.set(qm.x, qm.y, qm.z, qm.w);
+    }).start();
+  }).call(this);
+}
 </script>
 
 <template>
-  <div id="main-scene"></div>
+  <main>
+    <div class="controls">
+      <button @click="animateCamera">click</button>
+    </div>
+    <div id="main-scene" class="main-scene"></div>
+  </main>
 </template>
+
+<style lang="scss" scoped>
+.main-scene {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.controls {
+  position: fixed;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #fbfbfb;
+  display: flex;
+  gap: 10;
+}
+</style>

@@ -11,28 +11,36 @@ class HadleysHope extends BaseScene {
 
   private terrain?: Mesh;
 
-  loadSceneCallback?: () => void;
-
-  override load(loader: GLTFLoader): void {
+  override async load(loader: GLTFLoader): Promise<void> {
     super.load(loader);
 
     this.buildLights();
-    loader.load(
-      HadleysHope.SCENE_MODEL_NAME,
-      (gltf) => {
-        this.sceneElements = [...this.buildingConstructor.construct(gltf)];
-        this.sceneElements.forEach((element) => {
-          element.meshes.forEach((mesh) => {
-            this.scene.add(mesh);
-          });
-        });
-        this.loadSceneCallback?.();
-      },
-      undefined,
-      function (error) {
-        console.error(error);
-      }
-    );
+
+    const gltf = await loader.loadAsync(HadleysHope.SCENE_MODEL_NAME);
+
+    this.sceneElements = [...this.buildingConstructor.construct(gltf)];
+    this.sceneElements.forEach((element) => {
+      element.meshes.forEach((mesh) => {
+        this.scene.add(mesh);
+      });
+    });
+
+    // loader.load(
+    //   HadleysHope.SCENE_MODEL_NAME,
+    //   (gltf) => {
+    //     this.sceneElements = [...this.buildingConstructor.construct(gltf)];
+    //     this.sceneElements.forEach((element) => {
+    //       element.meshes.forEach((mesh) => {
+    //         this.scene.add(mesh);
+    //       });
+    //     });
+    //     this.loadSceneCallback?.();
+    //   },
+    //   undefined,
+    //   function (error) {
+    //     console.error(error);
+    //   }
+    // );
   }
 
   override update(delta: number): void {
