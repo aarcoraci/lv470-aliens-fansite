@@ -18,7 +18,7 @@ let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
 let perspectiveCamera: THREE.PerspectiveCamera;
-let d = 5;
+let d = 3;
 
 let animationRequestId;
 
