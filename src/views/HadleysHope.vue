@@ -36,7 +36,7 @@ const createScene = (targetDomElement: Element) => {
   perspectiveCamera.lookAt(0, 0, 0);
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
-  camera.position.set(20, 20, 20)
+  camera.position.set(10, 10, 10)
   camera.lookAt(hadleysHope.scene.position)
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);

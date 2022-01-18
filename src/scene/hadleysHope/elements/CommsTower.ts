@@ -23,15 +23,20 @@ class CommsTower extends BaseSceneElement {
     meshes.forEach((mesh) => {
       if (mesh.userData.node_name == CommsTower.LIGHT_BUILDING_NAME) {
         mesh.material = MaterialFactory.getRegularAccentRedMaterial();
-        mesh.castShadow = false;
+        mesh.castShadow = true;
         this.light = mesh;
         mesh.rotation.z = Math.PI / 3;
         mesh.rotation.y = Math.PI / 2;
         this.meshes.push(mesh);
       } else {
-        mesh.material = MaterialFactory.getRegularBuildingMaterial(true);
         mesh.castShadow = true;
+        if (mesh.userData.node_name == CommsTower.BASE_BUILDING_NAME) {
+          mesh.material = MaterialFactory.getRegularBuildingMaterial(false);
+          mesh.receiveShadow = true;
+        }
         if (mesh.userData.node_name == CommsTower.ANTENNA_BUILDING_NAME) {
+          mesh.material = MaterialFactory.getRegularBuildingMaterial(true);
+
           this.antenna = mesh;
           mesh.rotation.z = Math.PI / 3;
           mesh.rotation.y = Math.PI / 2;

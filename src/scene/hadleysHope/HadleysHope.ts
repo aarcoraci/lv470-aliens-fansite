@@ -55,8 +55,10 @@ class HadleysHope extends BaseScene {
     // spotlight (sun ?)
     const spotlight = new SpotLight(0xf5fc5a);
     spotlight.position.set(0, 6, 0);
-    spotlight.castShadow = true;
+    spotlight.castShadow = false;
     spotlight.intensity = 0.45;
+    spotlight.shadow.mapSize.width = 2048;
+    spotlight.shadow.mapSize.height = 2048;
     this.scene.add(spotlight);
 
     // ambient
@@ -69,6 +71,8 @@ class HadleysHope extends BaseScene {
     dirlight.position.set(4, 3, 2);
     dirlight.castShadow = true;
     dirlight.intensity = 0.55;
+    dirlight.shadow.mapSize.width = 1024;
+    dirlight.shadow.mapSize.height = 1024;
     this.scene.add(dirlight);
   }
 }

@@ -11,6 +11,7 @@ class AtmosphereProcessor extends BaseSceneElement {
     meshes.forEach((mesh) => {
       mesh.material = MaterialFactory.getRegularBuildingMaterial();
       mesh.castShadow = true;
+      mesh.receiveShadow = true;
       this.meshes.push(mesh);
     });
   }

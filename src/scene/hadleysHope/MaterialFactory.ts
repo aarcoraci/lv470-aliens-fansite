@@ -39,13 +39,6 @@ abstract class MaterialFactory {
     }
     return result;
   }
-
-  static getSceneBuildingMaterial(dobuleSided: Boolean = false): Material[] {
-    return [
-      this.getMapBuildingMaterial(dobuleSided),
-      this.getRegularBuildingMaterial(dobuleSided),
-    ];
-  }
 }
 
 export default MaterialFactory;
