@@ -1,12 +1,12 @@
-import { Mesh, MeshPhongMaterial } from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import SceneColors from "../../SceneColors";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneColors from '../../SceneColors';
+import MaterialFactory from '../MaterialFactory';
 
 class AtmosphereProcessor extends BaseSceneElement {
-  static BUILDING_NAME: string = "atmosphere_processor";
+  static BUILDING_NAME = 'atmosphere_processor';
 
-  constructor(meshes: Mesh[] = [], name: string = "") {
+  constructor(meshes: Mesh[] = [], name = '') {
     super(name);
 
     meshes.forEach((mesh) => {
@@ -30,8 +30,6 @@ class AtmosphereProcessor extends BaseSceneElement {
       }
     });
   }
-
-  override update(): void {}
 }
 
 export default AtmosphereProcessor;

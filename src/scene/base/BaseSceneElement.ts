@@ -1,10 +1,12 @@
-import { Material, Mesh } from "three";
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Mesh } from 'three';
 
 abstract class BaseSceneElement {
   name: string;
   meshes: Mesh[] = [];
 
-  constructor(name: string = "") {
+  constructor(name = '') {
     this.name = name;
   }
 

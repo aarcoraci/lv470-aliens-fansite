@@ -1,9 +1,9 @@
-import { Mesh } from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import MaterialFactory from '../MaterialFactory';
 
 class HadleysHopeTerrain extends BaseSceneElement {
-  static BUILDING_NAME: string = "terrain";
+  static BUILDING_NAME = 'terrain';
 
   constructor(meshes: Mesh[], name: string) {
     super(name);

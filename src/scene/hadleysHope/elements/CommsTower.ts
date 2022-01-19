@@ -1,23 +1,17 @@
-import {
-  DoubleSide,
-  Mesh,
-  MeshPhongMaterial,
-  MeshStandardMaterial,
-  Side,
-} from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import MaterialFactory from '../MaterialFactory';
 
 class CommsTower extends BaseSceneElement {
-  static BUILDING_NAME: string = "comms_tower";
-  static BASE_BUILDING_NAME: string = "comms_tower_base";
-  static ANTENNA_BUILDING_NAME: string = "comms_tower_antenna";
-  static LIGHT_BUILDING_NAME: string = "comms_tower_light";
+  static BUILDING_NAME = 'comms_tower';
+  static BASE_BUILDING_NAME = 'comms_tower_base';
+  static ANTENNA_BUILDING_NAME = 'comms_tower_antenna';
+  static LIGHT_BUILDING_NAME = 'comms_tower_light';
 
   private antenna: Mesh;
   private light: Mesh;
 
-  constructor(meshes: Mesh[] = [], name: string = "") {
+  constructor(meshes: Mesh[] = [], name = '') {
     super(name);
 
     meshes.forEach((mesh) => {

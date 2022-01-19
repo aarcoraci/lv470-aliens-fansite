@@ -1,12 +1,12 @@
-import { Mesh } from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import SceneColors from "../../SceneColors";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneColors from '../../SceneColors';
+import MaterialFactory from '../MaterialFactory';
 
 class Operations extends BaseSceneElement {
-  static BUILDING_NAME: string = "operations";
+  static BUILDING_NAME = 'operations';
 
-  constructor(meshes: Mesh[] = [], name: string = "") {
+  constructor(meshes: Mesh[] = [], name = '') {
     super(name);
 
     meshes.forEach((mesh) => {
@@ -29,8 +29,6 @@ class Operations extends BaseSceneElement {
       }
     });
   }
-
-  override update(): void {}
 }
 
 export default Operations;

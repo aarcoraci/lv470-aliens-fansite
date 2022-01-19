@@ -1,13 +1,13 @@
-import { Scene } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Scene } from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
-import BaseSceneElement from "./BaseSceneElement";
+import BaseSceneElement from './BaseSceneElement';
 
 abstract class BaseScene {
   readonly scene: Scene = new Scene();
   sceneElements: BaseSceneElement[] = [];
 
-  load(loader: GLTFLoader): void {}
+  abstract load(loader: GLTFLoader): void;
 
   update(delta: number): void {
     this.sceneElements.forEach((element) => {

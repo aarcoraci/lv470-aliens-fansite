@@ -1,12 +1,12 @@
-import { Mesh } from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import SceneColors from "../../SceneColors";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneColors from '../../SceneColors';
+import MaterialFactory from '../MaterialFactory';
 
 class Connectors extends BaseSceneElement {
-  static BUILDING_NAME: string = "connector";
+  static BUILDING_NAME = 'connector';
 
-  constructor(meshes: Mesh[] = [], name: string = "") {
+  constructor(meshes: Mesh[] = [], name = '') {
     super(name);
 
     meshes.forEach((mesh) => {
@@ -31,8 +31,6 @@ class Connectors extends BaseSceneElement {
       }
     });
   }
-
-  override update(): void {}
 }
 
 export default Connectors;

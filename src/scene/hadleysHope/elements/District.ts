@@ -1,12 +1,12 @@
-import { Mesh } from "three";
-import BaseSceneElement from "../../base/BaseSceneElement";
-import SceneColors from "../../SceneColors";
-import MaterialFactory from "../MaterialFactory";
+import { Mesh } from 'three';
+import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneColors from '../../SceneColors';
+import MaterialFactory from '../MaterialFactory';
 
 class District extends BaseSceneElement {
-  static BUILDING_NAME: string = "district";
+  static BUILDING_NAME = 'district';
 
-  constructor(meshes: Mesh[] = [], name: string = "") {
+  constructor(meshes: Mesh[] = [], name = '') {
     super(name);
 
     meshes.forEach((mesh) => {
@@ -29,8 +29,6 @@ class District extends BaseSceneElement {
       }
     });
   }
-
-  override update(): void {}
 }
 
 export default District;
