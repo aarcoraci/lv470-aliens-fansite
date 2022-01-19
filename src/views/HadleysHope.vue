@@ -123,28 +123,35 @@ const animateCamera = () => {
   let zoom = { z: 1 };
   let targetZoom = { z: 2 };
 
-  new TWEEN.Tween(position)
-    .to(targetPosition, 3200)
+  const positionTween = new TWEEN.Tween(position)
+    .to(targetPosition, 2200)
     .easing(TWEEN.Easing.Cubic.InOut)
     .onUpdate(() => {
       camera.position.copy(position);
       updateCamera();
-    }).start();
-  new TWEEN.Tween(rotationQuaterion)
-    .to(targetRotationQuaternion, 3200)
+    })
+    .onStart(() => {
+      rotationTween.start();
+    });
+
+  const rotationTween = new TWEEN.Tween(rotationQuaterion)
+    .to(targetRotationQuaternion, 2200)
     .easing(TWEEN.Easing.Cubic.InOut)
     .onUpdate(() => {
       camera.rotation.setFromQuaternion(rotationQuaterion);
       updateCamera();
-    }).start().onComplete(() => {
-      new TWEEN.Tween(zoom)
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        .to(targetZoom, 2200)
-        .onUpdate(() => {
-          camera.zoom = zoom.z;
-          updateCamera();
-        }).start();
     });
+
+  const zoomTween = new TWEEN.Tween(zoom)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .to(targetZoom, 1100)
+    .onUpdate(() => {
+      camera.zoom = zoom.z;
+      updateCamera();
+    });
+
+  rotationTween.chain(zoomTween);
+  positionTween.start();
 }
 
 
