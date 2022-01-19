@@ -5,6 +5,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
 import * as TWEEN from "@tweenjs/tween.js";
 import { Quaternion, Vector3 } from 'three';
+import BaseSceneElement from '../scene/base/BaseSceneElement';
+import Operations from '../scene/hadleysHope/elements/Operations';
 
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
@@ -88,15 +90,47 @@ onMounted(async () => {
   await createScene(targetSceneElement);
   window.addEventListener("resize", handleResize);
   animate();
-})
+});
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
   hadleysHope.dispose();
   renderer.dispose();
   window.removeEventListener("resize", handleResize);
-})
+});
 
+
+const focusTarget = (target: BaseSceneElement): void => {
+  let position = new THREE.Vector3().copy(camera.position);
+  const targetPosition = target.meshes[0].position.clone();
+
+  targetPosition.y = position.y; // lock x and z
+  targetPosition.add(new Vector3(10, 0, 10));
+
+  // zoom
+  let zoom = { z: camera.zoom };
+  let targetZoom = { z: 3 };
+
+
+  const trackingTween = new TWEEN.Tween(position)
+    .to(targetPosition, 2200)
+    .easing(TWEEN.Easing.Cubic.InOut)
+    .onUpdate(() => {
+      camera.position.copy(position);
+      updateCamera();
+    });
+
+  const zoomTween = new TWEEN.Tween(zoom)
+    .easing(TWEEN.Easing.Quadratic.Out)
+    .to(targetZoom, 1100)
+    .onUpdate(() => {
+      camera.zoom = zoom.z;
+      updateCamera();
+    });
+
+  trackingTween.chain(zoomTween);
+  trackingTween.start();
+}
 
 const animateCamera = () => {
   // position
@@ -154,6 +188,11 @@ const animateCamera = () => {
   positionTween.start();
 }
 
+const targetOperations = (): void => {
+  const target = hadleysHope.sceneElements.find(e => e.name == Operations.BUILDING_NAME);
+  focusTarget(target);
+}
+
 
 </script>
 
@@ -161,6 +200,7 @@ const animateCamera = () => {
   <main>
     <div class="controls">
       <button @click="animateCamera">click</button>
+      <button @click="targetOperations">click</button>
     </div>
     <div id="main-scene" class="main-scene"></div>
   </main>
