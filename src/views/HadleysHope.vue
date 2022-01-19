@@ -97,45 +97,57 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 })
 
-const animateCamera = () => {
 
+const animateCamera = () => {
+  // position
   let position = new THREE.Vector3().copy(camera.position);
   const targetPosition = new THREE.Vector3(10, 10, 10);
 
-  let rotation = { r: 0 };
-  let targetRotation = { r: 1 };
+  // rotation
+  const rotation = camera.rotation.clone();
+  let rotationQuaterion = new Quaternion();
+  rotationQuaterion.setFromEuler(rotation);
 
+  // calculate final rotation by moving and rotating the camera, then resetting to its original values
+  camera.position.copy(targetPosition);
+  camera.lookAt(hadleysHope.scene.position);
+  const targetRotation = camera.rotation.clone();
+  const targetRotationQuaternion = new Quaternion();
+  targetRotationQuaternion.setFromEuler(targetRotation);
+
+  // reset to initial animation
+  camera.position.copy(position);
+  camera.lookAt(hadleysHope.scene.position);
+
+  // zoom
   let zoom = { z: 1 };
   let targetZoom = { z: 2 };
 
-  new TWEEN.Tween(rotation)
+  new TWEEN.Tween(position)
+    .to(targetPosition, 3200)
     .easing(TWEEN.Easing.Cubic.InOut)
-    .to(targetRotation, 1200)
     .onUpdate(() => {
-      camera.rotation.z += rotation.r * Math.PI / 180;
-    }).onComplete(() => {
-      new TWEEN.Tween(position)
-        .easing(TWEEN.Easing.Quadratic.InOut)
-        .to(targetPosition, 2200)
-        .onUpdate(() => {
-          camera.position.copy(position);
-          camera.lookAt(hadleysHope.scene.position);
-          updateCamera();
-        })
-        .onComplete(function () {
-          camera.position.copy(targetPosition);
-          camera.lookAt(hadleysHope.scene.position);
-          updateCamera();
-          new TWEEN.Tween(zoom)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .to(targetZoom, 2200)
-            .onUpdate(() => {
-              camera.zoom = zoom.z;
-              updateCamera();
-            }).start();
-        }).start();
+      camera.position.copy(position);
+      updateCamera();
     }).start();
+  new TWEEN.Tween(rotationQuaterion)
+    .to(targetRotationQuaternion, 3200)
+    .easing(TWEEN.Easing.Cubic.InOut)
+    .onUpdate(() => {
+      camera.rotation.setFromQuaternion(rotationQuaterion);
+      updateCamera();
+    }).start().onComplete(() => {
+      new TWEEN.Tween(zoom)
+        .easing(TWEEN.Easing.Quadratic.InOut)
+        .to(targetZoom, 2200)
+        .onUpdate(() => {
+          camera.zoom = zoom.z;
+          updateCamera();
+        }).start();
+    });
 }
+
+
 </script>
 
 <template>
