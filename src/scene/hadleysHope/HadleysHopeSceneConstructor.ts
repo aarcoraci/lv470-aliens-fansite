@@ -1,14 +1,13 @@
-import BaseSceneElement from "../base/BaseSceneElement";
-import { Mesh, PlaneGeometry } from "three";
-import AtmosphereProcessor from "./elements/AtmosphereProcessor";
-import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
-import HadleysHopeTerrain from "./elements/HadleysHopeTerrain";
-import CommsTower from "./elements/CommsTower";
-import MaterialFactory from "./MaterialFactory";
-import District from "./elements/District";
-import LivingQuarters from "./elements/LivingQuarters";
-import Operations from "./elements/Operations";
-import Connectors from "./elements/Connectors";
+import BaseSceneElement from '../base/BaseSceneElement';
+import { Mesh } from 'three';
+import AtmosphereProcessor from './elements/AtmosphereProcessor';
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import HadleysHopeTerrain from './elements/HadleysHopeTerrain';
+import CommsTower from './elements/CommsTower';
+import District from './elements/District';
+import LivingQuarters from './elements/LivingQuarters';
+import Operations from './elements/Operations';
+import Connectors from './elements/Connectors';
 
 class HadleysHopeSceneConstructor {
   construct(gltf: GLTF): BaseSceneElement[] {
