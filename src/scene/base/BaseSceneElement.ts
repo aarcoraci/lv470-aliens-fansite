@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Mesh } from 'three';
 
 abstract class BaseSceneElement {
@@ -10,7 +8,7 @@ abstract class BaseSceneElement {
     this.name = name;
   }
 
-  update(delta: number): void {}
+  update?(delta: number): void;
 
   dispose(): void {
     this.meshes.forEach((mesh) => {

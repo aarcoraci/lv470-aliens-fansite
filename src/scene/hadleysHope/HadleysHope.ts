@@ -26,7 +26,9 @@ class HadleysHope extends BaseScene {
 
   override update(delta: number): void {
     this.sceneElements.forEach((b) => {
-      b.update(delta);
+      if (b.update) {
+        b.update(delta);
+      }
     });
   }
 

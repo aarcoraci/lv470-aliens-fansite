@@ -11,7 +11,7 @@ abstract class BaseScene {
 
   update(delta: number): void {
     this.sceneElements.forEach((element) => {
-      element.update(delta);
+      element?.update(delta);
     });
   }
 
