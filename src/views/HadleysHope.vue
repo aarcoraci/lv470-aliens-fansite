@@ -17,7 +17,6 @@ let height = window.innerHeight;
 
 const nearPlane = 0.1;
 const farPlane = 1000;
-const fov = 45;
 
 let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
@@ -141,8 +140,6 @@ const focusTarget = (target: BaseSceneElement): void => {
   let position = new THREE.Vector3().copy(camera.position);
   const targetPosition = target.meshes[0].position.clone();
 
-
-
   targetPosition.y = d; // lock x and z
   targetPosition.add(new Vector3(d, 0, d));
   // zoom
@@ -195,7 +192,7 @@ const animateCamera = () => {
   camera.lookAt(hadleysHope.scene.position);
 
   // zoom
-  let zoom = { z: 1 };
+  let zoom = { z: camera.zoom };
   let targetZoom = { z: 2 };
 
   const positionTween = new TWEEN.Tween(position)
@@ -225,7 +222,6 @@ const animateCamera = () => {
       updateCamera();
     }).onComplete(() => {
       createCameraControls();
-
     });
 
   rotationTween.chain(zoomTween);
