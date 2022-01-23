@@ -2,7 +2,7 @@ import { DoubleSide, Material, MeshPhongMaterial } from 'three';
 import SceneColors from '../SceneColors';
 
 abstract class MaterialFactory {
-  static getRegularBuildingMaterial(doubleSided: Boolean = false): Material {
+  static getRegularBuildingMaterial(doubleSided = false): Material {
     const result = new MeshPhongMaterial({
       color: SceneColors.BLUE_1
     });
@@ -15,11 +15,12 @@ abstract class MaterialFactory {
   }
 
   static getRegularAccentRedMaterial(
-    doubleSided: Boolean = false,
+    doubleSided = false,
     color: SceneColors = SceneColors.RED_1
   ): Material {
     const result = new MeshPhongMaterial({
-      color: color
+      color: color,
+      emissive: color
     });
 
     if (doubleSided) {
@@ -35,7 +36,7 @@ abstract class MaterialFactory {
     return result;
   }
 
-  static getMapBuildingMaterial(doubleSided: Boolean = false): Material {
+  static getMapBuildingMaterial(doubleSided = false): Material {
     const result = new MeshPhongMaterial({
       color: SceneColors.BLUE_1,
       wireframe: true

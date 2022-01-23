@@ -1,6 +1,6 @@
 import BaseScene from '../base/BaseScene';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Mesh, AmbientLight, SpotLight, DirectionalLight, Fog } from 'three';
+import { Mesh, AmbientLight, SpotLight, DirectionalLight } from 'three';
 import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
 
 class HadleysHope extends BaseScene {
@@ -46,16 +46,16 @@ class HadleysHope extends BaseScene {
   private buildLights(): void {
     // spotlight (sun ?)
     const spotlight = new SpotLight(0xf5fc5a);
-    spotlight.position.set(0, 6, 0);
+    spotlight.position.set(0, 16, 0);
     spotlight.castShadow = false;
-    spotlight.intensity = 0.45;
+    spotlight.intensity = 0.25;
     spotlight.shadow.mapSize.width = 2048;
     spotlight.shadow.mapSize.height = 2048;
     this.scene.add(spotlight);
 
     // ambient
     const ambientLight = new AmbientLight(0xfaedf0);
-    ambientLight.intensity = 0.45;
+    ambientLight.intensity = 0.25;
     this.scene.add(ambientLight);
 
     //directional
@@ -66,6 +66,15 @@ class HadleysHope extends BaseScene {
     dirlight.shadow.mapSize.width = 1024;
     dirlight.shadow.mapSize.height = 1024;
     this.scene.add(dirlight);
+
+    //directional
+    const dirlight2 = new DirectionalLight(0x0f00ff);
+    dirlight2.position.set(-4, 3, 2);
+    dirlight2.castShadow = false;
+    dirlight2.intensity = 0.65;
+    dirlight2.shadow.mapSize.width = 1024;
+    dirlight2.shadow.mapSize.height = 1024;
+    this.scene.add(dirlight2);
   }
 }
 
