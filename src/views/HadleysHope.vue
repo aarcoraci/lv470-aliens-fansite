@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import * as THREE from 'three';
-import { onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount } from 'vue';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
-import * as TWEEN from "@tweenjs/tween.js";
+import * as TWEEN from '@tweenjs/tween.js';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 import Operations from '../scene/hadleysHope/elements/Operations';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../scene/utils/cameraUtils';
 
 const loader = new GLTFLoader();
@@ -36,14 +36,13 @@ const createScene = async (targetDomElement: Element) => {
   camera.position.set(0, d, 0);
   camera.lookAt(hadleysHope.scene.position);
 
-
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x141A35);
+  renderer.setClearColor(0x141a35);
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
-}
+};
 
 const createCameraControls = () => {
   if (cameraControls != null) {
@@ -59,20 +58,19 @@ const createCameraControls = () => {
   cameraControls.mouseButtons.LEFT = THREE.MOUSE.PAN;
 
   const limitPan = createLimitPan(camera, cameraControls);
-  cameraControls.addEventListener("change", e => {
+  cameraControls.addEventListener('change', (e) => {
     limitPan({ minX: 0, maxX: 9, minZ: 0, maxZ: 6, minY: 0, maxY: 4 });
     // console.log(cameraControls.target);
     // console.log(camera.position);
   });
-}
+};
 
 const handleResize = () => {
   width = window.innerWidth;
   height = window.innerHeight;
   renderer.setSize(width, height);
   updateCamera();
-}
-
+};
 
 const updateCamera = () => {
   width = window.innerWidth;
@@ -81,7 +79,7 @@ const updateCamera = () => {
   camera.left = -d * aspect;
   camera.right = d * aspect;
   camera.updateProjectionMatrix();
-}
+};
 
 const animate = () => {
   TWEEN.update();
@@ -91,12 +89,12 @@ const animate = () => {
   }
   hadleysHope.update(clock.getDelta());
   renderer.render(hadleysHope.scene, camera);
-}
+};
 
 onMounted(async () => {
-  const targetSceneElement = document.querySelector("#main-scene");
+  const targetSceneElement = document.querySelector('#main-scene');
   await createScene(targetSceneElement);
-  window.addEventListener("resize", handleResize);
+  window.addEventListener('resize', handleResize);
   animate();
 });
 
@@ -105,19 +103,16 @@ onBeforeUnmount(() => {
   hadleysHope.dispose();
   cameraControls.dispose();
   renderer.dispose();
-  window.removeEventListener("resize", handleResize);
+  window.removeEventListener('resize', handleResize);
 });
 
-
-
 /**
- * Moving the camera while the controls (orbit) are active requires not only moving
- * the camera to a target also move the target (focal target) of the controls keeping the 
- * desired offset Vector
- * @param target 
- */
+* Moving the camera while the controls (orbit) are active requires not only moving
+* the camera to a target also move the target (focal target) of the controls keeping the
+* desired offset Vector
+ * @param target
+  */
 const focusTarget = (target: BaseSceneElement): void => {
-
   cameraControls.enabled = false;
   let position = new THREE.Vector3().copy(camera.position);
   const targetPosition = target.meshes[0].position.clone();
@@ -134,7 +129,9 @@ const focusTarget = (target: BaseSceneElement): void => {
     .onUpdate(() => {
       camera.position.copy(position);
       // the focus point must be updated as well
-      cameraControls.target.copy(camera.position.clone().sub(new THREE.Vector3(d, d, d)));
+      cameraControls.target.copy(
+        camera.position.clone().sub(new THREE.Vector3(d, d, d))
+      );
       cameraControls.update();
     });
 
@@ -144,13 +141,14 @@ const focusTarget = (target: BaseSceneElement): void => {
     .onUpdate(() => {
       camera.zoom = zoom.z;
       updateCamera();
-    }).onComplete(() => {
+    })
+    .onComplete(() => {
       cameraControls.enabled = true;
     });
 
   trackingTween.chain(zoomTween);
   trackingTween.start();
-}
+};
 
 const animateCamera = () => {
   // position
@@ -202,23 +200,25 @@ const animateCamera = () => {
     .onUpdate(() => {
       camera.zoom = zoom.z;
       updateCamera();
-    }).onComplete(() => {
+    })
+    .onComplete(() => {
       createCameraControls();
     });
 
   rotationTween.chain(zoomTween);
   positionTween.start();
-}
+};
 
 const targetOperations = (): void => {
-  const target = hadleysHope.sceneElements.find(e => e.name == Operations.BUILDING_NAME);
+  const target = hadleysHope.sceneElements.find(
+    (e) => e.name == Operations.BUILDING_NAME
+  );
   focusTarget(target);
-}
-
-
+};
 </script>
 
-  <template>
+
+ <template>
   <main>
     <div class="controls">
       <button @click="animateCamera">click</button>
