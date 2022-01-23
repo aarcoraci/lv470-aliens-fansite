@@ -8,6 +8,7 @@ import District from './elements/District';
 import LivingQuarters from './elements/LivingQuarters';
 import Operations from './elements/Operations';
 import Connectors from './elements/Connectors';
+import OreProcessing from './elements/OreProcessing';
 
 class HadleysHopeSceneConstructor {
   construct(gltf: GLTF): BaseSceneElement[] {
@@ -20,6 +21,7 @@ class HadleysHopeSceneConstructor {
     result.push(this.buildLivingQuarters(gltf));
     result.push(this.buildOperations(gltf));
     result.push(this.buildConnectors(gltf));
+    result.push(this.buildOreProcessing(gltf));
 
     return result;
   }
@@ -35,7 +37,7 @@ class HadleysHopeSceneConstructor {
         s.userData.parent_node == Operations.BUILDING_NAME
     );
 
-    var buildingMeshes: Mesh[] = [];
+    const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
     buildingAccent.forEach((accent) => {
@@ -59,7 +61,7 @@ class HadleysHopeSceneConstructor {
         (s.userData.parent_node as string).includes(Connectors.BUILDING_NAME)
     );
 
-    var buildingMeshes: Mesh[] = [];
+    const buildingMeshes: Mesh[] = [];
 
     mainBuildingMeshes.forEach((mesh) => {
       buildingMeshes.push(mesh as Mesh);
@@ -83,7 +85,7 @@ class HadleysHopeSceneConstructor {
         s.userData.parent_node == LivingQuarters.BUILDING_NAME
     );
 
-    var buildingMeshes: Mesh[] = [];
+    const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
     buildingAccent.forEach((accent) => {
@@ -104,7 +106,7 @@ class HadleysHopeSceneConstructor {
         s.userData.parent_node == District.BUILDING_NAME
     );
 
-    var buildingMeshes: Mesh[] = [];
+    const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
     buildingAccent.forEach((accent) => {
@@ -112,6 +114,44 @@ class HadleysHopeSceneConstructor {
     });
 
     return new District(buildingMeshes, District.BUILDING_NAME);
+  }
+
+  private buildOreProcessing(gltf: GLTF): OreProcessing {
+    const oreProcessing = gltf.scene.children.find(
+      (s) => s.userData.node_name == OreProcessing.ORE_PROCESSING
+    );
+    const grinder1 = gltf.scene.children.find(
+      (s) => s.userData.node_name == OreProcessing.GRINDER_1
+    );
+    const grinder2 = gltf.scene.children.find(
+      (s) => s.userData.node_name == OreProcessing.GRINDER_2
+    );
+    const crane = gltf.scene.children.find(
+      (s) => s.userData.node_name == OreProcessing.CRANE_BULDING
+    );
+    const craneGrip = gltf.scene.children.find(
+      (s) => s.userData.node_name == OreProcessing.CRANE_GRIP
+    );
+
+    const buildingAccent = gltf.scene.children.filter(
+      (s) =>
+        s.userData.building_accent == 1 &&
+        s.userData.parent_node == OreProcessing.BUILDING_NAME
+    );
+
+    const buildingMeshes: Mesh[] = [
+      oreProcessing as Mesh,
+      grinder1 as Mesh,
+      grinder2 as Mesh,
+      crane as Mesh,
+      craneGrip as Mesh
+    ];
+
+    buildingAccent.forEach((accent) => {
+      buildingMeshes.push(accent as Mesh);
+    });
+
+    return new OreProcessing(buildingMeshes, OreProcessing.BUILDING_NAME);
   }
 
   private buildCommsTower(gltf: GLTF): CommsTower {
@@ -135,7 +175,7 @@ class HadleysHopeSceneConstructor {
     const mainTerrainMesh = gltf.scene.children.find(
       (s) => s.userData.terrain == 1
     );
-    var terrainMeshes: Mesh[] = [mainTerrainMesh as Mesh];
+    const terrainMeshes: Mesh[] = [mainTerrainMesh as Mesh];
     return new HadleysHopeTerrain(
       terrainMeshes,
       HadleysHopeTerrain.BUILDING_NAME
@@ -153,7 +193,7 @@ class HadleysHopeSceneConstructor {
         s.userData.parent_node == AtmosphereProcessor.BUILDING_NAME
     );
 
-    var buildingMeshes: Mesh[] = [];
+    const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
     buildingAccent.forEach((accent) => {
