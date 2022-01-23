@@ -4,9 +4,10 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
 import * as TWEEN from "@tweenjs/tween.js";
-import { Quaternion, Vector3 } from 'three';
+import { Box3, OrthographicCamera, Quaternion, Vector3 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 import Operations from '../scene/hadleysHope/elements/Operations';
+import { MapControls, OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
@@ -21,7 +22,7 @@ const fov = 45;
 let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
-let perspectiveCamera: THREE.PerspectiveCamera;
+let cameraControls: OrbitControls | null;
 let d = 10;
 
 let animationRequestId;
@@ -32,11 +33,7 @@ const createScene = async (targetDomElement: Element) => {
 
   await hadleysHope.load(loader);
 
-  perspectiveCamera = new THREE.PerspectiveCamera(fov, aspect, nearPlane, farPlane);
-  perspectiveCamera.position.z = 0;
-  perspectiveCamera.position.y = 20;
-  perspectiveCamera.position.x = 0;
-  perspectiveCamera.lookAt(hadleysHope.scene.position);
+
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
   camera.position.set(0, 10, 0);
@@ -49,6 +46,26 @@ const createScene = async (targetDomElement: Element) => {
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
+
+
+}
+
+
+const createCameraControls = () => {
+  // controls
+  cameraControls = new OrbitControls(camera, renderer.domElement);
+  cameraControls.enableRotate = false;
+  cameraControls.enableZoom = false;
+  cameraControls.enablePan = true;
+  cameraControls.screenSpacePanning = true;
+  cameraControls.touches.ONE = THREE.TOUCH.PAN;
+  cameraControls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+
+  const limitPan = createLimitPan(camera, cameraControls);
+  cameraControls.addEventListener("change", e => {
+    limitPan({ minX: 0, maxX: 9, minZ: 0, maxZ: 6, minY: 0, maxY: 4 });
+  });
+
 }
 
 const handleResize = () => {
@@ -60,9 +77,7 @@ const handleResize = () => {
 
   updateCamera();
 
-  // perspective
-  perspectiveCamera.aspect = aspect;
-  perspectiveCamera.updateProjectionMatrix();
+
 }
 
 
@@ -75,12 +90,12 @@ const updateCamera = () => {
   camera.updateProjectionMatrix();
 }
 
-
-
 const animate = () => {
-  camera.updateProjectionMatrix();
   TWEEN.update();
   animationRequestId = requestAnimationFrame(animate);
+  if (cameraControls != null) {
+    cameraControls.update();
+  }
   hadleysHope.update(clock.getDelta());
   renderer.render(hadleysHope.scene, camera);
 }
@@ -99,6 +114,26 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", handleResize);
 });
 
+const createLimitPan = (camera: OrthographicCamera, controls: OrbitControls) => {
+  const v = new THREE.Vector3()
+  const minPan = new THREE.Vector3()
+  const maxPan = new THREE.Vector3()
+  return ({
+    maxX = Infinity,
+    minX = -Infinity,
+    maxY = Infinity,
+    minY = -Infinity,
+    maxZ = Infinity,
+    minZ = -Infinity,
+  }) => {
+    minPan.set(minX, minY, minZ)
+    maxPan.set(maxX, maxY, maxZ)
+    v.copy(controls.target)
+    controls.target.clamp(minPan, maxPan)
+    v.sub(controls.target)
+    camera.position.sub(v)
+  }
+}
 
 const focusTarget = (target: BaseSceneElement): void => {
   let position = new THREE.Vector3().copy(camera.position);
@@ -110,7 +145,6 @@ const focusTarget = (target: BaseSceneElement): void => {
   // zoom
   let zoom = { z: camera.zoom };
   let targetZoom = { z: 3 };
-
 
   const trackingTween = new TWEEN.Tween(position)
     .to(targetPosition, 2200)
@@ -182,6 +216,9 @@ const animateCamera = () => {
     .onUpdate(() => {
       camera.zoom = zoom.z;
       updateCamera();
+    }).onComplete(() => {
+      createCameraControls();
+
     });
 
   rotationTween.chain(zoomTween);
