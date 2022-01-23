@@ -20,7 +20,8 @@ abstract class MaterialFactory {
   ): Material {
     const result = new MeshPhongMaterial({
       color: color,
-      emissive: color
+      emissive: color,
+      emissiveIntensity: 0.3
     });
 
     if (doubleSided) {

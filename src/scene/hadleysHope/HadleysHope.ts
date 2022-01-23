@@ -1,6 +1,6 @@
 import BaseScene from '../base/BaseScene';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Mesh, AmbientLight, SpotLight, DirectionalLight } from 'three';
+import { Mesh, AmbientLight, SpotLight, DirectionalLight, Fog } from 'three';
 import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
 
 class HadleysHope extends BaseScene {
@@ -22,6 +22,8 @@ class HadleysHope extends BaseScene {
         this.scene.add(mesh);
       });
     });
+
+    this.scene.fog = new Fog(0x2c2554, 0.0025, 41);
   }
 
   override update(delta: number): void {
@@ -68,7 +70,7 @@ class HadleysHope extends BaseScene {
     this.scene.add(dirlight);
 
     //directional
-    const dirlight2 = new DirectionalLight(0x0f00ff);
+    const dirlight2 = new DirectionalLight(0x0000ff);
     dirlight2.position.set(-4, 3, 2);
     dirlight2.castShadow = false;
     dirlight2.intensity = 0.65;

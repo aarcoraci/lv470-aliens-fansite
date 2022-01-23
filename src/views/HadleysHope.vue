@@ -4,10 +4,10 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
 import * as TWEEN from "@tweenjs/tween.js";
-import { OrthographicCamera, Quaternion, Vector3 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 import Operations from '../scene/hadleysHope/elements/Operations';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { createLimitPan } from '../scene/utils/cameraUtils';
 
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
@@ -103,30 +103,12 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
   hadleysHope.dispose();
+  cameraControls.dispose();
   renderer.dispose();
   window.removeEventListener("resize", handleResize);
 });
 
-const createLimitPan = (camera: OrthographicCamera, controls: OrbitControls) => {
-  const v = new THREE.Vector3()
-  const minPan = new THREE.Vector3()
-  const maxPan = new THREE.Vector3()
-  return ({
-    maxX = Infinity,
-    minX = -Infinity,
-    maxY = Infinity,
-    minY = -Infinity,
-    maxZ = Infinity,
-    minZ = -Infinity,
-  }) => {
-    minPan.set(minX, minY, minZ)
-    maxPan.set(maxX, maxY, maxZ)
-    v.copy(controls.target)
-    controls.target.clamp(minPan, maxPan)
-    v.sub(controls.target)
-    camera.position.sub(v)
-  }
-}
+
 
 /**
  * Moving the camera while the controls (orbit) are active requires not only moving
@@ -141,7 +123,7 @@ const focusTarget = (target: BaseSceneElement): void => {
   const targetPosition = target.meshes[0].position.clone();
 
   targetPosition.y = d; // lock x and z
-  targetPosition.add(new Vector3(d, 0, d));
+  targetPosition.add(new THREE.Vector3(d, 0, d));
   // zoom
   let zoom = { z: camera.zoom };
   let targetZoom = { z: 3 };
@@ -152,7 +134,7 @@ const focusTarget = (target: BaseSceneElement): void => {
     .onUpdate(() => {
       camera.position.copy(position);
       // the focus point must be updated as well
-      cameraControls.target.copy(camera.position.clone().sub(new Vector3(d, d, d)));
+      cameraControls.target.copy(camera.position.clone().sub(new THREE.Vector3(d, d, d)));
       cameraControls.update();
     });
 
@@ -177,14 +159,14 @@ const animateCamera = () => {
 
   // rotation
   const rotation = camera.rotation.clone();
-  let rotationQuaterion = new Quaternion();
+  let rotationQuaterion = new THREE.Quaternion();
   rotationQuaterion.setFromEuler(rotation);
 
   // calculate final rotation by moving and rotating the camera, then resetting to its original values
   camera.position.copy(targetPosition);
   camera.lookAt(hadleysHope.scene.position);
   const targetRotation = camera.rotation.clone();
-  const targetRotationQuaternion = new Quaternion();
+  const targetRotationQuaternion = new THREE.Quaternion();
   targetRotationQuaternion.setFromEuler(targetRotation);
 
   // reset to initial animation
@@ -236,13 +218,13 @@ const targetOperations = (): void => {
 
 </script>
 
-<template>
+  <template>
   <main>
     <div class="controls">
       <button @click="animateCamera">click</button>
       <button @click="targetOperations">click</button>
     </div>
-    <div id="main-scene" class="main-scene"></div>
+    <div div id="main-scene" class="main-scene"></div>
   </main>
 </template>
 
