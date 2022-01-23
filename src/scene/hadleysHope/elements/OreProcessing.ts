@@ -1,3 +1,4 @@
+import { Tween } from '@tweenjs/tween.js';
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import SceneColors from '../../SceneColors';
@@ -5,7 +6,7 @@ import MaterialFactory from '../MaterialFactory';
 
 class OreProcessing extends BaseSceneElement {
   static BUILDING_NAME = 'ore_processing';
-  static CRANE_BULDING = 'crane';
+  static CRANE_BUILDING = 'crane';
   static CRANE_GRIP = 'crane_grip';
   static ORE_PROCESSING = 'ore_processing';
   static GRINDER_1 = 'grinder_1';
@@ -16,10 +17,13 @@ class OreProcessing extends BaseSceneElement {
   private grinder1: Mesh;
   private grinder2: Mesh;
 
+  private gripTween1: Tween<{ r: number }>;
+  private gripTween2: Tween<{ r: number }>;
+
   constructor(meshes: Mesh[], name = '') {
     super(name);
     meshes.forEach((mesh) => {
-      if (mesh.userData.node_name == OreProcessing.CRANE_BULDING) {
+      if (mesh.userData.node_name == OreProcessing.CRANE_BUILDING) {
         mesh.material = MaterialFactory.getRegularBuildingMaterial();
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -57,6 +61,34 @@ class OreProcessing extends BaseSceneElement {
         }
       }
     });
+
+    // use tweens to handle the crane movement
+    const gripBalanceAngle = Math.PI * 0.011;
+    const gripBalanceTime = 8000;
+    const r1 = { r: -gripBalanceAngle * Math.PI };
+    const r1end = { r: gripBalanceAngle * Math.PI };
+
+    const r2 = { r: gripBalanceAngle * Math.PI };
+    const r2end = { r: -gripBalanceAngle * Math.PI };
+
+    this.gripTween1 = new Tween(r1)
+      .to(r1end, gripBalanceTime)
+      .onUpdate(() => {
+        this.craneGrip.rotation.x = r1.r;
+      })
+      .onComplete(() => {
+        this.gripTween2.start();
+      });
+    this.gripTween2 = new Tween(r2)
+      .to(r2end, gripBalanceTime)
+      .onUpdate(() => {
+        this.craneGrip.rotation.x = r2.r;
+      })
+      .onComplete(() => {
+        this.gripTween1.start();
+      });
+
+    this.gripTween1.start();
   }
 
   override update(delta: number): void {

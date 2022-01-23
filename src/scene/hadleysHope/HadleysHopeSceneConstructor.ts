@@ -127,7 +127,7 @@ class HadleysHopeSceneConstructor {
       (s) => s.userData.node_name == OreProcessing.GRINDER_2
     );
     const crane = gltf.scene.children.find(
-      (s) => s.userData.node_name == OreProcessing.CRANE_BULDING
+      (s) => s.userData.node_name == OreProcessing.CRANE_BUILDING
     );
     const craneGrip = gltf.scene.children.find(
       (s) => s.userData.node_name == OreProcessing.CRANE_GRIP
