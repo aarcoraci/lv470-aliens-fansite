@@ -4,10 +4,10 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import HadleysHope from '../scene/hadleysHope/HadleysHope';
 import * as TWEEN from "@tweenjs/tween.js";
-import { Box3, OrthographicCamera, Quaternion, Vector3 } from 'three';
+import { OrthographicCamera, Quaternion, Vector3 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 import Operations from '../scene/hadleysHope/elements/Operations';
-import { MapControls, OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
@@ -33,8 +33,6 @@ const createScene = async (targetDomElement: Element) => {
 
   await hadleysHope.load(loader);
 
-
-
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
   camera.position.set(0, 10, 0);
   camera.lookAt(hadleysHope.scene.position);
@@ -46,38 +44,34 @@ const createScene = async (targetDomElement: Element) => {
   renderer.shadowMap.enabled = true;
   renderer.setSize(window.innerWidth, window.innerHeight);
   targetDomElement.appendChild(renderer.domElement);
-
-
 }
 
-
 const createCameraControls = () => {
+  if (cameraControls != null) {
+    return;
+  }
   // controls
   cameraControls = new OrbitControls(camera, renderer.domElement);
   cameraControls.enableRotate = false;
-  cameraControls.enableZoom = false;
-  cameraControls.enablePan = true;
-  cameraControls.screenSpacePanning = true;
+  cameraControls.enableZoom = true;
+  cameraControls.maxZoom = 4;
+  cameraControls.minZoom = 2;
   cameraControls.touches.ONE = THREE.TOUCH.PAN;
   cameraControls.mouseButtons.LEFT = THREE.MOUSE.PAN;
 
   const limitPan = createLimitPan(camera, cameraControls);
   cameraControls.addEventListener("change", e => {
     limitPan({ minX: 0, maxX: 9, minZ: 0, maxZ: 6, minY: 0, maxY: 4 });
+    // console.log(cameraControls.target);
+    // console.log(camera.position);
   });
-
 }
 
 const handleResize = () => {
   width = window.innerWidth;
   height = window.innerHeight;
-  const aspect = width / height;
-
   renderer.setSize(width, height);
-
   updateCamera();
-
-
 }
 
 
@@ -135,13 +129,20 @@ const createLimitPan = (camera: OrthographicCamera, controls: OrbitControls) => 
   }
 }
 
+/**
+ * Moving the camera while the controls (orbit) are active requires not only moving
+ * the camera to a target also move the target (focal target) of the controls keeping the 
+ * desired offset Vector
+ * @param target 
+ */
 const focusTarget = (target: BaseSceneElement): void => {
+
+  cameraControls.enabled = false;
   let position = new THREE.Vector3().copy(camera.position);
   const targetPosition = target.meshes[0].position.clone();
 
   targetPosition.y = position.y; // lock x and z
   targetPosition.add(new Vector3(10, 0, 10));
-
   // zoom
   let zoom = { z: camera.zoom };
   let targetZoom = { z: 3 };
@@ -151,7 +152,9 @@ const focusTarget = (target: BaseSceneElement): void => {
     .easing(TWEEN.Easing.Cubic.InOut)
     .onUpdate(() => {
       camera.position.copy(position);
-      updateCamera();
+      // the focus point must be updated as well
+      cameraControls.target.copy(camera.position.clone().sub(new Vector3(10, 10, 10)));
+      cameraControls.update();
     });
 
   const zoomTween = new TWEEN.Tween(zoom)
@@ -160,6 +163,8 @@ const focusTarget = (target: BaseSceneElement): void => {
     .onUpdate(() => {
       camera.zoom = zoom.z;
       updateCamera();
+    }).onComplete(() => {
+      cameraControls.enabled = true;
     });
 
   trackingTween.chain(zoomTween);
