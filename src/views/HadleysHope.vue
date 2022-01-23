@@ -34,7 +34,7 @@ const createScene = async (targetDomElement: Element) => {
   await hadleysHope.load(loader);
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
-  camera.position.set(0, 10, 0);
+  camera.position.set(0, d, 0);
   camera.lookAt(hadleysHope.scene.position);
 
 
@@ -141,8 +141,10 @@ const focusTarget = (target: BaseSceneElement): void => {
   let position = new THREE.Vector3().copy(camera.position);
   const targetPosition = target.meshes[0].position.clone();
 
-  targetPosition.y = position.y; // lock x and z
-  targetPosition.add(new Vector3(10, 0, 10));
+
+
+  targetPosition.y = d; // lock x and z
+  targetPosition.add(new Vector3(d, 0, d));
   // zoom
   let zoom = { z: camera.zoom };
   let targetZoom = { z: 3 };
@@ -153,7 +155,7 @@ const focusTarget = (target: BaseSceneElement): void => {
     .onUpdate(() => {
       camera.position.copy(position);
       // the focus point must be updated as well
-      cameraControls.target.copy(camera.position.clone().sub(new Vector3(10, 10, 10)));
+      cameraControls.target.copy(camera.position.clone().sub(new Vector3(d, d, d)));
       cameraControls.update();
     });
 
@@ -174,7 +176,7 @@ const focusTarget = (target: BaseSceneElement): void => {
 const animateCamera = () => {
   // position
   let position = new THREE.Vector3().copy(camera.position);
-  const targetPosition = new THREE.Vector3(10, 10, 10);
+  const targetPosition = new THREE.Vector3(d, d, d);
 
   // rotation
   const rotation = camera.rotation.clone();
