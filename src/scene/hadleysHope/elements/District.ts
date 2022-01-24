@@ -41,6 +41,7 @@ class District extends BaseSceneElement {
           true,
           true
         );
+        this.meshes.push(buildingMesh);
       }
     });
   }
