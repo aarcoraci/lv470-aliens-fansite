@@ -32,16 +32,16 @@ class HadleysHopeSceneConstructor {
       (s) => s.userData.node_name == Operations.BUILDING_NAME
     );
 
-    const buildingAccent = gltf.scene.children.filter(
+    const buildingExtras = gltf.scene.children.filter(
       (s) =>
-        s.userData.building_accent == 1 &&
+        s.userData.parent_node &&
         s.userData.parent_node == Operations.BUILDING_NAME
     );
 
     const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
-    buildingAccent.forEach((accent) => {
+    buildingExtras.forEach((accent) => {
       buildingMeshes.push(accent as Mesh);
     });
 
@@ -80,16 +80,16 @@ class HadleysHopeSceneConstructor {
       (s) => s.userData.node_name == LivingQuarters.BUILDING_NAME
     );
 
-    const buildingAccent = gltf.scene.children.filter(
+    const buildingExtras = gltf.scene.children.filter(
       (s) =>
-        s.userData.building_accent == 1 &&
+        s.userData.parent_node &&
         s.userData.parent_node == LivingQuarters.BUILDING_NAME
     );
 
     const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
-    buildingAccent.forEach((accent) => {
+    buildingExtras.forEach((accent) => {
       buildingMeshes.push(accent as Mesh);
     });
 
@@ -105,16 +105,16 @@ class HadleysHopeSceneConstructor {
       (s) => s.userData.node_name == District.BUILDING_NAME
     );
 
-    const buildingAccent = gltf.scene.children.filter(
+    const buildingExtras = gltf.scene.children.filter(
       (s) =>
-        s.userData.building_accent == 1 &&
+        s.userData.parent_node &&
         s.userData.parent_node == District.BUILDING_NAME
     );
 
     const buildingMeshes: Mesh[] = [];
 
     buildingMeshes.push(mainBuildingMesh as Mesh);
-    buildingAccent.forEach((accent) => {
+    buildingExtras.forEach((accent) => {
       buildingMeshes.push(accent as Mesh);
     });
 

@@ -28,21 +28,34 @@ class Operations extends BaseSceneElement {
         );
         this.meshes.push(buildingMesh);
       } else {
-        const color = MaterialFactory.getAccentColor(
-          buildingMesh.userData.accent_type
-        );
+        if (!isBluePrint) {
+          if (buildingMesh.userData.building_accent) {
+            const color = MaterialFactory.getAccentColor(
+              buildingMesh.userData.accent_type
+            );
 
-        MaterialFactory.assignBuildingMaterial(
-          buildingMesh,
-          color,
-          false,
-          false,
-          isBluePrint,
-          true,
-          true
-        );
-
-        this.meshes.push(buildingMesh);
+            MaterialFactory.assignBuildingMaterial(
+              buildingMesh,
+              color,
+              false,
+              false,
+              isBluePrint,
+              true,
+              true
+            );
+          } else {
+            MaterialFactory.assignBuildingMaterial(
+              buildingMesh,
+              SceneColors.BLUE_1,
+              true,
+              true,
+              isBluePrint,
+              false,
+              false
+            );
+          }
+          this.meshes.push(buildingMesh);
+        }
       }
     });
   }

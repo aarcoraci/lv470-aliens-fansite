@@ -32,21 +32,23 @@ class AtmosphereProcessor extends BaseSceneElement {
 
         this.meshes.push(buildingMesh);
       } else {
-        const color = MaterialFactory.getAccentColor(
-          buildingMesh.userData.accent_type
-        );
+        if (!isBluePrint) {
+          const color = MaterialFactory.getAccentColor(
+            buildingMesh.userData.accent_type
+          );
 
-        MaterialFactory.assignBuildingMaterial(
-          buildingMesh,
-          color,
-          false,
-          false,
-          isBluePrint,
-          true,
-          true
-        );
+          MaterialFactory.assignBuildingMaterial(
+            buildingMesh,
+            color,
+            false,
+            false,
+            isBluePrint,
+            true,
+            true
+          );
 
-        this.meshes.push(buildingMesh);
+          this.meshes.push(buildingMesh);
+        }
       }
     });
   }

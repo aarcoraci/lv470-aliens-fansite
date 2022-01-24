@@ -29,20 +29,34 @@ class LivingQuarters extends BaseSceneElement {
         );
         this.meshes.push(buildingMesh);
       } else {
-        const color = MaterialFactory.getAccentColor(
-          buildingMesh.userData.accent_type
-        );
+        if (!isBluePrint) {
+          const color = MaterialFactory.getAccentColor(
+            buildingMesh.userData.accent_type
+          );
+          if (buildingMesh.userData.building_accent) {
+            MaterialFactory.assignBuildingMaterial(
+              buildingMesh,
+              color,
+              false,
+              false,
+              isBluePrint,
+              true,
+              true
+            );
+          } else if (buildingMesh.userData.building_base) {
+            MaterialFactory.assignBuildingMaterial(
+              buildingMesh,
+              SceneColors.BLUE_1,
+              true,
+              true,
+              isBluePrint,
+              false,
+              false
+            );
+          }
 
-        MaterialFactory.assignBuildingMaterial(
-          buildingMesh,
-          color,
-          false,
-          false,
-          isBluePrint,
-          true,
-          true
-        );
-        this.meshes.push(buildingMesh);
+          this.meshes.push(buildingMesh);
+        }
       }
     });
   }
