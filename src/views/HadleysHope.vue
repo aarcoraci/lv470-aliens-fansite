@@ -1,94 +1,31 @@
 <script setup lang="ts">
 import * as THREE from 'three';
 import { onMounted, onBeforeUnmount } from 'vue';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import * as TWEEN from '@tweenjs/tween.js';
-import BaseSceneElement from '../scene/base/BaseSceneElement';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { createLimitPan } from '../scene/utils/cameraUtils';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
-import { Vector3 } from 'three';
 import DrawMode from '../scene/DrawMode';
+import CameraHelpers from '../scene/hadleysHope/helpers/CameraHelpers';
 
-const orchestrator = new Orchestrator();
-const loader = new GLTFLoader();
-const clock = new THREE.Clock();
+let orchestrator: Orchestrator;
 
-let width = window.innerWidth;
-let height = window.innerHeight;
-
-const nearPlane = 0.1;
-const farPlane = 1000;
-
-let renderer: THREE.WebGLRenderer;
-let camera: THREE.OrthographicCamera;
-let cameraControls: OrbitControls | null;
-let d = 10;
 
 let animationRequestId;
 
 const createScene = async (targetDomElement: Element) => {
-  const aspect = width / height;
-
-  await orchestrator.load(loader);
-
-  camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
-  camera.position.set(0, d, 0);
-  camera.lookAt(new Vector3());
-
-  renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x141a35);
-  renderer.shadowMap.enabled = true;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  targetDomElement.appendChild(renderer.domElement);
-};
-
-const createCameraControls = () => {
-  if (cameraControls != null) {
-    return;
-  }
-  // controls
-  cameraControls = new OrbitControls(camera, renderer.domElement);
-  cameraControls.enableRotate = false;
-  cameraControls.enableZoom = true;
-  cameraControls.maxZoom = 4;
-  cameraControls.minZoom = 2;
-  cameraControls.touches.ONE = THREE.TOUCH.PAN;
-  cameraControls.mouseButtons.LEFT = THREE.MOUSE.PAN;
-
-  const limitPan = createLimitPan(camera, cameraControls);
-  cameraControls.addEventListener('change', (e) => {
-    limitPan({ minX: 0, maxX: 9, minZ: 0, maxZ: 6, minY: 0, maxY: 4 });
-    // console.log(cameraControls.target);
-    // console.log(camera.position);
-  });
+  orchestrator = new Orchestrator(window.innerWidth, window.innerHeight, window.devicePixelRatio)
+  await orchestrator.load();
+  targetDomElement.appendChild(orchestrator.renderer.domElement);
 };
 
 const handleResize = () => {
-  width = window.innerWidth;
-  height = window.innerHeight;
-  renderer.setSize(width, height);
-  updateCamera();
-};
-
-const updateCamera = () => {
-  width = window.innerWidth;
-  height = window.innerHeight;
-  const aspect = width / height;
-  camera.left = -d * aspect;
-  camera.right = d * aspect;
-  camera.updateProjectionMatrix();
+  orchestrator.resize(window.innerWidth, window.innerHeight);
 };
 
 const animate = () => {
   TWEEN.update();
   animationRequestId = requestAnimationFrame(animate);
-  if (cameraControls != null) {
-    cameraControls.update();
-  }
-  orchestrator.update(clock.getDelta());
-  orchestrator.render(renderer, camera);
+  orchestrator.update();
+  orchestrator.render();
 };
 
 onMounted(async () => {
@@ -101,10 +38,6 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
   orchestrator.dispose();
-  if (cameraControls != null) {
-    cameraControls.dispose();
-  }
-  renderer.dispose();
   window.removeEventListener('resize', handleResize);
 });
 
@@ -114,101 +47,46 @@ onBeforeUnmount(() => {
 * desired offset Vector
  * @param target
   */
-const focusTarget = (target: BaseSceneElement): void => {
-  cameraControls.enabled = false;
-  let position = new THREE.Vector3().copy(camera.position);
-  const targetPosition = target.meshes[0].position.clone();
+// const focusTarget = (target: BaseSceneElement): void => {
+//   cameraControls.enabled = false;
+//   let position = new THREE.Vector3().copy(camera.position);
+//   const targetPosition = target.meshes[0].position.clone();
 
-  targetPosition.y = d; // lock x and z
-  targetPosition.add(new THREE.Vector3(d, 0, d));
-  // zoom
-  let zoom = { z: camera.zoom };
-  let targetZoom = { z: 3 };
+//   targetPosition.y = d; // lock x and z
+//   targetPosition.add(new THREE.Vector3(d, 0, d));
+//   // zoom
+//   let zoom = { z: camera.zoom };
+//   let targetZoom = { z: 3 };
 
-  const trackingTween = new TWEEN.Tween(position)
-    .to(targetPosition, 2200)
-    .easing(TWEEN.Easing.Cubic.InOut)
-    .onUpdate(() => {
-      camera.position.copy(position);
-      // the focus point must be updated as well
-      cameraControls.target.copy(
-        camera.position.clone().sub(new THREE.Vector3(d, d, d))
-      );
-      cameraControls.update();
-    });
+//   const trackingTween = new TWEEN.Tween(position)
+//     .to(targetPosition, 2200)
+//     .easing(TWEEN.Easing.Cubic.InOut)
+//     .onUpdate(() => {
+//       camera.position.copy(position);
+//       // the focus point must be updated as well
+//       cameraControls.target.copy(
+//         camera.position.clone().sub(new THREE.Vector3(d, d, d))
+//       );
+//       cameraControls.update();
+//     });
 
-  const zoomTween = new TWEEN.Tween(zoom)
-    .easing(TWEEN.Easing.Quadratic.Out)
-    .to(targetZoom, 1100)
-    .onUpdate(() => {
-      camera.zoom = zoom.z;
-      updateCamera();
-    })
-    .onComplete(() => {
-      cameraControls.enabled = true;
-    });
+//   const zoomTween = new TWEEN.Tween(zoom)
+//     .easing(TWEEN.Easing.Quadratic.Out)
+//     .to(targetZoom, 1100)
+//     .onUpdate(() => {
+//       camera.zoom = zoom.z;
+//       updateCamera();
+//     })
+//     .onComplete(() => {
+//       cameraControls.enabled = true;
+//     });
 
-  trackingTween.chain(zoomTween);
-  trackingTween.start();
-};
+//   trackingTween.chain(zoomTween);
+//   trackingTween.start();
+// };
 
 const animateCamera = () => {
-  // position
-  let position = new THREE.Vector3().copy(camera.position);
-  const targetPosition = new THREE.Vector3(d, d, d);
-
-  // rotation
-  const rotation = camera.rotation.clone();
-  let rotationQuaterion = new THREE.Quaternion();
-  rotationQuaterion.setFromEuler(rotation);
-
-  // calculate final rotation by moving and rotating the camera, then resetting to its original values
-  camera.position.copy(targetPosition);
-  camera.lookAt(orchestrator.getCurrentScene().scene.position);
-  const targetRotation = camera.rotation.clone();
-  const targetRotationQuaternion = new THREE.Quaternion();
-  targetRotationQuaternion.setFromEuler(targetRotation);
-
-  // reset to initial animation
-  camera.position.copy(position);
-  camera.lookAt(orchestrator.getCurrentScene().scene.position);
-
-  // zoom
-  let zoom = { z: camera.zoom };
-  let targetZoom = { z: 2 };
-
-  const positionTween = new TWEEN.Tween(position)
-    .to(targetPosition, 2200)
-    .easing(TWEEN.Easing.Cubic.InOut)
-    .onUpdate(() => {
-      camera.position.copy(position);
-      updateCamera();
-    })
-    .onStart(() => {
-      rotationTween.start();
-    });
-
-  const rotationTween = new TWEEN.Tween(rotationQuaterion)
-    .to(targetRotationQuaternion, 2200)
-    .easing(TWEEN.Easing.Cubic.InOut)
-    .onUpdate(() => {
-      camera.rotation.setFromQuaternion(rotationQuaterion);
-      updateCamera();
-    });
-
-  const zoomTween = new TWEEN.Tween(zoom)
-    .easing(TWEEN.Easing.Quadratic.Out)
-    .to(targetZoom, 1100)
-    .onUpdate(() => {
-      camera.zoom = zoom.z;
-      updateCamera();
-    })
-    .onComplete(() => {
-      createCameraControls();
-    });
-
-  rotationTween.chain(zoomTween);
-  positionTween.start();
+  CameraHelpers.transitionFromTopToMain(orchestrator);
 };
 
 const targetOperations = (): void => {
@@ -217,8 +95,6 @@ const targetOperations = (): void => {
   } else {
     orchestrator.currentDrawMode = DrawMode.REGULAR;
   }
-
-
   // const target = hadleysHope.sceneElements.find(
   //   (e) => e.name == Operations.BUILDING_NAME
   // );
