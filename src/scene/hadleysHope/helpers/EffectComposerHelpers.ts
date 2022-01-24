@@ -56,8 +56,8 @@ abstract class EffectComposerHelpers {
 
     const filmPass = new FilmPass(
       0.1, // noise intensity
-      0.1, // scanline intensity
-      650, // scanline count
+      0.3, // scanline intensity
+      750, // scanline count
       0 // grayscale
     );
     filmPass.renderToScreen = true;

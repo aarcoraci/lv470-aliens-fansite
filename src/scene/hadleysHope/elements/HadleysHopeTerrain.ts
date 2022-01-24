@@ -20,7 +20,7 @@ class HadleysHopeTerrain extends BaseSceneElement {
       if (isBluePrint) {
         buildingMesh.material = MaterialFactory.getBlueprintMaterial();
       } else {
-        buildingMesh.material = MaterialFactory.getRegularGroundMAterial();
+        buildingMesh.material = MaterialFactory.getTexturedGroundMaterial();
         buildingMesh.receiveShadow = true;
       }
       this.meshes.push(buildingMesh);
