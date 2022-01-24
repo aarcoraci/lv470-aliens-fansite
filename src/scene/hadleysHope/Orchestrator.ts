@@ -13,7 +13,11 @@ import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../../scene/utils/cameraUtils';
-
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
+/**
+ * Manages the main aspect of the final scene
+ */
 class Orchestrator {
   private static SCENE_MODEL_NAME = './models/hadleys.glb';
   private loader = new GLTFLoader();
@@ -25,7 +29,8 @@ class Orchestrator {
   regularScene: HadleysHope = new HadleysHope();
 
   renderer: WebGLRenderer;
-  effectCompose: EffectComposer;
+  bluePrintEffectComposer: EffectComposer;
+  regularEffectComposer: EffectComposer;
 
   private nearPlane = 0.1;
   private farPlane = 1000;
@@ -35,13 +40,12 @@ class Orchestrator {
   d = 10;
 
   constructor(width: number, height: number, devicePixelRatio: number) {
+    // init renderer
     this.renderer = new WebGLRenderer({ alpha: true });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setClearColor(0x141a35);
     this.renderer.shadowMap.enabled = true;
     this.renderer.setSize(width, height);
-
-    this.effectCompose = new EffectComposer(this.renderer);
 
     const aspect = width / height;
 
@@ -101,6 +105,25 @@ class Orchestrator {
     this.blueprintScene.buildLights();
     this.regularScene.addFog();
     this.regularScene.buildLights();
+
+    // effects
+    this.bluePrintEffectComposer = new EffectComposer(this.renderer);
+    this.bluePrintEffectComposer.addPass(
+      new RenderPass(this.blueprintScene.scene, this.camera)
+    );
+
+    this.regularEffectComposer = new EffectComposer(this.renderer);
+    this.regularEffectComposer.addPass(
+      new RenderPass(this.regularScene.scene, this.camera)
+    );
+    const filmPass = new FilmPass(
+      0.1, // noise intensity
+      0.1, // scanline intensity
+      1000, // scanline count
+      0 // grayscale
+    );
+    filmPass.renderToScreen = true;
+    this.regularEffectComposer.addPass(filmPass);
   }
 
   update(): void {
@@ -113,10 +136,12 @@ class Orchestrator {
   }
 
   render() {
+    const delta = this.clock.getDelta();
     if (this.currentDrawMode == DrawMode.REGULAR) {
-      this.renderer.render(this.regularScene.scene, this.camera);
+      this.regularEffectComposer.render(delta);
     } else {
-      this.renderer.render(this.blueprintScene.scene, this.camera);
+      // this.renderer.render(this.blueprintScene.scene, this.camera);
+      this.bluePrintEffectComposer.render(delta);
     }
   }
 
@@ -133,7 +158,8 @@ class Orchestrator {
     this.camera.updateProjectionMatrix();
 
     this.renderer.setSize(width, height);
-    this.effectCompose.setSize(width, height);
+    this.bluePrintEffectComposer.setSize(width, height);
+    this.regularEffectComposer.setSize(width, height);
   }
   dispose() {
     if (this.cameraControls != null) {
