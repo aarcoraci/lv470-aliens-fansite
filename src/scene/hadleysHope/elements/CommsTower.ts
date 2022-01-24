@@ -57,7 +57,7 @@ class CommsTower extends BaseSceneElement {
             buildingMesh,
             SceneColors.BLUE_1,
             true,
-            true,
+            false,
             isBluePrint,
             false,
             true

@@ -15,6 +15,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../../scene/utils/cameraUtils';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
+import EffectComposerHelpers from './helpers/EffectComposerHelpers';
 /**
  * Manages the main aspect of the final scene
  */
@@ -108,22 +109,18 @@ class Orchestrator {
 
     // effects
     this.bluePrintEffectComposer = new EffectComposer(this.renderer);
-    this.bluePrintEffectComposer.addPass(
-      new RenderPass(this.blueprintScene.scene, this.camera)
+    EffectComposerHelpers.setBluePrintEffectComposerPasses(
+      this.bluePrintEffectComposer,
+      this.blueprintScene.scene,
+      this.camera
     );
 
     this.regularEffectComposer = new EffectComposer(this.renderer);
-    this.regularEffectComposer.addPass(
-      new RenderPass(this.regularScene.scene, this.camera)
+    EffectComposerHelpers.setRegularEffectComposerPasses(
+      this.regularEffectComposer,
+      this.regularScene.scene,
+      this.camera
     );
-    const filmPass = new FilmPass(
-      0.1, // noise intensity
-      0.1, // scanline intensity
-      1000, // scanline count
-      0 // grayscale
-    );
-    filmPass.renderToScreen = true;
-    this.regularEffectComposer.addPass(filmPass);
   }
 
   update(): void {
