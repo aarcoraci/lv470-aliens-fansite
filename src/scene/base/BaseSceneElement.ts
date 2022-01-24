@@ -1,8 +1,9 @@
-import { Mesh } from 'three';
+import { Mesh, Vector3 } from 'three';
 
 abstract class BaseSceneElement {
   name: string;
   meshes: Mesh[] = [];
+  position: Vector3;
 
   constructor(name = '') {
     this.name = name;

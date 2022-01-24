@@ -1,31 +1,8 @@
 import BaseScene from '../base/BaseScene';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Mesh, AmbientLight, SpotLight, DirectionalLight, Fog } from 'three';
-import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
+import { AmbientLight, SpotLight, DirectionalLight, Fog } from 'three';
+import BaseSceneElement from '../base/BaseSceneElement';
 
 class HadleysHope extends BaseScene {
-  private static SCENE_MODEL_NAME = './models/hadleys.glb';
-
-  private buildingConstructor: HadleysHopeSceneConstructor =
-    new HadleysHopeSceneConstructor();
-
-  private terrain?: Mesh;
-
-  override async load(loader: GLTFLoader): Promise<void> {
-    this.buildLights();
-
-    const gltf = await loader.loadAsync(HadleysHope.SCENE_MODEL_NAME);
-
-    this.sceneElements = [...this.buildingConstructor.construct(gltf)];
-    this.sceneElements.forEach((element) => {
-      element.meshes.forEach((mesh) => {
-        this.scene.add(mesh);
-      });
-    });
-
-    this.scene.fog = new Fog(0x2c2554, 0.0025, 41);
-  }
-
   override update(delta: number): void {
     this.sceneElements.forEach((b) => {
       if (b.update) {
@@ -45,7 +22,19 @@ class HadleysHope extends BaseScene {
     this.sceneElements = [];
   }
 
-  private buildLights(): void {
+  assignElementsToScene(elements: BaseSceneElement[]) {
+    elements.forEach((element) => {
+      this.sceneElements.push(element);
+      element.meshes.forEach((mesh) => {
+        this.scene.add(mesh);
+      });
+    });
+  }
+
+  addFog(): void {
+    this.scene.fog = new Fog(0x2c2554, 0.0025, 41);
+  }
+  buildLights(): void {
     // spotlight (sun ?)
     const spotlight = new SpotLight(0xf5fc5a);
     spotlight.position.set(0, 16, 0);

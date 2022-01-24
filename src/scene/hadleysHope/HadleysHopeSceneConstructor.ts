@@ -9,24 +9,25 @@ import LivingQuarters from './elements/LivingQuarters';
 import Operations from './elements/Operations';
 import Connectors from './elements/Connectors';
 import OreProcessing from './elements/OreProcessing';
+import DrawMode from '../DrawMode';
 
 class HadleysHopeSceneConstructor {
-  construct(gltf: GLTF): BaseSceneElement[] {
+  construct(gltf: GLTF, drawMode: DrawMode): BaseSceneElement[] {
     const result: BaseSceneElement[] = [];
 
-    result.push(this.buildAtmosphereProcessor(gltf));
-    result.push(this.buildTerrain(gltf));
-    result.push(this.buildCommsTower(gltf));
-    result.push(this.buildDistrict(gltf));
-    result.push(this.buildLivingQuarters(gltf));
-    result.push(this.buildOperations(gltf));
-    result.push(this.buildConnectors(gltf));
-    result.push(this.buildOreProcessing(gltf));
+    result.push(this.buildAtmosphereProcessor(gltf, drawMode));
+    result.push(this.buildTerrain(gltf, drawMode));
+    result.push(this.buildCommsTower(gltf, drawMode));
+    result.push(this.buildDistrict(gltf, drawMode));
+    result.push(this.buildLivingQuarters(gltf, drawMode));
+    result.push(this.buildOperations(gltf, drawMode));
+    result.push(this.buildConnectors(gltf, drawMode));
+    result.push(this.buildOreProcessing(gltf, drawMode));
 
     return result;
   }
 
-  private buildOperations(gltf: GLTF): Operations {
+  private buildOperations(gltf: GLTF, drawMode: DrawMode): Operations {
     const mainBuildingMesh = gltf.scene.children.find(
       (s) => s.userData.node_name == Operations.BUILDING_NAME
     );
@@ -44,10 +45,10 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(accent as Mesh);
     });
 
-    return new Operations(buildingMeshes, Operations.BUILDING_NAME);
+    return new Operations(buildingMeshes, Operations.BUILDING_NAME, drawMode);
   }
 
-  private buildConnectors(gltf: GLTF): District {
+  private buildConnectors(gltf: GLTF, drawMode: DrawMode): District {
     const mainBuildingMeshes = gltf.scene.children.filter(
       (s) =>
         s.userData.node_name &&
@@ -71,10 +72,10 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(accent as Mesh);
     });
 
-    return new Connectors(buildingMeshes, Connectors.BUILDING_NAME);
+    return new Connectors(buildingMeshes, Connectors.BUILDING_NAME, drawMode);
   }
 
-  private buildLivingQuarters(gltf: GLTF): District {
+  private buildLivingQuarters(gltf: GLTF, drawMode: DrawMode): District {
     const mainBuildingMesh = gltf.scene.children.find(
       (s) => s.userData.node_name == LivingQuarters.BUILDING_NAME
     );
@@ -92,10 +93,14 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(accent as Mesh);
     });
 
-    return new LivingQuarters(buildingMeshes, LivingQuarters.BUILDING_NAME);
+    return new LivingQuarters(
+      buildingMeshes,
+      LivingQuarters.BUILDING_NAME,
+      drawMode
+    );
   }
 
-  private buildDistrict(gltf: GLTF): District {
+  private buildDistrict(gltf: GLTF, drawMode: DrawMode): District {
     const mainBuildingMesh = gltf.scene.children.find(
       (s) => s.userData.node_name == District.BUILDING_NAME
     );
@@ -113,10 +118,10 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(accent as Mesh);
     });
 
-    return new District(buildingMeshes, District.BUILDING_NAME);
+    return new District(buildingMeshes, District.BUILDING_NAME, drawMode);
   }
 
-  private buildOreProcessing(gltf: GLTF): OreProcessing {
+  private buildOreProcessing(gltf: GLTF, drawMode: DrawMode): OreProcessing {
     const oreProcessing = gltf.scene.children.find(
       (s) => s.userData.node_name == OreProcessing.ORE_PROCESSING
     );
@@ -151,10 +156,14 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(accent as Mesh);
     });
 
-    return new OreProcessing(buildingMeshes, OreProcessing.BUILDING_NAME);
+    return new OreProcessing(
+      buildingMeshes,
+      OreProcessing.BUILDING_NAME,
+      drawMode
+    );
   }
 
-  private buildCommsTower(gltf: GLTF): CommsTower {
+  private buildCommsTower(gltf: GLTF, drawMode: DrawMode): CommsTower {
     const towerBase = gltf.scene.children.find(
       (s) => s.userData.node_name == CommsTower.BASE_BUILDING_NAME
     );
@@ -167,22 +176,27 @@ class HadleysHopeSceneConstructor {
 
     return new CommsTower(
       [towerBase as Mesh, antenna as Mesh, light as Mesh],
-      CommsTower.BUILDING_NAME
+      CommsTower.BUILDING_NAME,
+      drawMode
     );
   }
 
-  private buildTerrain(gltf: GLTF): HadleysHopeTerrain {
+  private buildTerrain(gltf: GLTF, drawMode: DrawMode): HadleysHopeTerrain {
     const mainTerrainMesh = gltf.scene.children.find(
       (s) => s.userData.terrain == 1
     );
     const terrainMeshes: Mesh[] = [mainTerrainMesh as Mesh];
     return new HadleysHopeTerrain(
       terrainMeshes,
-      HadleysHopeTerrain.BUILDING_NAME
+      HadleysHopeTerrain.BUILDING_NAME,
+      drawMode
     );
   }
 
-  private buildAtmosphereProcessor(gltf: GLTF): AtmosphereProcessor {
+  private buildAtmosphereProcessor(
+    gltf: GLTF,
+    drawMode: DrawMode
+  ): AtmosphereProcessor {
     const mainBuildingMesh = gltf.scene.children.find(
       (s) => s.userData.node_name == AtmosphereProcessor.BUILDING_NAME
     );
@@ -202,7 +216,8 @@ class HadleysHopeSceneConstructor {
 
     return new AtmosphereProcessor(
       buildingMeshes,
-      AtmosphereProcessor.BUILDING_NAME
+      AtmosphereProcessor.BUILDING_NAME,
+      drawMode
     );
   }
 }

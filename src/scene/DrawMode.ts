@@ -1,6 +1,6 @@
 enum DrawMode {
-  MAP_VIEW,
-  REGULAR_VIEW
+  BLUEPRINT,
+  REGULAR
 }
 
 export default DrawMode;

@@ -1,6 +1,7 @@
 import { Tween } from '@tweenjs/tween.js';
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import MaterialFactory from '../MaterialFactory';
 
@@ -20,45 +21,90 @@ class OreProcessing extends BaseSceneElement {
   private gripTween1: Tween<{ r: number }>;
   private gripTween2: Tween<{ r: number }>;
 
-  constructor(meshes: Mesh[], name = '') {
+  constructor(meshes: Mesh[], name = '', drawMode: DrawMode) {
     super(name);
+    const isBluePrint = drawMode == DrawMode.BLUEPRINT;
+
     meshes.forEach((mesh) => {
-      if (mesh.userData.node_name == OreProcessing.CRANE_BUILDING) {
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        this.meshes.push(mesh);
-      } else if (mesh.userData.node_name == OreProcessing.ORE_PROCESSING) {
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        this.meshes.push(mesh);
-      } else if (mesh.userData.node_name == OreProcessing.GRINDER_1) {
-        this.grinder1 = mesh;
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        this.meshes.push(mesh);
-      } else if (mesh.userData.node_name == OreProcessing.GRINDER_2) {
-        this.grinder2 = mesh;
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        this.meshes.push(mesh);
+      const buildingMesh = mesh.clone();
+
+      if (buildingMesh.userData.node_name == OreProcessing.CRANE_BUILDING) {
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          true,
+          isBluePrint,
+          false,
+          false
+        );
+        this.meshes.push(buildingMesh);
+      } else if (
+        buildingMesh.userData.node_name == OreProcessing.ORE_PROCESSING
+      ) {
+        this.position = buildingMesh.position.clone();
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          true,
+          isBluePrint,
+          false,
+          false
+        );
+        this.meshes.push(buildingMesh);
+      } else if (buildingMesh.userData.node_name == OreProcessing.GRINDER_1) {
+        this.grinder1 = buildingMesh;
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          false,
+          isBluePrint,
+          false,
+          false
+        );
+        this.meshes.push(buildingMesh);
+      } else if (buildingMesh.userData.node_name == OreProcessing.GRINDER_2) {
+        this.grinder2 = buildingMesh;
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          false,
+          isBluePrint,
+          false,
+          false
+        );
+        this.meshes.push(buildingMesh);
       } else if (mesh.userData.node_name == OreProcessing.CRANE_GRIP) {
-        this.craneGrip = mesh;
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        this.meshes.push(mesh);
+        this.craneGrip = buildingMesh;
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          false,
+          isBluePrint,
+          false,
+          false
+        );
+        this.meshes.push(buildingMesh);
       } else {
-        if (mesh.userData.accent_type == 1) {
-          mesh.material = MaterialFactory.getRegularAccentRedMaterial(
-            true,
-            SceneColors.WHITE
-          );
-          this.meshes.push(mesh);
-        } else if (mesh.userData.accent_type == 2) {
-          mesh.material = MaterialFactory.getRegularAccentRedMaterial(true);
-          this.meshes.push(mesh);
-        }
+        const color = MaterialFactory.getAccentColor(
+          buildingMesh.userData.accent_type
+        );
+
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          color,
+          false,
+          false,
+          isBluePrint,
+          true,
+          true
+        );
+
+        this.meshes.push(mesh);
       }
     });
 

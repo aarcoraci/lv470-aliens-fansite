@@ -1,5 +1,7 @@
-import { Mesh } from 'three';
+import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import DrawMode from '../../DrawMode';
+import SceneColors from '../../SceneColors';
 import MaterialFactory from '../MaterialFactory';
 
 class CommsTower extends BaseSceneElement {
@@ -11,31 +13,61 @@ class CommsTower extends BaseSceneElement {
   private antenna: Mesh;
   private light: Mesh;
 
-  constructor(meshes: Mesh[] = [], name = '') {
+  constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
     super(name);
 
-    meshes.forEach((mesh) => {
-      if (mesh.userData.node_name == CommsTower.LIGHT_BUILDING_NAME) {
-        mesh.material = MaterialFactory.getRegularAccentRedMaterial();
-        mesh.castShadow = true;
-        this.light = mesh;
-        mesh.rotation.z = Math.PI / 3;
-        mesh.rotation.y = Math.PI / 2;
-        this.meshes.push(mesh);
-      } else {
-        mesh.castShadow = true;
-        if (mesh.userData.node_name == CommsTower.BASE_BUILDING_NAME) {
-          mesh.material = MaterialFactory.getRegularBuildingMaterial(false);
-          mesh.receiveShadow = true;
-        }
-        if (mesh.userData.node_name == CommsTower.ANTENNA_BUILDING_NAME) {
-          mesh.material = MaterialFactory.getRegularBuildingMaterial(true);
+    const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 
-          this.antenna = mesh;
-          mesh.rotation.z = Math.PI / 3;
-          mesh.rotation.y = Math.PI / 2;
+    meshes.forEach((mesh) => {
+      const buildingMesh = mesh.clone();
+
+      if (buildingMesh.userData.node_name == CommsTower.LIGHT_BUILDING_NAME) {
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.RED_1,
+          true,
+          false,
+          isBluePrint,
+          true,
+          false
+        );
+
+        this.light = buildingMesh;
+        this.light.rotation.z = Math.PI / 3;
+        this.light.rotation.y = Math.PI / 2;
+
+        this.meshes.push(buildingMesh);
+      } else {
+        if (buildingMesh.userData.node_name == CommsTower.BASE_BUILDING_NAME) {
+          this.position = buildingMesh.position.clone();
+          MaterialFactory.assignBuildingMaterial(
+            buildingMesh,
+            SceneColors.BLUE_1,
+            true,
+            true,
+            isBluePrint,
+            false,
+            false
+          );
         }
-        this.meshes.push(mesh);
+        if (
+          buildingMesh.userData.node_name == CommsTower.ANTENNA_BUILDING_NAME
+        ) {
+          MaterialFactory.assignBuildingMaterial(
+            buildingMesh,
+            SceneColors.BLUE_1,
+            true,
+            true,
+            isBluePrint,
+            false,
+            true
+          );
+
+          this.antenna = buildingMesh;
+          this.antenna.rotation.z = Math.PI / 3;
+          this.antenna.rotation.y = Math.PI / 2;
+        }
+        this.meshes.push(buildingMesh);
       }
     });
   }

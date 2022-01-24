@@ -1,31 +1,46 @@
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import MaterialFactory from '../MaterialFactory';
 
 class District extends BaseSceneElement {
   static BUILDING_NAME = 'district';
 
-  constructor(meshes: Mesh[] = [], name = '') {
+  constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
     super(name);
 
+    const isBluePrint = drawMode == DrawMode.BLUEPRINT;
+
     meshes.forEach((mesh) => {
-      if (mesh.userData.node_name == District.BUILDING_NAME) {
-        mesh.material = MaterialFactory.getRegularBuildingMaterial();
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        this.meshes.push(mesh);
+      const buildingMesh = mesh.clone();
+
+      if (buildingMesh.userData.node_name == District.BUILDING_NAME) {
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          SceneColors.BLUE_1,
+          true,
+          true,
+          isBluePrint,
+          false,
+          false
+        );
+        this.position = buildingMesh.position.clone();
+        this.meshes.push(buildingMesh);
       } else {
-        if (mesh.userData.accent_type == 1) {
-          mesh.material = MaterialFactory.getRegularAccentRedMaterial(
-            true,
-            SceneColors.WHITE
-          );
-          this.meshes.push(mesh);
-        } else if (mesh.userData.accent_type == 2) {
-          mesh.material = MaterialFactory.getRegularAccentRedMaterial(true);
-          this.meshes.push(mesh);
-        }
+        const color = MaterialFactory.getAccentColor(
+          buildingMesh.userData.accent_type
+        );
+
+        MaterialFactory.assignBuildingMaterial(
+          buildingMesh,
+          color,
+          false,
+          false,
+          isBluePrint,
+          true,
+          true
+        );
       }
     });
   }

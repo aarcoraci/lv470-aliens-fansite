@@ -2,13 +2,15 @@
 import * as THREE from 'three';
 import { onMounted, onBeforeUnmount } from 'vue';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import HadleysHope from '../scene/hadleysHope/HadleysHope';
 import * as TWEEN from '@tweenjs/tween.js';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
-import Operations from '../scene/hadleysHope/elements/Operations';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../scene/utils/cameraUtils';
+import Orchestrator from '../scene/hadleysHope/Orchestrator';
+import { Vector3 } from 'three';
+import DrawMode from '../scene/DrawMode';
 
+const orchestrator = new Orchestrator();
 const loader = new GLTFLoader();
 const clock = new THREE.Clock();
 
@@ -18,7 +20,6 @@ let height = window.innerHeight;
 const nearPlane = 0.1;
 const farPlane = 1000;
 
-let hadleysHope: HadleysHope;
 let renderer: THREE.WebGLRenderer;
 let camera: THREE.OrthographicCamera;
 let cameraControls: OrbitControls | null;
@@ -28,13 +29,12 @@ let animationRequestId;
 
 const createScene = async (targetDomElement: Element) => {
   const aspect = width / height;
-  hadleysHope = new HadleysHope();
 
-  await hadleysHope.load(loader);
+  await orchestrator.load(loader);
 
   camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, nearPlane, farPlane);
   camera.position.set(0, d, 0);
-  camera.lookAt(hadleysHope.scene.position);
+  camera.lookAt(new Vector3());
 
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -87,8 +87,8 @@ const animate = () => {
   if (cameraControls != null) {
     cameraControls.update();
   }
-  hadleysHope.update(clock.getDelta());
-  renderer.render(hadleysHope.scene, camera);
+  orchestrator.update(clock.getDelta());
+  orchestrator.render(renderer, camera);
 };
 
 onMounted(async () => {
@@ -100,8 +100,10 @@ onMounted(async () => {
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
-  hadleysHope.dispose();
-  cameraControls.dispose();
+  orchestrator.dispose();
+  if (cameraControls != null) {
+    cameraControls.dispose();
+  }
   renderer.dispose();
   window.removeEventListener('resize', handleResize);
 });
@@ -162,14 +164,14 @@ const animateCamera = () => {
 
   // calculate final rotation by moving and rotating the camera, then resetting to its original values
   camera.position.copy(targetPosition);
-  camera.lookAt(hadleysHope.scene.position);
+  camera.lookAt(orchestrator.getCurrentScene().scene.position);
   const targetRotation = camera.rotation.clone();
   const targetRotationQuaternion = new THREE.Quaternion();
   targetRotationQuaternion.setFromEuler(targetRotation);
 
   // reset to initial animation
   camera.position.copy(position);
-  camera.lookAt(hadleysHope.scene.position);
+  camera.lookAt(orchestrator.getCurrentScene().scene.position);
 
   // zoom
   let zoom = { z: camera.zoom };
@@ -210,10 +212,17 @@ const animateCamera = () => {
 };
 
 const targetOperations = (): void => {
-  const target = hadleysHope.sceneElements.find(
-    (e) => e.name == Operations.BUILDING_NAME
-  );
-  focusTarget(target);
+  if (orchestrator.currentDrawMode == DrawMode.REGULAR) {
+    orchestrator.currentDrawMode = DrawMode.BLUEPRINT;
+  } else {
+    orchestrator.currentDrawMode = DrawMode.REGULAR;
+  }
+
+
+  // const target = hadleysHope.sceneElements.find(
+  //   (e) => e.name == Operations.BUILDING_NAME
+  // );
+  // focusTarget(target);
 };
 </script>
 

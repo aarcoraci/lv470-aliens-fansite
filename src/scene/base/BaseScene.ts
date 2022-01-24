@@ -1,4 +1,4 @@
-import { Scene } from 'three';
+import { Camera, Scene, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 import BaseSceneElement from './BaseSceneElement';
@@ -7,11 +7,11 @@ abstract class BaseScene {
   readonly scene: Scene = new Scene();
   sceneElements: BaseSceneElement[] = [];
 
-  abstract load(loader: GLTFLoader): void;
-
   update(delta: number): void {
     this.sceneElements.forEach((element) => {
-      element?.update(delta);
+      if (element.update) {
+        element.update(delta);
+      }
     });
   }
 
@@ -19,6 +19,10 @@ abstract class BaseScene {
     this.sceneElements.forEach((element) => {
       element.dispose();
     });
+  }
+
+  render(renderer: WebGLRenderer, camera: Camera) {
+    renderer.render(this.scene, camera);
   }
 }
 
