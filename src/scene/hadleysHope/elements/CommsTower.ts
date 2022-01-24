@@ -2,6 +2,7 @@ import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
+import SceneElementType from '../../SceneElementType';
 import MaterialFactory from '../MaterialFactory';
 
 class CommsTower extends BaseSceneElement {
@@ -14,7 +15,7 @@ class CommsTower extends BaseSceneElement {
   private light: Mesh;
 
   constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
-    super(name);
+    super(name, SceneElementType.BUILDING);
 
     const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 

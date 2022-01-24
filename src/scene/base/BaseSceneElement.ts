@@ -1,12 +1,15 @@
 import { Mesh, Vector3 } from 'three';
+import SceneElementType from '../SceneElementType';
 
 abstract class BaseSceneElement {
   name: string;
   meshes: Mesh[] = [];
   position: Vector3;
+  sceneElementType: SceneElementType;
 
-  constructor(name = '') {
+  constructor(name = '', sceneElementType = SceneElementType.UNKNOWN) {
     this.name = name;
+    this.sceneElementType = sceneElementType;
   }
 
   update?(delta: number): void;

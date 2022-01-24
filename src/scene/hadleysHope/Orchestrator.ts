@@ -111,14 +111,14 @@ class Orchestrator {
     this.bluePrintEffectComposer = new EffectComposer(this.renderer);
     EffectComposerHelpers.setBluePrintEffectComposerPasses(
       this.bluePrintEffectComposer,
-      this.blueprintScene.scene,
+      this.blueprintScene,
       this.camera
     );
 
     this.regularEffectComposer = new EffectComposer(this.renderer);
     EffectComposerHelpers.setRegularEffectComposerPasses(
       this.regularEffectComposer,
-      this.regularScene.scene,
+      this.regularScene,
       this.camera
     );
   }

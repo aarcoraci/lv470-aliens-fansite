@@ -1,13 +1,14 @@
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import DrawMode from '../../DrawMode';
+import SceneElementType from '../../SceneElementType';
 import MaterialFactory from '../MaterialFactory';
 
 class HadleysHopeTerrain extends BaseSceneElement {
   static BUILDING_NAME = 'terrain';
 
   constructor(meshes: Mesh[], name: string, drawMode: DrawMode) {
-    super(name);
+    super(name, SceneElementType.TERRAIN);
 
     const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 

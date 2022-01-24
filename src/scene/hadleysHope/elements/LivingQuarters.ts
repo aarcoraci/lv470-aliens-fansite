@@ -2,13 +2,14 @@ import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
+import SceneElementType from '../../SceneElementType';
 import MaterialFactory from '../MaterialFactory';
 
 class LivingQuarters extends BaseSceneElement {
   static BUILDING_NAME = 'living_quarters';
 
   constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
-    super(name);
+    super(name, SceneElementType.BUILDING);
     const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 
     meshes.forEach((mesh) => {

@@ -2,13 +2,14 @@ import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
+import SceneElementType from '../../SceneElementType';
 import MaterialFactory from '../MaterialFactory';
 
 class Connectors extends BaseSceneElement {
   static BUILDING_NAME = 'connector';
 
   constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
-    super(name);
+    super(name, SceneElementType.BUILDING);
 
     const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 

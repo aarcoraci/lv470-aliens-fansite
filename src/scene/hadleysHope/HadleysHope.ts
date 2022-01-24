@@ -34,6 +34,7 @@ class HadleysHope extends BaseScene {
   addFog(): void {
     this.scene.fog = new Fog(0x2c2554, 0.0025, 41);
   }
+
   buildLights(): void {
     // spotlight (sun ?)
     const spotlight = new SpotLight(0xf5fc5a);
