@@ -100,14 +100,19 @@ const targetOperations = (): void => {
   // );
   // focusTarget(target);
 };
+
+const fadeOut = (): void => {
+  // orchestrator.transitionFromBluePrintToRegular();
+}
 </script>
 
 
  <template>
   <main>
     <div class="controls">
-      <button @click="animateCamera">click</button>
-      <button @click="targetOperations">click</button>
+      <button @click="animateCamera">camera</button>
+      <button @click="targetOperations">toggle</button>
+      <button @click="fadeOut">fade out</button>
     </div>
     <div div id="main-scene" class="main-scene"></div>
   </main>
@@ -131,6 +136,8 @@ const targetOperations = (): void => {
   border-radius: 4px;
   background-color: #fbfbfb;
   display: flex;
-  gap: 10;
+  & > * {
+    margin-right: 30px;
+  }
 }
 </style>
