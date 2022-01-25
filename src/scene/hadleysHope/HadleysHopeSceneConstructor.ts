@@ -12,6 +12,7 @@ import OreProcessing from './elements/OreProcessing';
 import DrawMode from '../DrawMode';
 import WorkShop from './elements/Workshop';
 import Rover from './elements/Rover';
+import DropShip from './elements/Dropship';
 
 class HadleysHopeSceneConstructor {
   construct(gltf: GLTF, drawMode: DrawMode): BaseSceneElement[] {
@@ -270,6 +271,19 @@ class HadleysHopeSceneConstructor {
 
       result.push(
         new Rover(vehicleMeshes, rover.userData.vehicle_name, drawMode)
+      );
+    });
+
+    // find all dropships
+    const dropships = gltf.scene.children.filter(
+      (s) =>
+        s.userData.node_name && s.userData.node_name == DropShip.VEHICLE_NAME
+    );
+
+    dropships.forEach((dropship) => {
+      const vehicleMeshes: Mesh[] = [dropship as Mesh];
+      result.push(
+        new DropShip(vehicleMeshes, dropship.userData.vehicle_name, drawMode)
       );
     });
 
