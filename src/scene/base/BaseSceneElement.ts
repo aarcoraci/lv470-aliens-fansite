@@ -20,10 +20,8 @@ abstract class BaseSceneElement {
     this.parts.forEach((part) => {
       part.mesh.geometry.dispose();
       if (part.material instanceof Array) {
-        // for better memory management and performance
         part.material.forEach((m) => m.dispose());
       } else {
-        // for better memory management and performance
         part.material.dispose();
       }
     });

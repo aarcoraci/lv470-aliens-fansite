@@ -13,8 +13,7 @@ import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../../scene/utils/cameraUtils';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
+import { Tween } from '@tweenjs/tween.js';
 import EffectComposerHelpers from './helpers/EffectComposerHelpers';
 /**
  * Manages the main aspect of the final scene
@@ -109,14 +108,14 @@ class Orchestrator {
 
     // effects
     this.bluePrintEffectComposer = new EffectComposer(this.renderer);
-    EffectComposerHelpers.setBluePrintEffectComposerPasses(
+    EffectComposerHelpers.getInstance().setBluePrintEffectComposerPasses(
       this.bluePrintEffectComposer,
       this.blueprintScene,
       this.camera
     );
 
     this.regularEffectComposer = new EffectComposer(this.renderer);
-    EffectComposerHelpers.setRegularEffectComposerPasses(
+    EffectComposerHelpers.getInstance().setRegularEffectComposerPasses(
       this.regularEffectComposer,
       this.regularScene,
       this.camera
@@ -137,7 +136,6 @@ class Orchestrator {
     if (this.currentDrawMode == DrawMode.REGULAR) {
       this.regularEffectComposer.render(delta);
     } else {
-      // this.renderer.render(this.blueprintScene.scene, this.camera);
       this.bluePrintEffectComposer.render(delta);
     }
   }

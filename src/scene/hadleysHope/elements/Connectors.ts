@@ -1,4 +1,4 @@
-import { Material, Mesh } from 'three';
+import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
 import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';

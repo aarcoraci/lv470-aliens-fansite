@@ -6,13 +6,33 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import HadleysHope from '../HadleysHope';
 import SceneElementType from '../../SceneElementType';
 
-abstract class EffectComposerHelpers {
-  static setBluePrintEffectComposerPasses(
+class EffectComposerHelpers {
+  private static instance: EffectComposerHelpers;
+  private constructor() {}
+
+  public static getInstance(): EffectComposerHelpers {
+    if (!EffectComposerHelpers.instance) {
+      EffectComposerHelpers.instance = new EffectComposerHelpers();
+    }
+    return EffectComposerHelpers.instance;
+  }
+
+  // blueprint passes
+  blueprintRenderPass: RenderPass;
+  blueprintOutlinePass: OutlinePass;
+  bluePrintFilmPass: FilmPass;
+
+  // regular
+  regularRenderPass: RenderPass;
+  regularFilmPass: FilmPass;
+
+  setBluePrintEffectComposerPasses(
     bluePrintEffectComposer: EffectComposer,
     hadleysHope: HadleysHope,
     camera: Camera
   ): void {
-    bluePrintEffectComposer.addPass(new RenderPass(hadleysHope.scene, camera));
+    this.blueprintRenderPass = new RenderPass(hadleysHope.scene, camera);
+    bluePrintEffectComposer.addPass(this.blueprintRenderPass);
 
     // get the objects to be outlined
     const buildings = hadleysHope.sceneElements.filter(
@@ -27,41 +47,47 @@ abstract class EffectComposerHelpers {
       });
     });
 
-    const outlinePass = new OutlinePass(
+    this.blueprintOutlinePass = new OutlinePass(
       new Vector2(800, 600),
       hadleysHope.scene,
       camera,
       outlineObjects
     );
-    outlinePass.edgeStrength = 2;
-    outlinePass.edgeGlow = 0.2;
-    bluePrintEffectComposer.addPass(outlinePass);
+    this.blueprintOutlinePass.edgeStrength = 2;
+    this.blueprintOutlinePass.edgeGlow = 0.2;
+    bluePrintEffectComposer.addPass(this.blueprintOutlinePass);
 
-    const filmPass = new FilmPass(
+    this.bluePrintFilmPass = new FilmPass(
       0.25, // noise intensity
       0.9, // scanline intensity
       650, // scanline count
       0 // grayscale
     );
-    filmPass.renderToScreen = true;
-    bluePrintEffectComposer.addPass(filmPass);
+    this.bluePrintFilmPass.renderToScreen = true;
+    bluePrintEffectComposer.addPass(this.bluePrintFilmPass);
   }
 
-  static setRegularEffectComposerPasses(
+  setRegularEffectComposerPasses(
     regularEffectComposer: EffectComposer,
     hadleysHope: HadleysHope,
     camera: Camera
   ): void {
-    regularEffectComposer.addPass(new RenderPass(hadleysHope.scene, camera));
+    this.regularRenderPass = new RenderPass(hadleysHope.scene, camera);
+    regularEffectComposer.addPass(this.regularRenderPass);
 
-    const filmPass = new FilmPass(
+    this.regularFilmPass = new FilmPass(
       0.1, // noise intensity
       0.3, // scanline intensity
       750, // scanline count
       0 // grayscale
     );
-    filmPass.renderToScreen = true;
-    regularEffectComposer.addPass(filmPass);
+    this.regularFilmPass.renderToScreen = true;
+    regularEffectComposer.addPass(this.regularFilmPass);
+  }
+
+  dispose(): void {
+    this.bluePrintFilmPass.material.dispose();
+    this.regularFilmPass.material.dispose();
   }
 }
 
