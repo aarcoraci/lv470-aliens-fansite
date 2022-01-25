@@ -163,6 +163,7 @@ class Orchestrator {
     this.renderer.dispose();
     this.blueprintScene.dispose();
     this.regularScene.dispose();
+    EffectComposerHelpers.getInstance().dispose();
   }
 }
 
