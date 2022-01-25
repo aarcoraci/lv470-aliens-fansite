@@ -35,7 +35,7 @@ class WorkShop extends BaseSceneElement {
           false,
           false
         );
-
+        this.position = buildingMesh.position.clone();
         this.meshes.push(buildingMesh);
       } else if (
         buildingMesh.userData.node_name &&

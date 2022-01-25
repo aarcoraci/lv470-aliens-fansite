@@ -11,6 +11,7 @@ import Connectors from './elements/Connectors';
 import OreProcessing from './elements/OreProcessing';
 import DrawMode from '../DrawMode';
 import WorkShop from './elements/Workshop';
+import Rover from './elements/Rover';
 
 class HadleysHopeSceneConstructor {
   construct(gltf: GLTF, drawMode: DrawMode): BaseSceneElement[] {
@@ -25,6 +26,10 @@ class HadleysHopeSceneConstructor {
     result.push(this.buildConnectors(gltf, drawMode));
     result.push(this.buildOreProcessing(gltf, drawMode));
     result.push(this.buildWorkshop(gltf, drawMode));
+    const vehicles = this.buildVehicles(gltf, drawMode);
+    vehicles.forEach((vehicle) => {
+      result.push(vehicle);
+    });
 
     return result;
   }
@@ -241,6 +246,34 @@ class HadleysHopeSceneConstructor {
       AtmosphereProcessor.BUILDING_NAME,
       drawMode
     );
+  }
+
+  private buildVehicles(gltf: GLTF, drawMode: DrawMode): Rover[] {
+    const result: Rover[] = [];
+
+    // find all rovers
+    const rovers = gltf.scene.children.filter(
+      (s) => s.userData.node_name && s.userData.node_name == Rover.VEHICLE_NAME
+    );
+
+    rovers.forEach((rover) => {
+      const vehicleMeshes: Mesh[] = [rover as Mesh];
+      // find parts of the vehicle
+      const roverParts = gltf.scene.children.filter(
+        (s) =>
+          s.userData.parent_vehicle &&
+          s.userData.parent_vehicle == rover.userData.vehicle_name
+      );
+      roverParts.forEach((part) => {
+        vehicleMeshes.push(part as Mesh);
+      });
+
+      result.push(
+        new Rover(vehicleMeshes, rover.userData.vehicle_name, drawMode)
+      );
+    });
+
+    return result;
   }
 }
 
