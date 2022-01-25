@@ -3,6 +3,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass';
 import HadleysHope from '../HadleysHope';
 import SceneElementType from '../../SceneElementType';
 
@@ -21,6 +22,7 @@ class EffectComposerHelpers {
   blueprintRenderPass: RenderPass;
   blueprintOutlinePass: OutlinePass;
   bluePrintFilmPass: FilmPass;
+  bluePrintGlitchPass: GlitchPass;
 
   // regular
   regularRenderPass: RenderPass;
@@ -65,6 +67,11 @@ class EffectComposerHelpers {
     );
     this.bluePrintFilmPass.renderToScreen = true;
     bluePrintEffectComposer.addPass(this.bluePrintFilmPass);
+
+    this.bluePrintGlitchPass = new GlitchPass();
+    this.bluePrintGlitchPass.goWild = true;
+    this.bluePrintGlitchPass.enabled = false;
+    bluePrintEffectComposer.addPass(this.bluePrintGlitchPass);
   }
 
   setRegularEffectComposerPasses(

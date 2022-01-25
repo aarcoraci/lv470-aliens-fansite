@@ -102,7 +102,7 @@ const targetOperations = (): void => {
 };
 
 const fadeOut = (): void => {
-  // orchestrator.transition();
+  orchestrator.transition();
 }
 </script>
 

@@ -146,6 +146,17 @@ class Orchestrator {
       : this.regularScene;
   }
 
+  transition(): void {
+    EffectComposerHelpers.getInstance().bluePrintGlitchPass.enabled = true;
+    setTimeout(() => {
+      this.currentDrawMode = DrawMode.REGULAR;
+      EffectComposerHelpers.getInstance().bluePrintGlitchPass.enabled = false;
+      EffectComposerHelpers.getInstance().blueprintOutlinePass.enabled = false;
+      EffectComposerHelpers.getInstance().bluePrintFilmPass.enabled = false;
+      EffectComposerHelpers.getInstance().blueprintRenderPass.enabled = false;
+    }, 120);
+  }
+
   resize(width: number, height: number) {
     const aspect = width / height;
     this.camera.left = this.d * -aspect;
