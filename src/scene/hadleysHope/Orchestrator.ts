@@ -13,8 +13,8 @@ import HadleysHopeSceneConstructor from './HadleysHopeSceneConstructor';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../../scene/utils/cameraUtils';
-import { Tween } from '@tweenjs/tween.js';
 import EffectComposerHelpers from './helpers/EffectComposerHelpers';
+import CameraHelpers from './helpers/CameraHelpers';
 /**
  * Manages the main aspect of the final scene
  */
@@ -102,9 +102,9 @@ class Orchestrator {
     this.regularScene.assignElementsToScene(regularBuildingElements);
 
     // configure each scene
-    this.blueprintScene.buildLights();
+    this.blueprintScene.buildLights(this.d, this.nearPlane, this.farPlane);
     this.regularScene.addFog();
-    this.regularScene.buildLights();
+    this.regularScene.buildLights(this.d, this.nearPlane, this.farPlane);
 
     // effects
     this.bluePrintEffectComposer = new EffectComposer(this.renderer);
@@ -154,6 +154,8 @@ class Orchestrator {
       EffectComposerHelpers.getInstance().blueprintOutlinePass.enabled = false;
       EffectComposerHelpers.getInstance().bluePrintFilmPass.enabled = false;
       EffectComposerHelpers.getInstance().blueprintRenderPass.enabled = false;
+      this.blueprintScene.dispose();
+      CameraHelpers.transitionFromTopToMain(this);
     }, 120);
   }
 
