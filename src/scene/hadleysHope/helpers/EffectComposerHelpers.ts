@@ -22,8 +22,8 @@ abstract class EffectComposerHelpers {
     const outlineObjects: Object3D[] = [];
 
     buildings.forEach((b) => {
-      b.meshes.forEach((m) => {
-        outlineObjects.push(m);
+      b.parts.forEach((p) => {
+        outlineObjects.push(p.mesh);
       });
     });
 

@@ -1,5 +1,6 @@
-import { Mesh } from 'three';
+import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -28,7 +29,7 @@ class Connectors extends BaseSceneElement {
           false
         );
 
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else {
         const color = MaterialFactory.getAccentColor(
           buildingMesh.userData.accent_type
@@ -43,7 +44,7 @@ class Connectors extends BaseSceneElement {
           true,
           true
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
   }

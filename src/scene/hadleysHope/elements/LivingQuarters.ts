@@ -1,5 +1,6 @@
-import { Mesh } from 'three';
+import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -27,7 +28,7 @@ class LivingQuarters extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else {
         const color = MaterialFactory.getAccentColor(
           buildingMesh.userData.accent_type
@@ -42,7 +43,7 @@ class LivingQuarters extends BaseSceneElement {
             true,
             true
           );
-          this.meshes.push(buildingMesh);
+          this.parts.push(new SceneElementPart(buildingMesh));
         } else if (buildingMesh.userData.building_base) {
           MaterialFactory.assignBuildingMaterial(
             buildingMesh,
@@ -53,7 +54,7 @@ class LivingQuarters extends BaseSceneElement {
             false,
             false
           );
-          this.meshes.push(buildingMesh);
+          this.parts.push(new SceneElementPart(buildingMesh));
         }
       }
     });

@@ -1,6 +1,7 @@
 import { Tween } from '@tweenjs/tween.js';
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -39,7 +40,7 @@ class OreProcessing extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else if (
         buildingMesh.userData.node_name == OreProcessing.ORE_PROCESSING
       ) {
@@ -53,7 +54,7 @@ class OreProcessing extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else if (buildingMesh.userData.node_name == OreProcessing.GRINDER_1) {
         this.grinder1 = buildingMesh;
         MaterialFactory.assignBuildingMaterial(
@@ -65,7 +66,7 @@ class OreProcessing extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else if (buildingMesh.userData.node_name == OreProcessing.GRINDER_2) {
         this.grinder2 = buildingMesh;
         MaterialFactory.assignBuildingMaterial(
@@ -77,7 +78,7 @@ class OreProcessing extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else if (mesh.userData.node_name == OreProcessing.CRANE_GRIP) {
         this.craneGrip = buildingMesh;
         MaterialFactory.assignBuildingMaterial(
@@ -89,7 +90,7 @@ class OreProcessing extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else {
         const color = MaterialFactory.getAccentColor(
           buildingMesh.userData.accent_type
@@ -105,7 +106,7 @@ class OreProcessing extends BaseSceneElement {
           true
         );
 
-        this.meshes.push(mesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
 

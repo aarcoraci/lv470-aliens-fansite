@@ -1,5 +1,6 @@
 import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -36,7 +37,7 @@ class WorkShop extends BaseSceneElement {
           false
         );
         this.position = buildingMesh.position.clone();
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else if (
         buildingMesh.userData.node_name &&
         buildingMesh.userData.node_name == WorkShop.FAN_SUFFIX
@@ -50,7 +51,7 @@ class WorkShop extends BaseSceneElement {
           false,
           false
         );
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
 
         const fan = new WorkshopFan();
         fan.mesh = buildingMesh;
@@ -71,7 +72,7 @@ class WorkShop extends BaseSceneElement {
             true,
             true
           );
-          this.meshes.push(buildingMesh);
+          this.parts.push(new SceneElementPart(buildingMesh));
         } else {
           MaterialFactory.assignBuildingMaterial(
             buildingMesh,
@@ -82,7 +83,7 @@ class WorkShop extends BaseSceneElement {
             false,
             false
           );
-          this.meshes.push(buildingMesh);
+          this.parts.push(new SceneElementPart(buildingMesh));
         }
       }
     });

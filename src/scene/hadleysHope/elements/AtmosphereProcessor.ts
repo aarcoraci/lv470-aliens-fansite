@@ -1,5 +1,6 @@
-import { Mesh } from 'three';
+import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -30,7 +31,7 @@ class AtmosphereProcessor extends BaseSceneElement {
           false
         );
 
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else {
         if (!isBluePrint) {
           const color = MaterialFactory.getAccentColor(
@@ -47,7 +48,7 @@ class AtmosphereProcessor extends BaseSceneElement {
             true
           );
 
-          this.meshes.push(buildingMesh);
+          this.parts.push(new SceneElementPart(buildingMesh));
         }
       }
     });

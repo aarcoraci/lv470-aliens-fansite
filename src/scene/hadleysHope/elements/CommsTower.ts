@@ -1,5 +1,6 @@
-import { Material, Mesh } from 'three';
+import { Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneColors from '../../SceneColors';
 import SceneElementType from '../../SceneElementType';
@@ -37,7 +38,7 @@ class CommsTower extends BaseSceneElement {
         this.light.rotation.z = Math.PI / 3;
         this.light.rotation.y = Math.PI / 2;
 
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       } else {
         if (buildingMesh.userData.node_name == CommsTower.BASE_BUILDING_NAME) {
           this.position = buildingMesh.position.clone();
@@ -68,7 +69,7 @@ class CommsTower extends BaseSceneElement {
           this.antenna.rotation.z = Math.PI / 3;
           this.antenna.rotation.y = Math.PI / 2;
         }
-        this.meshes.push(buildingMesh);
+        this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
   }

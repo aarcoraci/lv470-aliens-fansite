@@ -1,11 +1,13 @@
 import { Mesh, Vector3 } from 'three';
 import SceneElementType from '../SceneElementType';
+import SceneElementPart from './SceneElementPart';
 
 abstract class BaseSceneElement {
   name: string;
-  meshes: Mesh[] = [];
   position: Vector3;
   sceneElementType: SceneElementType;
+
+  parts: SceneElementPart[] = [];
 
   constructor(name = '', sceneElementType = SceneElementType.UNKNOWN) {
     this.name = name;
@@ -15,14 +17,14 @@ abstract class BaseSceneElement {
   update?(delta: number): void;
 
   dispose(): void {
-    this.meshes.forEach((mesh) => {
-      mesh.geometry.dispose();
-      if (mesh.material instanceof Array) {
+    this.parts.forEach((part) => {
+      part.mesh.geometry.dispose();
+      if (part.material instanceof Array) {
         // for better memory management and performance
-        mesh.material.forEach((m) => m.dispose());
+        part.material.forEach((m) => m.dispose());
       } else {
         // for better memory management and performance
-        mesh.material.dispose();
+        part.material.dispose();
       }
     });
   }

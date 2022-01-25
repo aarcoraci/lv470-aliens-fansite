@@ -1,5 +1,6 @@
-import { Mesh } from 'three';
+import { Material, Mesh } from 'three';
 import BaseSceneElement from '../../base/BaseSceneElement';
+import SceneElementPart from '../../base/SceneElementPart';
 import DrawMode from '../../DrawMode';
 import SceneElementType from '../../SceneElementType';
 import MaterialFactory from '../MaterialFactory';
@@ -23,7 +24,7 @@ class HadleysHopeTerrain extends BaseSceneElement {
         buildingMesh.material = MaterialFactory.getTexturedGroundMaterial();
         buildingMesh.receiveShadow = true;
       }
-      this.meshes.push(buildingMesh);
+      this.parts.push(new SceneElementPart(buildingMesh));
     });
   }
 }

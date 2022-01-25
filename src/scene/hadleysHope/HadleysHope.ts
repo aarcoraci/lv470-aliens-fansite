@@ -14,10 +14,10 @@ class HadleysHope extends BaseScene {
   override dispose(): void {
     super.dispose();
     this.sceneElements.forEach((sceneElement) => {
-      sceneElement.meshes.forEach((mesh) => {
-        this.scene.remove(mesh);
+      sceneElement.parts.forEach((part) => {
+        this.scene.remove(part.mesh);
       });
-      sceneElement.meshes = [];
+      sceneElement.parts = [];
     });
     this.sceneElements = [];
   }
@@ -25,8 +25,8 @@ class HadleysHope extends BaseScene {
   assignElementsToScene(elements: BaseSceneElement[]) {
     elements.forEach((element) => {
       this.sceneElements.push(element);
-      element.meshes.forEach((mesh) => {
-        this.scene.add(mesh);
+      element.parts.forEach((part) => {
+        this.scene.add(part.mesh);
       });
     });
   }
