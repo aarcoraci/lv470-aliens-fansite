@@ -10,6 +10,7 @@ import Operations from './elements/Operations';
 import Connectors from './elements/Connectors';
 import OreProcessing from './elements/OreProcessing';
 import DrawMode from '../DrawMode';
+import WorkShop from './elements/Workshop';
 
 class HadleysHopeSceneConstructor {
   construct(gltf: GLTF, drawMode: DrawMode): BaseSceneElement[] {
@@ -23,6 +24,7 @@ class HadleysHopeSceneConstructor {
     result.push(this.buildOperations(gltf, drawMode));
     result.push(this.buildConnectors(gltf, drawMode));
     result.push(this.buildOreProcessing(gltf, drawMode));
+    result.push(this.buildWorkshop(gltf, drawMode));
 
     return result;
   }
@@ -119,6 +121,26 @@ class HadleysHopeSceneConstructor {
     });
 
     return new District(buildingMeshes, District.BUILDING_NAME, drawMode);
+  }
+
+  private buildWorkshop(gltf: GLTF, drawMode: DrawMode): WorkShop {
+    const workshop = gltf.scene.children.find(
+      (s) => s.userData.node_name == WorkShop.BUILDING_NAME
+    );
+    const buildingExtras = gltf.scene.children.filter(
+      (s) =>
+        s.userData.parent_node &&
+        s.userData.parent_node == WorkShop.BUILDING_NAME
+    );
+
+    const buildingMeshes: Mesh[] = [];
+
+    buildingMeshes.push(workshop as Mesh);
+    buildingExtras.forEach((extra) => {
+      buildingMeshes.push(extra as Mesh);
+    });
+
+    return new WorkShop(buildingMeshes, District.BUILDING_NAME, drawMode);
   }
 
   private buildOreProcessing(gltf: GLTF, drawMode: DrawMode): OreProcessing {
