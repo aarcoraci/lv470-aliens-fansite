@@ -249,8 +249,8 @@ class HadleysHopeSceneConstructor {
     );
   }
 
-  private buildVehicles(gltf: GLTF, drawMode: DrawMode): Rover[] {
-    const result: Rover[] = [];
+  private buildVehicles(gltf: GLTF, drawMode: DrawMode): BaseSceneElement[] {
+    const result: BaseSceneElement[] = [];
 
     // find all rovers
     const rovers = gltf.scene.children.filter(

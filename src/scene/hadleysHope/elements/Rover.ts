@@ -9,6 +9,7 @@ import MaterialFactory from '../MaterialFactory';
 class Rover extends BaseSceneElement {
   static VEHICLE_NAME = 'rover';
 
+  private mainMesh: Mesh;
   constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
     super(name, SceneElementType.VEHICLE);
 
@@ -19,6 +20,7 @@ class Rover extends BaseSceneElement {
 
       if (buildingMesh.userData.node_name == Rover.VEHICLE_NAME) {
         this.position = mesh.position.clone();
+        this.mainMesh = buildingMesh;
         MaterialFactory.assignBuildingMaterial(
           buildingMesh,
           SceneColors.BLUE_1,
