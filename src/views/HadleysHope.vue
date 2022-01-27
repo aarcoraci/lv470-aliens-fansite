@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import * as THREE from 'three';
 import { onMounted, onBeforeUnmount } from 'vue';
 import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
 import DrawMode from '../scene/DrawMode';
 import CameraHelpers from '../scene/hadleysHope/helpers/CameraHelpers';
 
-let orchestrator: Orchestrator;
+import IntroOvlerlay from "../components/IntroOverlay.vue";
 
+let orchestrator: Orchestrator;
 
 let animationRequestId;
 
@@ -114,6 +114,7 @@ const fadeOut = (): void => {
       <button @click="targetOperations">toggle</button>
       <button @click="fadeOut">fade out</button>
     </div>
+    <intro-ovlerlay />
     <div div id="main-scene" class="main-scene"></div>
   </main>
 </template>

@@ -1,11 +1,14 @@
 // reset and normalize
-@import "./partials/utils/reset";
-@import "normalize.css";
+@import './partials/utils/reset';
+@import 'normalize.css';
 
-@import "./partials/variables/colors";
-@import "./partials/utils/breakpoints";
-@import "./partials/utils/typography";
-@import "./partials/fonts";
+@import './partials/variables/layout';
+@import './partials/variables/colors';
+@import './partials/utils/breakpoints';
+@import './partials/utils/typography';
+@import './partials/fonts';
+
+@import './partials/layout';
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -15,6 +18,7 @@ body {
 html {
   background-color: $color-white;
   color: $color-black;
+  @include typo-paragraph;
 }
 
 h1,
@@ -44,4 +48,8 @@ h5 {
 
 p {
   @include typo-paragraph;
+}
+
+* {
+  box-sizing: border-box;
 }
