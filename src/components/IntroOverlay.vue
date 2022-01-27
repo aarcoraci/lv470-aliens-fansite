@@ -6,6 +6,7 @@
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
       <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi deleniti.</p>
+      <a href="#" class="button orange">explore the base</a>
     </div>
   </div>
 </template>
@@ -29,7 +30,7 @@
     width: 100px;
     height: 30px;
     margin: 0 auto;
-    background-image: url("~@/assets/img/wy-logo-variant.svg");
+    background-image: url("~@/assets/img/wy-logo-variant.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -40,25 +41,19 @@
     background-color: $color-blue;
     color: $color-white;
     box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
-    transition-duration: 270ms;
-    transition-property: border-color, background-color;
-    transition-timing-function: ease-in-out;
+
     text-align: center;
-    @include font-general;
 
     @include respond-to("large") {
       padding: 90px;
     }
 
+    p,
     h2 {
       margin-bottom: 18px;
       @include respond-to("large") {
         margin-bottom: 28px;
       }
-    }
-
-    &:hover {
-      background-color: lighten($color-blue, 0.75);
     }
   }
 }

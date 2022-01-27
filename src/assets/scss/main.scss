@@ -9,6 +9,7 @@
 @import './partials/fonts';
 
 @import './partials/layout';
+@import './partials/elements';
 
 body {
   -webkit-font-smoothing: antialiased;
@@ -18,7 +19,7 @@ body {
 html {
   background-color: $color-white;
   color: $color-black;
-  @include typo-paragraph;
+  @include font-general;
 }
 
 h1,
@@ -27,7 +28,7 @@ h3,
 h4,
 h5,
 h6 {
-  @include font-general;
+  @include font-thedus;
 }
 
 h1 {
@@ -47,6 +48,7 @@ h5 {
 }
 
 p {
+  @include font-thedus;
   @include typo-paragraph;
 }
 
