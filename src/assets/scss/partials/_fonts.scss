@@ -28,6 +28,10 @@
   src: url('./fonts/Thedus-WideLight.otf');
 }
 
+@mixin font-thedus-wide {
+  font-family: Thedus-Wide, Arial, Helvetica, sans-serif;
+}
+
 @mixin font-thedus {
   font-family: Thedus-CondensedLight, Arial, Helvetica, sans-serif;
 }
