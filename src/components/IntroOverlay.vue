@@ -26,10 +26,13 @@
   padding: $padding;
 
   .wy-logo {
-    width: 80px;
-    height: 22px;
+    width: 100px;
+    height: 30px;
     margin: 0 auto;
-    background-image: url("~/assets/img/wy-logo-variant.svg");
+    background-image: url("~@/assets/img/wy-logo-variant.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   .intro {
     border-radius: $border-radius;
