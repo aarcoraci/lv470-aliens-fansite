@@ -13,9 +13,9 @@
   letter-spacing: 0.5px;
   border: 2px solid $color-white;
 
-  transition-duration: 270ms;
-  transition-property: border-color, background-color, color;
-  transition-timing-function: ease-in-out;
+  transition-duration: 280ms;
+  transition-property: border-color, background-color, color, box-shadow;
+  transition-timing-function: linear;
 
   &:hover {
     background-color: transparentize($color-blue-grey, 0.5);
@@ -27,6 +27,7 @@
     color: $color-orange;
 
     &:hover {
+      box-shadow: 0px 0px 20px -5px rgba(lighten($color-orange, 18), 0.25);
       background-color: inherit;
       color: lighten($color-orange, 18);
       border-color: lighten($color-orange, 18);

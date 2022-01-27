@@ -36,6 +36,7 @@
     background-position: center;
   }
   .intro {
+    position: relative;
     border-radius: $border-radius;
     padding: 30px;
     background-color: $color-blue;
@@ -43,9 +44,21 @@
     box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
 
     text-align: center;
+    @include blueprint-background;
 
     @include respond-to("large") {
       padding: 90px;
+    }
+
+    &::before {
+      position: absolute;
+      content: "";
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0 0 5rem rgba(0, 0, 0, 0.05);
+      pointer-events: none;
     }
 
     p,

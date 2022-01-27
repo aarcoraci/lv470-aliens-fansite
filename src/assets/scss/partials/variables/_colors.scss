@@ -3,3 +3,18 @@ $color-black: #242424;
 $color-blue: #082032;
 $color-blue-grey: #334756;
 $color-orange: #f0a500;
+
+@mixin blueprint-background {
+  background-color: $color-blue;
+  background-image: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.01),
+      transparent
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 0),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 0),
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 0),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 0);
+  background-size: cover, 5rem 5rem, 5rem 5rem, 1rem 1rem, 1rem 1rem;
+  background-position: 50% 50%;
+}
