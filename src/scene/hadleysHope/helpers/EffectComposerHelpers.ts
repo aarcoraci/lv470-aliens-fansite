@@ -114,6 +114,10 @@ class EffectComposerHelpers {
     this.regularOutlinePass.selectedObjects = selection;
   }
 
+  clearRegularElementOutlined(): void {
+    this.regularOutlinePass.selectedObjects = [];
+  }
+
   dispose(): void {
     this.bluePrintFilmPass.material.dispose();
     this.regularFilmPass.material.dispose();

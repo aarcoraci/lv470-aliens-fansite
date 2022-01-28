@@ -210,6 +210,7 @@ class Orchestrator {
     const zoomFrom = { zoom: this.camera.zoom };
     const zoomTo = { zoom: 2 };
     this.currentSelectedElement = null;
+    EffectComposerHelpers.getInstance().clearRegularElementOutlined();
 
     new Tween(zoomFrom)
       .to(zoomTo, 380)
