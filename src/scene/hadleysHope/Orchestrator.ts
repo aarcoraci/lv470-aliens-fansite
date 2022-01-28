@@ -21,7 +21,6 @@ import CameraHelpers from './helpers/CameraHelpers';
 import BaseSceneElement from '../base/BaseSceneElement';
 import { Easing, Tween } from '@tweenjs/tween.js';
 import SceneElementType from '../SceneElementType';
-import { textChangeRangeIsUnchanged } from 'typescript';
 /**
  * Manages the main aspect of the final scene
  */
@@ -85,7 +84,7 @@ class Orchestrator {
       this.renderer.domElement
     );
     this.cameraControls.enableRotate = false;
-    this.cameraControls.enableZoom = true;
+    this.cameraControls.enableZoom = false;
     this.cameraControls.maxZoom = 4;
     this.cameraControls.minZoom = 2;
     this.cameraControls.touches.ONE = TOUCH.PAN;
@@ -136,6 +135,10 @@ class Orchestrator {
     );
   }
 
+  /**
+   * Focus a given object using different animation effects
+   * @param target element to target
+   */
   private focusTarget(target: BaseSceneElement) {
     this.cameraControls.enabled = false;
     let position = new Vector3().copy(this.camera.position);
@@ -162,6 +165,10 @@ class Orchestrator {
     trackingTween.start();
   }
 
+  /**
+   * check if there is a element of type Building being intersected by the raycaster and updates
+   * the reference. Only works on regular draw mode.
+   */
   private checkSelectedObject(): void {
     if (
       this.currentDrawMode == DrawMode.BLUEPRINT ||
@@ -193,10 +200,20 @@ class Orchestrator {
     }
   }
 
+  /**
+   * Checks if the current raycaster is intersecting an object. Useful for devices where hovering is possible.
+   * @returns true if there is an element being intersected by the current pointer
+   */
   isPointerOverElement(): boolean {
     return this.selectedElement != null;
   }
 
+  /**
+   * Attempts to obtain the element (of type building) of a given tap position
+   * @param x current mouse x position to calculate the pointer
+   * @param y current y position to calculate the pointer
+   * @returns a BaseSceneElement of type Building if detected on the click or null if noting clicked
+   */
   attemptTapOrClick(x: number, y: number): BaseSceneElement | null {
     this.updatePointerPosition(x, y); // on mobile hover wont be triggering this, must be explicit
     this.checkSelectedObject();
@@ -208,6 +225,12 @@ class Orchestrator {
     }
   }
 
+  /**
+   * Updates the pointer and raycaster object with new x and y mouse coordinates.
+   * Useful on desktop environments or devices where mouse hovering is available.
+   * @param x x mouse position
+   * @param y y mouse position
+   */
   updatePointerPosition(x: number, y: number) {
     this.pointer.x = x;
     this.pointer.y = y;
@@ -241,6 +264,9 @@ class Orchestrator {
       : this.regularScene;
   }
 
+  /**
+   * Makes the transition from Blueprint to Regular mode
+   */
   transition(): void {
     EffectComposerHelpers.getInstance().bluePrintGlitchPass.enabled = true;
     setTimeout(() => {
@@ -270,6 +296,10 @@ class Orchestrator {
     this.bluePrintEffectComposer.setSize(width, height);
     this.regularEffectComposer.setSize(width, height);
   }
+
+  /**
+   * disposes the resources being used by the orchestrator
+   */
   dispose() {
     if (this.cameraControls != null) {
       this.cameraControls.dispose();
