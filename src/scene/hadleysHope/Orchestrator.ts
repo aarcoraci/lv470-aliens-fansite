@@ -198,8 +198,8 @@ class Orchestrator {
   }
 
   attemptTapOrClick(x: number, y: number): BaseSceneElement | null {
-    this.updatePointerPosition(x, y);
-    this.checkSelectedObject(); // on mobile hover wont be triggering this, must be explicit
+    this.updatePointerPosition(x, y); // on mobile hover wont be triggering this, must be explicit
+    this.checkSelectedObject();
     if (this.selectedElement != null) {
       this.focusTarget(this.selectedElement);
       return this.selectedElement;
