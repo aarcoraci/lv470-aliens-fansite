@@ -17,6 +17,10 @@
   transition-property: border-color, background-color, color, box-shadow;
   transition-timing-function: linear;
 
+  &.fixed-width {
+    width: 310px;
+  }
+
   &:not(.disabled):not(:disabled) {
     &:hover {
       background-color: transparentize($color-blue-gray, 0.5);

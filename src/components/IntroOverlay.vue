@@ -7,10 +7,13 @@ const loadingCover = ref(null);
 const isLoading = ref(true);
 const isEnabled = ref(true);
 
+const buttonText = ref('loading...');
+
 const emit = defineEmits(['explore']);
 
 const removeLoadingCover = (): void => {
   isLoading.value = false;
+  buttonText.value = 'explore settlement';
   gsap.to(loadingCover.value, {
     autoAlpha: 0,
     duration: 0.85
@@ -62,10 +65,10 @@ defineExpose({
       </p>
       <button
         @click.prevent="initExplore"
-        class="button orange"
+        class="button orange fixed-width"
         :disabled="!isUIInteractive"
       >
-        explore settlement
+        {{ buttonText }}
       </button>
     </div>
   </div>

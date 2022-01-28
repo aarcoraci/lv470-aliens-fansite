@@ -278,6 +278,7 @@ class Orchestrator {
     ) {
       return null;
     }
+
     this.updatePointerPosition(x, y); // on mobile hover wont be triggering this, must be explicit
     this.checkSelectedObject();
     if (this.currentIntersectedElement != null) {
