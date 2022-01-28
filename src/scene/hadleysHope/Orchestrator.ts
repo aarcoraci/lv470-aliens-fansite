@@ -153,7 +153,6 @@ class Orchestrator {
     const aspect = this.width / this.height;
     if (aspect < 1) {
       offset = new Vector3(1.5, 0, 1.5);
-      console.log('mobile');
     }
     targetPosition.add(offset);
 
