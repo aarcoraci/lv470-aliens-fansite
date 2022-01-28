@@ -222,7 +222,7 @@ const initExperience = (): void => {
     color: $color-orange;
     @include typo-h4;
     @include respond-to('x-large') {
-      @include typo-h5;
+      @include typo-h3;
     }
   }
 
