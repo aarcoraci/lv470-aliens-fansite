@@ -7,6 +7,8 @@ import IntroOvlerlay from '../components/IntroOverlay.vue';
 import { Vector2 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 
+import { BuildingInfo, buildingDirectory } from '../data/buildings';
+
 let orchestrator: Orchestrator;
 let animationRequestId;
 
@@ -19,6 +21,12 @@ let dragging = false;
 let dragStart = new Vector2();
 let dragEnd = new Vector2();
 let dragDistance: number = 0;
+
+const currentBuildingInfo = ref<BuildingInfo>({
+  name: '',
+  text: '',
+  sceneElementName: ''
+});
 
 const createScene = async (targetDomElement: Element) => {
   orchestrator = new Orchestrator(
@@ -34,6 +42,9 @@ const createScene = async (targetDomElement: Element) => {
 
 const buildingSelected = (target: BaseSceneElement) => {
   mainScene.value.classList.remove('selecting');
+  currentBuildingInfo.value = buildingDirectory.find(
+    (b) => b.sceneElementName == target.name
+  );
   toggleInformationPanel(true);
 };
 
@@ -156,16 +167,11 @@ const initExperience = (): void => {
     <div div id="main-scene" class="main-scene" ref="mainScene"></div>
     <div class="side-panel" ref="sidePanel">
       <div class="top">
-        <h3>Building Name</h3>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus at
-          recusandae illum iusto incidunt laudantium nam architecto eaque
-          nesciunt quis veritatis soluta optio inventore beatae omnis, nihil sed
-          iste corrupti?
-        </p>
+        <h3>{{ currentBuildingInfo.name }}</h3>
+        <p v-html="currentBuildingInfo.text"></p>
       </div>
       <div class="bottom">
-        <button @click="closeInfoPanel" class="button yellow">close</button>
+        <button @click="closeInfoPanel" class="button orange">close</button>
       </div>
     </div>
   </div>
@@ -212,10 +218,14 @@ const initExperience = (): void => {
     }
   }
 
+  h3 {
+    color: $color-orange;
+  }
+
   p {
     @include typo-h4;
     @include respond-to('x-large') {
-      @include typo-h3;
+      @include typo-h4;
     }
   }
   .bottom {
