@@ -5,7 +5,7 @@ import Orchestrator from '../scene/hadleysHope/Orchestrator';
 import DrawMode from '../scene/DrawMode';
 import CameraHelpers from '../scene/hadleysHope/helpers/CameraHelpers';
 
-import IntroOvlerlay from "../components/IntroOverlay.vue";
+import IntroOvlerlay from '../components/IntroOverlay.vue';
 
 let orchestrator: Orchestrator;
 let animationRequestId;
@@ -14,7 +14,11 @@ const showIntro = ref(true);
 const introOverlay = ref(null);
 
 const createScene = async (targetDomElement: Element) => {
-  orchestrator = new Orchestrator(window.innerWidth, window.innerHeight, window.devicePixelRatio)
+  orchestrator = new Orchestrator(
+    window.innerWidth,
+    window.innerHeight,
+    window.devicePixelRatio
+  );
   await orchestrator.load();
   targetDomElement.appendChild(orchestrator.renderer.domElement);
   introOverlay.value.removeLoadingCover();
@@ -45,11 +49,11 @@ onBeforeUnmount(() => {
 });
 
 /**
-* Moving the camera while the controls (orbit) are active requires not only moving
-* the camera to a target also move the target (focal target) of the controls keeping the
-* desired offset Vector
+ * Moving the camera while the controls (orbit) are active requires not only moving
+ * the camera to a target also move the target (focal target) of the controls keeping the
+ * desired offset Vector
  * @param target
-  */
+ */
 // const focusTarget = (target: BaseSceneElement): void => {
 //   cameraControls.enabled = false;
 //   let position = new THREE.Vector3().copy(camera.position);
@@ -106,23 +110,26 @@ const targetOperations = (): void => {
 
 const fadeOut = (): void => {
   orchestrator.transition();
-}
+};
 
 const initExperience = (): void => {
   showIntro.value = false;
   orchestrator.transition();
-}
+};
 </script>
 
-
- <template>
+<template>
   <main>
     <div class="controls">
       <button @click="animateCamera">camera</button>
       <button @click="targetOperations">toggle</button>
       <button @click="fadeOut">fade out</button>
     </div>
-    <intro-ovlerlay @explore="initExperience" ref="introOverlay" v-if="showIntro" />
+    <intro-ovlerlay
+      @explore="initExperience"
+      ref="introOverlay"
+      v-if="showIntro"
+    />
     <div div id="main-scene" class="main-scene"></div>
   </main>
 </template>

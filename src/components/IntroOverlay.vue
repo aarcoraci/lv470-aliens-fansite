@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { gsap, Back } from "gsap";
+import { gsap, Back } from 'gsap';
 
 const welcomePanel = ref(null);
 const loadingCover = ref(null);
@@ -12,18 +12,18 @@ const removeLoadingCover = (): void => {
   isLoading.value = false;
   gsap.to(loadingCover.value, {
     autoAlpha: 0,
-    duration: .85,
-  })
+    duration: 0.85
+  });
 };
 
 const initExplore = () => {
   gsap.to(welcomePanel.value, {
     ease: Back.easeIn,
     autoAlpha: 0,
-    scale: .9,
-    duration: .64,
+    scale: 0.9,
+    duration: 0.64,
     onComplete: () => {
-      emit("explore");
+      emit('explore');
     }
   });
 };
@@ -39,12 +39,19 @@ defineExpose({
     <div class="intro container" ref="welcomePanel">
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi deleniti.</p>
+      <p>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste
+        cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum
+        hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi
+        deleniti.
+      </p>
       <button
         @click.prevent="initExplore"
         class="button orange"
         :disabled="isLoading"
-      >explore the base</button>
+      >
+        explore the base
+      </button>
     </div>
   </div>
 </template>
@@ -83,13 +90,13 @@ defineExpose({
     text-align: center;
     @include blueprint-background;
 
-    @include respond-to("large") {
+    @include respond-to('large') {
       padding: 90px;
     }
 
     &::before {
       position: absolute;
-      content: "";
+      content: '';
       top: 0;
       left: 0;
       width: 100%;
@@ -101,7 +108,7 @@ defineExpose({
     p,
     h2 {
       margin-bottom: 18px;
-      @include respond-to("large") {
+      @include respond-to('large') {
         margin-bottom: 28px;
       }
     }
@@ -110,7 +117,7 @@ defineExpose({
       width: 100px;
       height: 30px;
       margin: 0 auto;
-      background-image: url("~@/assets/img/wy-logo-variant.png");
+      background-image: url('~@/assets/img/wy-logo-variant.png');
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
