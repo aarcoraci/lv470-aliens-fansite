@@ -23,7 +23,9 @@ const initExplore = () => {
     scale: 0.9,
     duration: 0.64,
     onComplete: () => {
-      emit('explore');
+      setTimeout(() => {
+        emit('explore');
+      }, 340);
     }
   });
 };
@@ -40,10 +42,17 @@ defineExpose({
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
       <p>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste
-        cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum
-        hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi
-        deleniti.
+        Weyland Yutani welcomes you to your new home. A small yet thriving
+        community awaits you at Mutta Station.
+      </p>
+      <p>
+        You have assigned a living unit at Mutta Station as a reward for your
+        hard years working as an <span class="highlight">[Operator]</span> at
+        <span class="highlight">[Fiorina Fury 223]</span>.
+      </p>
+      <p>
+        Use this terminal to explore the settlement and get familiar with your
+        environments. We know you will love it here.
       </p>
       <button
         @click.prevent="initExplore"
@@ -82,7 +91,7 @@ defineExpose({
   .intro {
     position: relative;
     border-radius: $border-radius;
-    padding: 30px;
+    padding: 45px 30px;
     background-color: $color-blue;
     color: $color-white;
     box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
@@ -113,6 +122,15 @@ defineExpose({
       }
     }
 
+    p {
+      span {
+        &.highlight {
+          color: $color-orange;
+          letter-spacing: 1px;
+          font-weight: 500;
+        }
+      }
+    }
     .wy-logo {
       width: 100px;
       height: 30px;
