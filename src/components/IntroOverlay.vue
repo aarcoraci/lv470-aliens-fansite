@@ -1,14 +1,50 @@
-<script setup ts>
-const emit = defineEmits(['explore'])
+<script setup lang="ts">
+import { ref } from 'vue';
+import { gsap, Back } from "gsap";
+
+const welcomePanel = ref(null);
+const loadingCover = ref(null);
+const isLoading = ref(true);
+
+const emit = defineEmits(['explore']);
+
+const removeLoadingCover = (): void => {
+  isLoading.value = false;
+  gsap.to(loadingCover.value, {
+    autoAlpha: 0,
+    duration: .85,
+  })
+};
+
+const initExplore = () => {
+  gsap.to(welcomePanel.value, {
+    ease: Back.easeIn,
+    autoAlpha: 0,
+    scale: .9,
+    duration: .64,
+    onComplete: () => {
+      emit("explore");
+    }
+  });
+};
+
+defineExpose({
+  removeLoadingCover
+});
 </script>
 
 <template>
   <div class="intro-overlay">
-    <div class="intro container">
+    <div class="loading-cover" ref="loadingCover"></div>
+    <div class="intro container" ref="welcomePanel">
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
       <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi deleniti.</p>
-      <button @click.prevent="$emit('explore')" class="button orange">explore the base</button>
+      <button
+        @click.prevent="initExplore"
+        class="button orange"
+        :disabled="isLoading"
+      >explore the base</button>
     </div>
   </div>
 </template>
@@ -20,23 +56,22 @@ const emit = defineEmits(['explore'])
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  z-index: 10;
+
+  z-index: 15;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: $padding;
 
-  .wy-logo {
-    width: 100px;
-    height: 30px;
-    margin: 0 auto;
-    background-image: url("~@/assets/img/wy-logo-variant.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+  .loading-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    @include blueprint-background($color-black);
   }
+
   .intro {
     position: relative;
     border-radius: $border-radius;
@@ -69,6 +104,16 @@ const emit = defineEmits(['explore'])
       @include respond-to("large") {
         margin-bottom: 28px;
       }
+    }
+
+    .wy-logo {
+      width: 100px;
+      height: 30px;
+      margin: 0 auto;
+      background-image: url("~@/assets/img/wy-logo-variant.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
   }
 }

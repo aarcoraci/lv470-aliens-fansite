@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
 import DrawMode from '../scene/DrawMode';
@@ -8,13 +8,16 @@ import CameraHelpers from '../scene/hadleysHope/helpers/CameraHelpers';
 import IntroOvlerlay from "../components/IntroOverlay.vue";
 
 let orchestrator: Orchestrator;
-
 let animationRequestId;
+
+const showIntro = ref(true);
+const introOverlay = ref(null);
 
 const createScene = async (targetDomElement: Element) => {
   orchestrator = new Orchestrator(window.innerWidth, window.innerHeight, window.devicePixelRatio)
   await orchestrator.load();
   targetDomElement.appendChild(orchestrator.renderer.domElement);
+  introOverlay.value.removeLoadingCover();
 };
 
 const handleResize = () => {
@@ -106,7 +109,8 @@ const fadeOut = (): void => {
 }
 
 const initExperience = (): void => {
-  console.log("emitted");
+  showIntro.value = false;
+  orchestrator.transition();
 }
 </script>
 
@@ -118,7 +122,7 @@ const initExperience = (): void => {
       <button @click="targetOperations">toggle</button>
       <button @click="fadeOut">fade out</button>
     </div>
-    <intro-ovlerlay @explore="initExperience" />
+    <intro-ovlerlay @explore="initExperience" ref="introOverlay" v-if="showIntro" />
     <div div id="main-scene" class="main-scene"></div>
   </main>
 </template>
