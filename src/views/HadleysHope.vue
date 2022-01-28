@@ -2,10 +2,9 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue';
 import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
-import DrawMode from '../scene/DrawMode';
-import CameraHelpers from '../scene/hadleysHope/helpers/CameraHelpers';
 
 import IntroOvlerlay from '../components/IntroOverlay.vue';
+import { Vector2 } from 'three';
 
 let orchestrator: Orchestrator;
 let animationRequestId;
@@ -14,7 +13,8 @@ const showIntro = ref(true);
 const introOverlay = ref(null);
 const mainScene = ref(null);
 
-let drag = false;
+let dragStart = new Vector2();
+let dragEnd = new Vector2();
 
 const createScene = async (targetDomElement: Element) => {
   orchestrator = new Orchestrator(
@@ -39,9 +39,9 @@ const animate = () => {
 };
 
 const handleMouseMove = (event: MouseEvent) => {
-  drag = true;
   const x = (event.clientX / window.innerWidth) * 2 - 1;
   const y = -(event.clientY / window.innerHeight) * 2 + 1;
+
   orchestrator.updatePointerPosition(x, y);
   if (orchestrator.isPointerOverElement()) {
     mainScene.value.classList.add('selecting');
@@ -50,16 +50,23 @@ const handleMouseMove = (event: MouseEvent) => {
   }
 };
 
-const handleMouseDown = () => {
-  drag = false;
+const handleMouseDown = (event: MouseEvent) => {
+  const x = (event.clientX / window.innerWidth) * 2 - 1;
+  const y = -(event.clientY / window.innerHeight) * 2 + 1;
+  dragStart = new Vector2(x, y);
 };
 
 const handleMouseUp = (event: MouseEvent) => {
-  if (drag) {
-    return;
-  }
   const x = (event.clientX / window.innerWidth) * 2 - 1;
   const y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+  // calculate a "snapping" distance to determine dragging
+  dragEnd = new Vector2(x, y);
+  const dragDistance = dragEnd.distanceTo(dragStart);
+  if (dragDistance >= 0.02) {
+    return;
+  }
+
   const selectedObject = orchestrator.attemptTapOrClick(x, y);
   if (selectedObject) {
     // console.log(selectedObject);
@@ -110,6 +117,7 @@ const initExperience = (): void => {
   left: 0;
   width: 100%;
   height: 100%;
+
   &.selecting {
     cursor: pointer;
   }

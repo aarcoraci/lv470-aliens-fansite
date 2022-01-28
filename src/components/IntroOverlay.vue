@@ -59,7 +59,7 @@ defineExpose({
         class="button orange"
         :disabled="isLoading"
       >
-        explore the base
+        explore settlement
       </button>
     </div>
   </div>
