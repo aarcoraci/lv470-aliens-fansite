@@ -97,7 +97,6 @@ class Orchestrator {
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
       // limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
-      console.log(this.cameraControls.target);
     });
   };
 
@@ -148,6 +147,16 @@ class Orchestrator {
     // define the final position
     let boxCenter = new Vector3();
     const targetPosition = target.getBoundingBox().getCenter(boxCenter);
+
+    // offset
+    let offset = new Vector3(1, 0, -1);
+    const aspect = this.width / this.height;
+    if (aspect < 1) {
+      offset = new Vector3(1.5, 0, 1.5);
+      console.log('mobile');
+    }
+    targetPosition.add(offset);
+
     targetPosition.y = 0;
     targetPosition.add(new Vector3(this.d, this.d, this.d));
 
@@ -155,17 +164,19 @@ class Orchestrator {
       .to(targetPosition, 1100)
       .easing(Easing.Cubic.InOut)
       .onUpdate((updatedPosition) => {
-        // this.cameraControls.target.copy(updatedPosition);
-        this.camera.position.copy(position);
+        this.camera.position.copy(updatedPosition);
         this.cameraControls.target.copy(
           this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
         );
         this.cameraControls.update();
-        // the focus point must be updated as well
       });
 
     const zoomFrom = { zoom: this.camera.zoom };
     const zoomTo = { zoom: 4 };
+
+    if (aspect < 1) {
+      zoomTo.zoom = 2;
+    }
 
     const zoomTween = new Tween(zoomFrom)
       .to(zoomTo, 380)

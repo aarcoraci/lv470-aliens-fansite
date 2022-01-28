@@ -100,23 +100,76 @@ const initExperience = (): void => {
 </script>
 
 <template>
-  <main>
+  <div class="main">
     <intro-ovlerlay
       @explore="initExperience"
       ref="introOverlay"
       v-if="showIntro"
     />
     <div div id="main-scene" class="main-scene" ref="mainScene"></div>
-  </main>
+    <div class="side-panel">
+      <div class="top">
+        <h3>Building Name</h3>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus at
+          recusandae illum iusto incidunt laudantium nam architecto eaque
+          nesciunt quis veritatis soluta optio inventore beatae omnis, nihil sed
+          iste corrupti?
+        </p>
+      </div>
+      <div class="bottom">
+        <button class="button yellow">close</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.main-scene {
+.main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+.side-panel {
   position: fixed;
+  bottom: 0;
+  right: 0;
+  height: 45vh;
+  width: 100%;
+  @include blueprint-background;
+  color: $color-white;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateY(100%);
+
+  @include respond-to('large') {
+    transform: translateX(100%);
+
+    width: 33vw;
+    height: 100%;
+    top: 0;
+    bottom: unset;
+    padding: 40px 60px;
+  }
+
+  p {
+    @include typo-h4;
+    @include respond-to('x-large') {
+      @include typo-h3;
+    }
+  }
+  .bottom {
+    text-align: right;
+  }
+}
+.main-scene {
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
 
   &.selecting {
     cursor: pointer;
