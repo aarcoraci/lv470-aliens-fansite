@@ -88,7 +88,7 @@ class Orchestrator {
 
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
-      limitPan({ minX: 0, maxX: 9, minZ: 0, maxZ: 6, minY: 0, maxY: 4 });
+      limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
       // console.log(cameraControls.target);
       // console.log(camera.position);
     });
@@ -194,7 +194,9 @@ class Orchestrator {
     return this.selectedElement != null;
   }
 
-  focusCurrentSelection(): BaseSceneElement | null {
+  attemptTapOrClick(x: number, y: number): BaseSceneElement | null {
+    this.updatePointerPosition(x, y);
+    this.checkSelectedObject(); // on mobile hover wont be triggering this, must be explicit
     if (this.selectedElement != null) {
       this.focusTarget(this.selectedElement);
       return this.selectedElement;
@@ -206,10 +208,10 @@ class Orchestrator {
   updatePointerPosition(x: number, y: number) {
     this.pointer.x = x;
     this.pointer.y = y;
+    this.raycaster.setFromCamera(this.pointer, this.camera);
   }
 
   update(): void {
-    this.raycaster.setFromCamera(this.pointer, this.camera);
     this.checkSelectedObject();
     const delta = this.clock.getDelta();
     if (this.cameraControls != null) {

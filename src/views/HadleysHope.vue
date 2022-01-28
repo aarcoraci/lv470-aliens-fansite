@@ -14,6 +14,8 @@ const showIntro = ref(true);
 const introOverlay = ref(null);
 const mainScene = ref(null);
 
+let drag = false;
+
 const createScene = async (targetDomElement: Element) => {
   orchestrator = new Orchestrator(
     window.innerWidth,
@@ -36,7 +38,8 @@ const animate = () => {
   orchestrator.render();
 };
 
-const handlePointerMove = (event: MouseEvent) => {
+const handleMouseMove = (event: MouseEvent) => {
+  drag = true;
   const x = (event.clientX / window.innerWidth) * 2 - 1;
   const y = -(event.clientY / window.innerHeight) * 2 + 1;
   orchestrator.updatePointerPosition(x, y);
@@ -47,8 +50,17 @@ const handlePointerMove = (event: MouseEvent) => {
   }
 };
 
-const handleClick = () => {
-  const selectedObject = orchestrator.focusCurrentSelection();
+const handleMouseDown = () => {
+  drag = false;
+};
+
+const handleMouseUp = (event: MouseEvent) => {
+  if (drag) {
+    return;
+  }
+  const x = (event.clientX / window.innerWidth) * 2 - 1;
+  const y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const selectedObject = orchestrator.attemptTapOrClick(x, y);
   if (selectedObject) {
     console.log(selectedObject);
   }
@@ -58,8 +70,9 @@ onMounted(async () => {
   const targetSceneElement = document.querySelector('#main-scene');
   await createScene(targetSceneElement);
   window.addEventListener('resize', handleResize);
-  window.addEventListener('pointermove', handlePointerMove);
-  window.addEventListener('click', handleClick);
+  window.addEventListener('mousemove', handleMouseMove);
+  window.addEventListener('mousedown', handleMouseDown);
+  window.addEventListener('mouseup', handleMouseUp);
 
   animate();
 });
@@ -67,9 +80,10 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
   orchestrator.dispose();
-  window.removeEventListener('click', handleClick);
   window.removeEventListener('resize', handleResize);
-  window.removeEventListener('pointermove', handlePointerMove);
+  window.removeEventListener('mousemove', handleMouseMove);
+  window.removeEventListener('mousedown', handleMouseDown);
+  window.removeEventListener('mouseup', handleMouseUp);
 });
 
 const animateCamera = () => {
