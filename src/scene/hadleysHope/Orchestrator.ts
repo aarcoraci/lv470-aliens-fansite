@@ -1,6 +1,8 @@
 import {
   Box3,
+  Box3Helper,
   Clock,
+  Color,
   MOUSE,
   OrthographicCamera,
   Raycaster,
@@ -52,8 +54,6 @@ class Orchestrator {
   private width: number;
   private height: number;
 
-  isFocusing: boolean = false;
-
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
     this.width = width;
@@ -80,21 +80,24 @@ class Orchestrator {
   }
 
   createCameraControls = () => {
-    // controls
     this.cameraControls = new OrbitControls(
       this.camera,
       this.renderer.domElement
     );
+
     this.cameraControls.enableRotate = false;
     this.cameraControls.enableZoom = false;
-    this.cameraControls.maxZoom = 4;
+    this.cameraControls.maxZoom = 4.5;
     this.cameraControls.minZoom = 2;
     this.cameraControls.touches.ONE = TOUCH.PAN;
     this.cameraControls.mouseButtons.LEFT = MOUSE.PAN;
 
+    console.log(this.cameraControls.target);
+
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
-      limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
+      // limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
+      console.log(this.cameraControls.target);
     });
   };
 
@@ -137,30 +140,28 @@ class Orchestrator {
     );
   }
 
-  /**
-   * Focus a given object using different animation effects
-   * @param target element to target
-   */
   private focusTarget(target: BaseSceneElement) {
-    EffectComposerHelpers.getInstance().outlineRegularElement(target);
-
     this.cameraControls.enabled = false;
+    EffectComposerHelpers.getInstance().outlineRegularElement(target);
     let position = new Vector3().copy(this.camera.position);
-    const targetPosition = target.position.clone();
 
-    targetPosition.y = this.d; // lock x and z
-    targetPosition.add(new Vector3(this.d, 0, this.d));
+    // define the final position
+    let boxCenter = new Vector3();
+    const targetPosition = target.getBoundingBox().getCenter(boxCenter);
+    targetPosition.y = 0;
+    targetPosition.add(new Vector3(this.d, this.d, this.d));
 
     const trackingTween = new Tween(position)
       .to(targetPosition, 1100)
       .easing(Easing.Cubic.InOut)
       .onUpdate((updatedPosition) => {
-        this.camera.position.copy(updatedPosition);
-        // the focus point must be updated as well
+        // this.cameraControls.target.copy(updatedPosition);
+        this.camera.position.copy(position);
         this.cameraControls.target.copy(
           this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
         );
         this.cameraControls.update();
+        // the focus point must be updated as well
       });
 
     const zoomFrom = { zoom: this.camera.zoom };
@@ -174,7 +175,6 @@ class Orchestrator {
       })
       .onComplete(() => {
         this.cameraControls.enabled = true;
-        this.isFocusing = true;
       });
 
     trackingTween.chain(zoomTween);
@@ -193,7 +193,6 @@ class Orchestrator {
       })
       .onComplete(() => {
         this.cameraControls.enabled = true;
-        this.isFocusing = false;
       });
 
     zoomTween.start();

@@ -10,7 +10,7 @@ class Connectors extends BaseSceneElement {
   static BUILDING_NAME = 'connector';
 
   constructor(meshes: Mesh[] = [], name = '', drawMode: DrawMode) {
-    super(name, SceneElementType.BUILDING);
+    super(name, SceneElementType.DOODAD);
 
     const isBluePrint = drawMode == DrawMode.BLUEPRINT;
 
