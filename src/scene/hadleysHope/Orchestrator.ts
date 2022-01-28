@@ -49,10 +49,13 @@ class Orchestrator {
 
   private raycaster: Raycaster = new Raycaster();
   private pointer: Vector2 = new Vector2();
-  private selectedElement: BaseSceneElement = null;
+  private currentIntersectedElement: BaseSceneElement | null = null; // element current under the raycast eye
+  currentSelectedElement: BaseSceneElement | null = null;
 
   private width: number;
   private height: number;
+
+  onBuildingFocused: (target: BaseSceneElement) => void;
 
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
@@ -91,8 +94,6 @@ class Orchestrator {
     this.cameraControls.minZoom = 2;
     this.cameraControls.touches.ONE = TOUCH.PAN;
     this.cameraControls.mouseButtons.LEFT = MOUSE.PAN;
-
-    console.log(this.cameraControls.target);
 
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
@@ -174,7 +175,7 @@ class Orchestrator {
     const zoomTo = { zoom: 4 };
 
     if (aspect < 1) {
-      zoomTo.zoom = 2;
+      zoomTo.zoom = 3;
     }
 
     const zoomTween = new Tween(zoomFrom)
@@ -184,7 +185,11 @@ class Orchestrator {
         this.camera.zoom = updateZoom.zoom;
       })
       .onComplete(() => {
-        this.cameraControls.enabled = true;
+        if (this.onBuildingFocused) {
+          this.currentSelectedElement = target;
+          this.onBuildingFocused(target);
+          this.cameraControls.enabled = true;
+        }
       });
 
     trackingTween.chain(zoomTween);
@@ -193,19 +198,16 @@ class Orchestrator {
 
   unfocus() {
     const zoomFrom = { zoom: this.camera.zoom };
-    const zoomTo = { zoom: 1 };
+    const zoomTo = { zoom: 2 };
+    this.currentSelectedElement = null;
 
-    const zoomTween = new Tween(zoomFrom)
+    new Tween(zoomFrom)
       .to(zoomTo, 380)
       .easing(Easing.Quadratic.InOut)
       .onUpdate((updateZoom) => {
         this.camera.zoom = updateZoom.zoom;
       })
-      .onComplete(() => {
-        this.cameraControls.enabled = true;
-      });
-
-    zoomTween.start();
+      .start();
   }
 
   /**
@@ -237,9 +239,9 @@ class Orchestrator {
       });
 
     if (intersections.length) {
-      this.selectedElement = intersections[0];
+      this.currentIntersectedElement = intersections[0];
     } else {
-      this.selectedElement = null;
+      this.currentIntersectedElement = null;
     }
   }
 
@@ -248,7 +250,7 @@ class Orchestrator {
    * @returns true if there is an element being intersected by the current pointer
    */
   isPointerOverElement(): boolean {
-    return this.selectedElement != null;
+    return this.currentIntersectedElement != null;
   }
 
   /**
@@ -258,11 +260,18 @@ class Orchestrator {
    * @returns a BaseSceneElement of type Building if detected on the click or null if noting clicked
    */
   attemptTapOrClick(x: number, y: number): BaseSceneElement | null {
+    if (
+      this.currentDrawMode == DrawMode.BLUEPRINT ||
+      !this.cameraControls ||
+      !this.cameraControls.enabled
+    ) {
+      return null;
+    }
     this.updatePointerPosition(x, y); // on mobile hover wont be triggering this, must be explicit
     this.checkSelectedObject();
-    if (this.selectedElement != null) {
-      this.focusTarget(this.selectedElement);
-      return this.selectedElement;
+    if (this.currentIntersectedElement != null) {
+      this.focusTarget(this.currentIntersectedElement);
+      return this.currentIntersectedElement;
     } else {
       return null;
     }
