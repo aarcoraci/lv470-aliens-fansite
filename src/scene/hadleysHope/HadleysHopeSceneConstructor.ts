@@ -146,7 +146,7 @@ class HadleysHopeSceneConstructor {
       buildingMeshes.push(extra as Mesh);
     });
 
-    return new WorkShop(buildingMeshes, District.BUILDING_NAME, drawMode);
+    return new WorkShop(buildingMeshes, WorkShop.BUILDING_NAME, drawMode);
   }
 
   private buildOreProcessing(gltf: GLTF, drawMode: DrawMode): OreProcessing {

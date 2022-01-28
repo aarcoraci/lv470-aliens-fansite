@@ -220,13 +220,22 @@ const initExperience = (): void => {
 
   h3 {
     color: $color-orange;
+    @include typo-h4;
+    @include respond-to('x-large') {
+      @include typo-h5;
+    }
   }
 
   p {
-    @include typo-h4;
+    @include typo-h5;
     @include respond-to('x-large') {
       @include typo-h4;
     }
+  }
+
+  .top {
+    flex-grow: 1;
+    overflow-y: auto;
   }
   .bottom {
     text-align: right;
