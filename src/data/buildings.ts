@@ -43,7 +43,7 @@ const buildingDirectory: BuildingInfo[] = [
     <br />
     <br />
     In special cases can be used to manually control ships or satellites in orbit though
-     this is more likely never to be needed.
+     this is likely never to be needed.
     `
   },
   {

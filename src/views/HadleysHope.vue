@@ -4,10 +4,13 @@ import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
 
 import IntroOvlerlay from '../components/IntroOverlay.vue';
+import NavigationPanelVue from '../components/NavigationPanel.vue';
+
 import { Vector2 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 
 import { BuildingInfo, buildingDirectory } from '../data/buildings';
+import NavigationPanel from '../components/NavigationPanel.vue';
 
 let orchestrator: Orchestrator;
 let animationRequestId;
@@ -84,6 +87,7 @@ const handleMouseMove = (event: MouseEvent) => {
   if (dragging) {
     dragEnd = new Vector2(x, y);
     dragDistance = dragEnd.distanceTo(dragStart);
+    mainScene.value.classList.add('dragging');
 
     if (dragDistance >= 0.1 && orchestrator.currentSelectedElement != null) {
       closeInfoPanel();
@@ -115,6 +119,7 @@ const handleMouseUp = (event: MouseEvent) => {
   dragEnd = new Vector2(x, y);
   dragDistance = dragEnd.distanceTo(dragStart);
 
+  mainScene.value.classList.remove('dragging');
   dragging = false;
   if (dragDistance >= 0.02) {
     return;
@@ -165,6 +170,7 @@ const initExperience = (): void => {
       v-if="showIntro"
     />
     <div div id="main-scene" class="main-scene" ref="mainScene"></div>
+    <navigation-panel />
     <div class="side-panel" ref="sidePanel">
       <div class="top">
         <h3>{{ currentBuildingInfo.name }}</h3>
@@ -190,6 +196,7 @@ const initExperience = (): void => {
   right: 0;
   height: 45vh;
   width: 100%;
+  z-index: 10;
   @include blueprint-background;
   color: $color-white;
   padding: 15px 20px;
@@ -247,6 +254,11 @@ const initExperience = (): void => {
   left: 0;
   right: 0;
   bottom: 0;
+  cursor: grab;
+
+  &.dragging {
+    cursor: grabbing;
+  }
 
   &.selecting {
     cursor: pointer;
