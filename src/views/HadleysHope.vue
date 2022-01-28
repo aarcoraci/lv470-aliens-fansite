@@ -62,7 +62,7 @@ const handleMouseUp = (event: MouseEvent) => {
   const y = -(event.clientY / window.innerHeight) * 2 + 1;
   const selectedObject = orchestrator.attemptTapOrClick(x, y);
   if (selectedObject) {
-    console.log(selectedObject);
+    // console.log(selectedObject);
   }
 };
 
@@ -86,26 +86,6 @@ onBeforeUnmount(() => {
   window.removeEventListener('mouseup', handleMouseUp);
 });
 
-const animateCamera = () => {
-  CameraHelpers.transitionFromTopToMain(orchestrator);
-};
-
-const targetOperations = (): void => {
-  if (orchestrator.currentDrawMode == DrawMode.REGULAR) {
-    orchestrator.currentDrawMode = DrawMode.BLUEPRINT;
-  } else {
-    orchestrator.currentDrawMode = DrawMode.REGULAR;
-  }
-  // const target = hadleysHope.sceneElements.find(
-  //   (e) => e.name == Operations.BUILDING_NAME
-  // );
-  // focusTarget(target);
-};
-
-const fadeOut = (): void => {
-  orchestrator.transition();
-};
-
 const initExperience = (): void => {
   showIntro.value = false;
   orchestrator.transition();
@@ -114,11 +94,6 @@ const initExperience = (): void => {
 
 <template>
   <main>
-    <div class="controls">
-      <button @click="animateCamera">camera</button>
-      <button @click="targetOperations">toggle</button>
-      <button @click="fadeOut">fade out</button>
-    </div>
     <intro-ovlerlay
       @explore="initExperience"
       ref="introOverlay"
@@ -137,20 +112,6 @@ const initExperience = (): void => {
   height: 100%;
   &.selecting {
     cursor: pointer;
-  }
-}
-
-.controls {
-  position: fixed;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  padding: 8px;
-  border-radius: 4px;
-  background-color: #fbfbfb;
-  display: flex;
-  & > * {
-    margin-right: 30px;
   }
 }
 </style>

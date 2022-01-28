@@ -39,7 +39,7 @@ class Orchestrator {
   bluePrintEffectComposer: EffectComposer;
   regularEffectComposer: EffectComposer;
 
-  private nearPlane = 0.1;
+  private nearPlane = -10;
   private farPlane = 1000;
 
   camera: THREE.OrthographicCamera;
@@ -50,8 +50,13 @@ class Orchestrator {
   private pointer: Vector2 = new Vector2();
   private selectedElement: BaseSceneElement = null;
 
+  private width: number;
+  private height: number;
+
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
+    this.width = width;
+    this.height = height;
     this.renderer = new WebGLRenderer({ alpha: true });
     this.renderer.setPixelRatio(devicePixelRatio);
     this.renderer.setClearColor(0x141a35);
@@ -89,8 +94,6 @@ class Orchestrator {
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
       limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
-      // console.log(cameraControls.target);
-      // console.log(camera.position);
     });
   };
 
@@ -144,8 +147,8 @@ class Orchestrator {
     const trackingTween = new Tween(position)
       .to(targetPosition, 1100)
       .easing(Easing.Cubic.InOut)
-      .onUpdate(() => {
-        this.camera.position.copy(position);
+      .onUpdate((updatedPosition) => {
+        this.camera.position.copy(updatedPosition);
         // the focus point must be updated as well
         this.cameraControls.target.copy(
           this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
@@ -213,6 +216,8 @@ class Orchestrator {
 
   update(): void {
     this.checkSelectedObject();
+    this.updateCamera();
+
     const delta = this.clock.getDelta();
     if (this.cameraControls != null) {
       this.cameraControls.update();
@@ -249,11 +254,17 @@ class Orchestrator {
     }, 120);
   }
 
-  resize(width: number, height: number) {
-    const aspect = width / height;
+  private updateCamera() {
+    const aspect = this.width / this.height;
     this.camera.left = this.d * -aspect;
     this.camera.right = this.d * aspect;
     this.camera.updateProjectionMatrix();
+  }
+
+  resize(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    this.updateCamera();
 
     this.renderer.setSize(width, height);
     this.bluePrintEffectComposer.setSize(width, height);
