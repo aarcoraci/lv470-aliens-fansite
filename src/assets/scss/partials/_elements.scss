@@ -17,20 +17,31 @@
   transition-property: border-color, background-color, color, box-shadow;
   transition-timing-function: linear;
 
-  &:hover {
-    background-color: transparentize($color-blue-grey, 0.5);
-    border-color: transparentize($color-white, 0.25);
+  &:not(.disabled):not(:disabled) {
+    &:hover {
+      background-color: transparentize($color-blue-gray, 0.5);
+      border-color: transparentize($color-white, 0.25);
+    }
   }
 
   &.orange {
     border-color: $color-orange;
     color: $color-orange;
 
-    &:hover {
-      box-shadow: 0px 0px 20px -5px rgba(lighten($color-orange, 18), 0.25);
-      background-color: inherit;
-      color: lighten($color-orange, 18);
-      border-color: lighten($color-orange, 18);
+    &:not(.disabled):not(:disabled) {
+      &:hover {
+        box-shadow: 0px 0px 20px -5px rgba(lighten($color-orange, 18), 0.25);
+        background-color: inherit;
+        color: lighten($color-orange, 18);
+        border-color: lighten($color-orange, 18);
+      }
     }
+  }
+
+  &:disabled,
+  &.disabled {
+    color: $color-gray;
+    border-color: $color-gray;
+    opacity: 0.6;
   }
 }

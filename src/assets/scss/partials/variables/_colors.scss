@@ -1,11 +1,12 @@
 $color-white: #fafafa;
 $color-black: #242424;
 $color-blue: #082032;
-$color-blue-grey: #334756;
+$color-blue-gray: #334756;
 $color-orange: #f0a500;
+$color-gray: #c3c3c3;
 
-@mixin blueprint-background {
-  background-color: $color-blue;
+@mixin blueprint-background($color: $color-blue) {
+  background-color: $color;
   background-image: radial-gradient(
       circle,
       rgba(255, 255, 255, 0.01),

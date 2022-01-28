@@ -104,6 +104,10 @@ const targetOperations = (): void => {
 const fadeOut = (): void => {
   orchestrator.transition();
 }
+
+const initExperience = (): void => {
+  console.log("emitted");
+}
 </script>
 
 
@@ -114,7 +118,7 @@ const fadeOut = (): void => {
       <button @click="targetOperations">toggle</button>
       <button @click="fadeOut">fade out</button>
     </div>
-    <intro-ovlerlay />
+    <intro-ovlerlay @explore="initExperience" />
     <div div id="main-scene" class="main-scene"></div>
   </main>
 </template>

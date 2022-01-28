@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup ts>
+const emit = defineEmits(['explore'])
+</script>
 
 <template>
   <div class="intro-overlay">
@@ -6,7 +8,7 @@
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
       <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iusto iste cumque ratione officiis nostrum reprehenderit temporibus cupiditate cum hic eaque, fugit sit odio natus nobis impedit obcaecati, atque modi deleniti.</p>
-      <a href="#" class="button orange">explore the base</a>
+      <button @click.prevent="$emit('explore')" class="button orange">explore the base</button>
     </div>
   </div>
 </template>
