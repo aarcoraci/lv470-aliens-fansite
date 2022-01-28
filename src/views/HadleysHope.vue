@@ -35,62 +35,34 @@ const animate = () => {
   orchestrator.render();
 };
 
+const handlePointerMove = (event: MouseEvent) => {
+  const x = (event.clientX / window.innerWidth) * 2 - 1;
+  const y = -(event.clientY / window.innerHeight) * 2 + 1;
+  orchestrator.updatePointerPosition(x, y);
+};
+
+const handleClick = () => {
+  const selectedObject = orchestrator.attemptToSelectObject();
+  console.log(selectedObject);
+};
+
 onMounted(async () => {
   const targetSceneElement = document.querySelector('#main-scene');
   await createScene(targetSceneElement);
   window.addEventListener('resize', handleResize);
+  window.addEventListener('pointermove', handlePointerMove);
+  window.addEventListener('click', handleClick);
+
   animate();
 });
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(animationRequestId);
   orchestrator.dispose();
+  window.removeEventListener('click', handleClick);
   window.removeEventListener('resize', handleResize);
+  window.removeEventListener('pointermove', handlePointerMove);
 });
-
-/**
- * Moving the camera while the controls (orbit) are active requires not only moving
- * the camera to a target also move the target (focal target) of the controls keeping the
- * desired offset Vector
- * @param target
- */
-// const focusTarget = (target: BaseSceneElement): void => {
-//   cameraControls.enabled = false;
-//   let position = new THREE.Vector3().copy(camera.position);
-//   const targetPosition = target.meshes[0].position.clone();
-
-//   targetPosition.y = d; // lock x and z
-//   targetPosition.add(new THREE.Vector3(d, 0, d));
-//   // zoom
-//   let zoom = { z: camera.zoom };
-//   let targetZoom = { z: 3 };
-
-//   const trackingTween = new TWEEN.Tween(position)
-//     .to(targetPosition, 2200)
-//     .easing(TWEEN.Easing.Cubic.InOut)
-//     .onUpdate(() => {
-//       camera.position.copy(position);
-//       // the focus point must be updated as well
-//       cameraControls.target.copy(
-//         camera.position.clone().sub(new THREE.Vector3(d, d, d))
-//       );
-//       cameraControls.update();
-//     });
-
-//   const zoomTween = new TWEEN.Tween(zoom)
-//     .easing(TWEEN.Easing.Quadratic.Out)
-//     .to(targetZoom, 1100)
-//     .onUpdate(() => {
-//       camera.zoom = zoom.z;
-//       updateCamera();
-//     })
-//     .onComplete(() => {
-//       cameraControls.enabled = true;
-//     });
-
-//   trackingTween.chain(zoomTween);
-//   trackingTween.start();
-// };
 
 const animateCamera = () => {
   CameraHelpers.transitionFromTopToMain(orchestrator);

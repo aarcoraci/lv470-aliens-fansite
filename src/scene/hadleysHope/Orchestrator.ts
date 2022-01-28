@@ -1,8 +1,11 @@
 import {
+  Box3,
   Clock,
   MOUSE,
   OrthographicCamera,
+  Raycaster,
   TOUCH,
+  Vector2,
   Vector3,
   WebGLRenderer
 } from 'three';
@@ -15,6 +18,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createLimitPan } from '../../scene/utils/cameraUtils';
 import EffectComposerHelpers from './helpers/EffectComposerHelpers';
 import CameraHelpers from './helpers/CameraHelpers';
+import BaseSceneElement from '../base/BaseSceneElement';
+import { Easing, Tween } from '@tweenjs/tween.js';
+import SceneElementType from '../SceneElementType';
 /**
  * Manages the main aspect of the final scene
  */
@@ -38,6 +44,9 @@ class Orchestrator {
   camera: THREE.OrthographicCamera;
   cameraControls: OrbitControls | null;
   d = 10;
+
+  private raycaster: Raycaster = new Raycaster();
+  private pointer: Vector2 = new Vector2();
 
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
@@ -122,7 +131,84 @@ class Orchestrator {
     );
   }
 
+  private focusTarget(target: BaseSceneElement) {
+    this.cameraControls.enabled = false;
+    let position = new Vector3().copy(this.camera.position);
+    const targetPosition = target.position.clone();
+
+    targetPosition.y = this.d; // lock x and z
+    targetPosition.add(new Vector3(this.d, 0, this.d));
+    // zoom
+    let zoom = { z: this.camera.zoom };
+    let targetZoom = { z: 3 };
+
+    const trackingTween = new Tween(position)
+      .to(targetPosition, 2200)
+      .easing(Easing.Cubic.InOut)
+      .onUpdate(() => {
+        this.camera.position.copy(position);
+        // the focus point must be updated as well
+        this.cameraControls.target.copy(
+          this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
+        );
+        this.cameraControls.update();
+      });
+
+    const zoomTween = new Tween(zoom)
+      .easing(Easing.Quadratic.Out)
+      .to(targetZoom, 1100)
+      .onUpdate(() => {
+        this.camera.zoom = zoom.z;
+        // updateCamera();
+      })
+      .onComplete(() => {
+        this.cameraControls.enabled = true;
+      });
+
+    trackingTween.chain(zoomTween);
+    trackingTween.start();
+  }
+
+  attemptToSelectObject(): BaseSceneElement | null {
+    if (
+      this.currentDrawMode == DrawMode.BLUEPRINT ||
+      !this.cameraControls ||
+      !this.cameraControls.enabled
+    ) {
+      return;
+    }
+
+    const intersections: BaseSceneElement[] = [];
+
+    this.regularScene.sceneElements
+      .filter((e) => e.sceneElementType == SceneElementType.BUILDING)
+      .forEach((element) => {
+        element.parts.forEach((part) => {
+          const intersectTarget: Vector3 = new Vector3();
+          if (
+            this.raycaster.ray.intersectBox(part.boundingBox, intersectTarget)
+          ) {
+            intersections.push(element);
+          }
+        });
+      });
+
+    if (intersections.length) {
+      const result = intersections[0];
+      this.focusTarget(result);
+      return result;
+    } else {
+      return null;
+    }
+  }
+
+  updatePointerPosition(x: number, y: number) {
+    this.pointer.x = x;
+    this.pointer.y = y;
+  }
+
   update(): void {
+    this.raycaster.setFromCamera(this.pointer, this.camera);
     const delta = this.clock.getDelta();
     if (this.cameraControls != null) {
       this.cameraControls.update();
