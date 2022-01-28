@@ -33,6 +33,7 @@ const createScene = async (targetDomElement: Element) => {
 };
 
 const buildingSelected = (target: BaseSceneElement) => {
+  mainScene.value.classList.remove('selecting');
   toggleInformationPanel(true);
 };
 
@@ -73,10 +74,10 @@ const handleMouseMove = (event: MouseEvent) => {
     dragEnd = new Vector2(x, y);
     dragDistance = dragEnd.distanceTo(dragStart);
 
-    if (dragDistance >= 0.02 && orchestrator.currentSelectedElement != null) {
+    if (dragDistance >= 0.1 && orchestrator.currentSelectedElement != null) {
       closeInfoPanel();
     }
-  } else {
+  } else if (orchestrator.currentSelectedElement == null) {
     if (orchestrator.isPointerOverElement()) {
       mainScene.value.classList.add('selecting');
     } else {
@@ -108,10 +109,12 @@ const handleMouseUp = (event: MouseEvent) => {
     return;
   }
 
-  const selectedObject = orchestrator.attemptTapOrClick(x, y);
-  if (selectedObject) {
-    // console.log(selectedObject);
+  if (orchestrator.currentSelectedElement != null) {
+    closeInfoPanel();
+    return;
   }
+
+  orchestrator.attemptTapOrClick(x, y);
 };
 // #endregion
 

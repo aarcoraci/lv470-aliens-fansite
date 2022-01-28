@@ -92,12 +92,21 @@ class Orchestrator {
     this.cameraControls.enableZoom = false;
     this.cameraControls.maxZoom = 4.5;
     this.cameraControls.minZoom = 2;
+    this.cameraControls.autoRotate = false;
     this.cameraControls.touches.ONE = TOUCH.PAN;
     this.cameraControls.mouseButtons.LEFT = MOUSE.PAN;
 
     const limitPan = createLimitPan(this.camera, this.cameraControls);
     this.cameraControls.addEventListener('change', (e) => {
-      // limitPan({ minX: -6, maxX: 6, minZ: -9, maxZ: 9, minY: -6, maxY: 6 });
+      const limit = 9;
+      limitPan({
+        minX: -limit,
+        maxX: limit,
+        minZ: -limit,
+        maxZ: limit,
+        minY: -limit,
+        maxY: limit
+      });
     });
   };
 
@@ -171,8 +180,9 @@ class Orchestrator {
         this.cameraControls.update();
       });
 
+    const targetZoom = aspect < 1 ? 3 : 4;
     const zoomFrom = { zoom: this.camera.zoom };
-    const zoomTo = { zoom: 4 };
+    const zoomTo = { zoom: targetZoom };
 
     if (aspect < 1) {
       zoomTo.zoom = 3;
@@ -186,9 +196,9 @@ class Orchestrator {
       })
       .onComplete(() => {
         if (this.onBuildingFocused) {
+          this.cameraControls.enabled = true;
           this.currentSelectedElement = target;
           this.onBuildingFocused(target);
-          this.cameraControls.enabled = true;
         }
       });
 
