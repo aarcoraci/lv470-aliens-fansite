@@ -21,6 +21,7 @@ import CameraHelpers from './helpers/CameraHelpers';
 import BaseSceneElement from '../base/BaseSceneElement';
 import { Easing, Tween } from '@tweenjs/tween.js';
 import SceneElementType from '../SceneElementType';
+import { textChangeRangeIsUnchanged } from 'typescript';
 /**
  * Manages the main aspect of the final scene
  */
@@ -47,6 +48,7 @@ class Orchestrator {
 
   private raycaster: Raycaster = new Raycaster();
   private pointer: Vector2 = new Vector2();
+  private selectedElement: BaseSceneElement = null;
 
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
@@ -138,12 +140,9 @@ class Orchestrator {
 
     targetPosition.y = this.d; // lock x and z
     targetPosition.add(new Vector3(this.d, 0, this.d));
-    // zoom
-    let zoom = { z: this.camera.zoom };
-    let targetZoom = { z: 3 };
 
     const trackingTween = new Tween(position)
-      .to(targetPosition, 2200)
+      .to(targetPosition, 1100)
       .easing(Easing.Cubic.InOut)
       .onUpdate(() => {
         this.camera.position.copy(position);
@@ -152,24 +151,15 @@ class Orchestrator {
           this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
         );
         this.cameraControls.update();
-      });
-
-    const zoomTween = new Tween(zoom)
-      .easing(Easing.Quadratic.Out)
-      .to(targetZoom, 1100)
-      .onUpdate(() => {
-        this.camera.zoom = zoom.z;
-        // updateCamera();
       })
       .onComplete(() => {
         this.cameraControls.enabled = true;
       });
 
-    trackingTween.chain(zoomTween);
     trackingTween.start();
   }
 
-  attemptToSelectObject(): BaseSceneElement | null {
+  private checkSelectedObject(): void {
     if (
       this.currentDrawMode == DrawMode.BLUEPRINT ||
       !this.cameraControls ||
@@ -194,9 +184,20 @@ class Orchestrator {
       });
 
     if (intersections.length) {
-      const result = intersections[0];
-      this.focusTarget(result);
-      return result;
+      this.selectedElement = intersections[0];
+    } else {
+      this.selectedElement = null;
+    }
+  }
+
+  isPointerOverElement(): boolean {
+    return this.selectedElement != null;
+  }
+
+  focusCurrentSelection(): BaseSceneElement | null {
+    if (this.selectedElement != null) {
+      this.focusTarget(this.selectedElement);
+      return this.selectedElement;
     } else {
       return null;
     }
@@ -209,6 +210,7 @@ class Orchestrator {
 
   update(): void {
     this.raycaster.setFromCamera(this.pointer, this.camera);
+    this.checkSelectedObject();
     const delta = this.clock.getDelta();
     if (this.cameraControls != null) {
       this.cameraControls.update();

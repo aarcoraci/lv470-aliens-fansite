@@ -12,6 +12,7 @@ let animationRequestId;
 
 const showIntro = ref(true);
 const introOverlay = ref(null);
+const mainScene = ref(null);
 
 const createScene = async (targetDomElement: Element) => {
   orchestrator = new Orchestrator(
@@ -39,11 +40,18 @@ const handlePointerMove = (event: MouseEvent) => {
   const x = (event.clientX / window.innerWidth) * 2 - 1;
   const y = -(event.clientY / window.innerHeight) * 2 + 1;
   orchestrator.updatePointerPosition(x, y);
+  if (orchestrator.isPointerOverElement()) {
+    mainScene.value.classList.add('selecting');
+  } else {
+    mainScene.value.classList.remove('selecting');
+  }
 };
 
 const handleClick = () => {
-  const selectedObject = orchestrator.attemptToSelectObject();
-  console.log(selectedObject);
+  const selectedObject = orchestrator.focusCurrentSelection();
+  if (selectedObject) {
+    console.log(selectedObject);
+  }
 };
 
 onMounted(async () => {
@@ -102,7 +110,7 @@ const initExperience = (): void => {
       ref="introOverlay"
       v-if="showIntro"
     />
-    <div div id="main-scene" class="main-scene"></div>
+    <div div id="main-scene" class="main-scene" ref="mainScene"></div>
   </main>
 </template>
 
@@ -113,6 +121,9 @@ const initExperience = (): void => {
   left: 0;
   width: 100%;
   height: 100%;
+  &.selecting {
+    cursor: pointer;
+  }
 }
 
 .controls {
