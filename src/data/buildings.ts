@@ -82,10 +82,10 @@ const buildingDirectory: BuildingInfo[] = [
     `
   },
   {
-    name: 'Workshop and Hangars',
+    name: 'The Workshop',
     sceneElementName: WorkShop.BUILDING_NAME,
-    text: `The Workshop is used to keep not only the colony's vehicles fine tuned but also
-    any device or facility that may require maintenance or fixing.
+    text: `The Workshop is not only used to keep the colony's vehicles fine tuned but also any 
+    device or facility that may require maintenance or fixing.
     <br />
     <br />
     Workers assigned to this building have the task of overseeing our land vehicles which can travel
