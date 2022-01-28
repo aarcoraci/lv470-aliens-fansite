@@ -52,6 +52,8 @@ class Orchestrator {
   private width: number;
   private height: number;
 
+  isFocusing: boolean = false;
+
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
     this.width = width;
@@ -140,6 +142,8 @@ class Orchestrator {
    * @param target element to target
    */
   private focusTarget(target: BaseSceneElement) {
+    EffectComposerHelpers.getInstance().outlineRegularElement(target);
+
     this.cameraControls.enabled = false;
     let position = new Vector3().copy(this.camera.position);
     const targetPosition = target.position.clone();
@@ -157,12 +161,42 @@ class Orchestrator {
           this.camera.position.clone().sub(new Vector3(this.d, this.d, this.d))
         );
         this.cameraControls.update();
+      });
+
+    const zoomFrom = { zoom: this.camera.zoom };
+    const zoomTo = { zoom: 4 };
+
+    const zoomTween = new Tween(zoomFrom)
+      .to(zoomTo, 380)
+      .easing(Easing.Quadratic.InOut)
+      .onUpdate((updateZoom) => {
+        this.camera.zoom = updateZoom.zoom;
       })
       .onComplete(() => {
         this.cameraControls.enabled = true;
+        this.isFocusing = true;
       });
 
+    trackingTween.chain(zoomTween);
     trackingTween.start();
+  }
+
+  unfocus() {
+    const zoomFrom = { zoom: this.camera.zoom };
+    const zoomTo = { zoom: 1 };
+
+    const zoomTween = new Tween(zoomFrom)
+      .to(zoomTo, 380)
+      .easing(Easing.Quadratic.InOut)
+      .onUpdate((updateZoom) => {
+        this.camera.zoom = updateZoom.zoom;
+      })
+      .onComplete(() => {
+        this.cameraControls.enabled = true;
+        this.isFocusing = false;
+      });
+
+    zoomTween.start();
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Camera, Object3D, Scene, Vector2 } from 'three';
+import { Camera, Object3D, Vector2 } from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
@@ -6,6 +6,7 @@ import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass';
 import HadleysHope from '../HadleysHope';
 import SceneElementType from '../../SceneElementType';
+import BaseSceneElement from '../../base/BaseSceneElement';
 
 class EffectComposerHelpers {
   private static instance: EffectComposerHelpers;
@@ -26,6 +27,7 @@ class EffectComposerHelpers {
 
   // regular
   regularRenderPass: RenderPass;
+  regularOutlinePass: OutlinePass;
   regularFilmPass: FilmPass;
 
   setBluePrintEffectComposerPasses(
@@ -82,6 +84,16 @@ class EffectComposerHelpers {
     this.regularRenderPass = new RenderPass(hadleysHope.scene, camera);
     regularEffectComposer.addPass(this.regularRenderPass);
 
+    this.regularOutlinePass = new OutlinePass(
+      new Vector2(800, 600),
+      hadleysHope.scene,
+      camera,
+      []
+    );
+    this.regularOutlinePass.edgeStrength = 2;
+    this.regularOutlinePass.edgeGlow = 0.2;
+    regularEffectComposer.addPass(this.regularOutlinePass);
+
     this.regularFilmPass = new FilmPass(
       0.1, // noise intensity
       0.3, // scanline intensity
@@ -90,6 +102,16 @@ class EffectComposerHelpers {
     );
     this.regularFilmPass.renderToScreen = true;
     regularEffectComposer.addPass(this.regularFilmPass);
+  }
+
+  outlineRegularElement(element: BaseSceneElement): void {
+    const selection: Object3D[] = [];
+    // obtain all the meshes to be outlined
+    element.parts.forEach((part) => {
+      selection.push(part.mesh);
+    });
+
+    this.regularOutlinePass.selectedObjects = selection;
   }
 
   dispose(): void {

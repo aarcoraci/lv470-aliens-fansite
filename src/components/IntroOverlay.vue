@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { gsap, Back } from 'gsap';
 
 const welcomePanel = ref(null);
 const loadingCover = ref(null);
 const isLoading = ref(true);
+const isEnabled = ref(true);
 
 const emit = defineEmits(['explore']);
 
@@ -17,6 +18,7 @@ const removeLoadingCover = (): void => {
 };
 
 const initExplore = () => {
+  isEnabled.value = false;
   gsap.to(welcomePanel.value, {
     ease: Back.easeIn,
     autoAlpha: 0,
@@ -29,6 +31,10 @@ const initExplore = () => {
     }
   });
 };
+
+const isUIInteractive = computed((): boolean => {
+  return isEnabled.value && !isLoading.value;
+});
 
 defineExpose({
   removeLoadingCover
@@ -57,7 +63,7 @@ defineExpose({
       <button
         @click.prevent="initExplore"
         class="button orange"
-        :disabled="isLoading"
+        :disabled="!isUIInteractive"
       >
         explore settlement
       </button>
