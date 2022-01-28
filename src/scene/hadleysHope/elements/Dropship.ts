@@ -35,6 +35,7 @@ class DropShip extends BaseSceneElement {
         this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
+    this.buildBoundingBox();
   }
 
   override update(delta: number): void {

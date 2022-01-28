@@ -44,6 +44,7 @@ class Rover extends BaseSceneElement {
         this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
+    this.buildBoundingBox();
   }
 }
 

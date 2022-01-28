@@ -58,6 +58,7 @@ class Operations extends BaseSceneElement {
         }
       }
     });
+    this.buildBoundingBox();
   }
 }
 

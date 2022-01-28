@@ -47,6 +47,7 @@ class Connectors extends BaseSceneElement {
         this.parts.push(new SceneElementPart(buildingMesh));
       }
     });
+    this.buildBoundingBox();
   }
 }
 

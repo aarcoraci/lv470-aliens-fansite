@@ -59,6 +59,7 @@ class District extends BaseSceneElement {
         }
       }
     });
+    this.buildBoundingBox();
   }
 }
 

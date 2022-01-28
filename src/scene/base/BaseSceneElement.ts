@@ -1,4 +1,4 @@
-import { Box3, Mesh, Vector3 } from 'three';
+import { Box3, Vector3 } from 'three';
 import SceneElementType from '../SceneElementType';
 import SceneElementPart from './SceneElementPart';
 
@@ -6,6 +6,7 @@ abstract class BaseSceneElement {
   name: string;
   position: Vector3;
   sceneElementType: SceneElementType;
+  boundingBox: Box3 = new Box3();
 
   parts: SceneElementPart[] = [];
 
@@ -14,13 +15,10 @@ abstract class BaseSceneElement {
     this.sceneElementType = sceneElementType;
   }
 
-  getBoundingBox(): Box3 {
-    const result = new Box3();
+  protected buildBoundingBox(): void {
     this.parts.forEach((part) => {
-      result.expandByObject(part.mesh);
+      this.boundingBox.expandByObject(part.mesh);
     });
-
-    return result;
   }
 
   update?(delta: number): void;

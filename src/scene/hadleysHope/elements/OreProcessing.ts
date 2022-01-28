@@ -110,6 +110,8 @@ class OreProcessing extends BaseSceneElement {
       }
     });
 
+    this.buildBoundingBox();
+
     // use tweens to handle the crane movement
     const gripBalanceAngle = Math.PI * 0.011;
     const gripBalanceTime = 8000;

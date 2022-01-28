@@ -52,6 +52,7 @@ class AtmosphereProcessor extends BaseSceneElement {
         }
       }
     });
+    this.buildBoundingBox();
   }
 }
 

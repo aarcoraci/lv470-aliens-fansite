@@ -146,7 +146,7 @@ class Orchestrator {
 
     // define the final position
     let boxCenter = new Vector3();
-    const targetPosition = target.getBoundingBox().getCenter(boxCenter);
+    const targetPosition = target.boundingBox.getCenter(boxCenter);
 
     // offset
     let offset = new Vector3(1, 0, -1);

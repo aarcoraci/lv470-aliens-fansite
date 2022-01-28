@@ -87,6 +87,7 @@ class WorkShop extends BaseSceneElement {
         }
       }
     });
+    this.buildBoundingBox();
   }
 
   override update(delta: number): void {

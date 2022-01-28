@@ -58,6 +58,7 @@ class LivingQuarters extends BaseSceneElement {
         }
       }
     });
+    this.buildBoundingBox();
   }
 }
 
