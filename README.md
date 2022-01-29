@@ -5,6 +5,10 @@ Feel free to download and take a look.
 
 ---
 
+### see it working
+
+[LV-470 Demo](https://aarcoraci.github.io/lv470-aliens-fansite/)
+
 ### about me
 
 I work as a software engineer for On 3 Technologies and I love doing visual and interactive projects.
