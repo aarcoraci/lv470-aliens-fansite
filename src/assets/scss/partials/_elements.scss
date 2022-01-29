@@ -1,8 +1,7 @@
 .button {
   cursor: pointer;
-
   display: inline-block;
-  padding: 0 35px;
+  padding: 0 5px;
   color: $color-white;
   border-radius: 4px;
   height: 50px;
@@ -10,15 +9,22 @@
   min-width: 180px;
   position: relative;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   border: 2px solid $color-white;
-
   transition-duration: 280ms;
   transition-property: border-color, background-color, color, box-shadow;
   transition-timing-function: linear;
+  white-space: nowrap;
+
+  @include respond-to('small') {
+    letter-spacing: 0.5px;
+    padding: 0 35px;
+  }
 
   &.fixed-width {
-    width: 310px;
+    width: 100%;
+    @include respond-to('small') {
+      width: 310px;
+    }
   }
 
   &:not(.disabled):not(:disabled) {
