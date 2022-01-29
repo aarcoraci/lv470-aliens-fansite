@@ -207,6 +207,7 @@ defineExpose({
   .technologies-showcase {
     display: flex;
     margin-bottom: 30px;
+    flex-wrap: wrap;
     & > * {
       &:not(:last-child) {
         margin-right: 15px;
