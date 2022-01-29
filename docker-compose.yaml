@@ -6,4 +6,4 @@ services:
     ports:
       - 8888:80
     volumes:
-      - ./dist/:/usr/local/apache2/htdocs/
+      - ./dist/:/usr/local/apache2/htdocs/lv470-aliens-fansite/
