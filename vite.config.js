@@ -8,6 +8,9 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [vue()],
     base: mode === 'production' ? '/lv470-aliens-fansite/' : '/',
+    build: {
+      outDir: './docs'
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '/src'),
