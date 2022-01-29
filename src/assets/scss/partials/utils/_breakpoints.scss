@@ -1,19 +1,23 @@
+/// Mixin to manage responsive breakpoints
+/// @author Kitty Giraudel
+/// @param {String} $breakpoint - Breakpoint name
+/// @require $breakpoints
 $breakpoints: (
-  "small": (
-    min-width: 767px,
+  'small': (
+    min-width: 767px
   ),
-  "medium": (
-    min-width: 1023px,
+  'medium': (
+    min-width: 1023px
   ),
-  "large": (
-    min-width: 1439px,
+  'large': (
+    min-width: 1439px
   ),
-  "x-large": (
-    min-width: 1919px,
+  'x-large': (
+    min-width: 1919px
   ),
-  "xxx-large": (
-    min-width: 2559px,
-  ),
+  'xxx-large': (
+    min-width: 2559px
+  )
 ) !default;
 
 /// Mixin to manage responsive breakpoints
