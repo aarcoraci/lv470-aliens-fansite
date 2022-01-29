@@ -1,8 +1,5 @@
 import {
-  Box3,
-  Box3Helper,
   Clock,
-  Color,
   MOUSE,
   OrthographicCamera,
   Raycaster,
