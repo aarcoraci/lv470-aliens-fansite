@@ -4,21 +4,20 @@ import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
 
 import IntroOvlerlay from '../components/IntroOverlay.vue';
-import NavigationPanelVue from '../components/NavigationPanel.vue';
+import NavigationPanel from '../components/NavigationPanel.vue';
 
 import { Vector2 } from 'three';
 import BaseSceneElement from '../scene/base/BaseSceneElement';
 
 import { BuildingInfo, buildingDirectory } from '../data/buildings';
-import NavigationPanel from '../components/NavigationPanel.vue';
 
 let orchestrator: Orchestrator;
 let animationRequestId;
 
 const showIntro = ref(true);
-const introOverlay = ref(null);
-const mainScene = ref(null);
-const sidePanel = ref(null);
+const introOverlay = ref<InstanceType<typeof IntroOvlerlay>>(null);
+const mainScene = ref<HTMLElement>(null);
+const sidePanel = ref<HTMLElement>(null);
 
 let dragging = false;
 let dragStart = new Vector2();

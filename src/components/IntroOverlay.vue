@@ -2,8 +2,8 @@
 import { ref, computed } from 'vue';
 import { gsap, Back } from 'gsap';
 
-const welcomePanel = ref(null);
-const loadingCover = ref(null);
+const welcomePanel = ref<HTMLElement>(null);
+const loadingCover = ref<HTMLElement>(null);
 const isLoading = ref(true);
 const isEnabled = ref(true);
 
@@ -59,9 +59,10 @@ defineExpose({
         hard years working as an <span class="highlight">[Operator]</span> at
         <span class="highlight">[Fiorina Fury 223]</span>.
       </p>
+      <p><strong>Get familiar with your environments:</strong></p>
       <p>
-        Use this terminal to explore the settlement and get familiar with your
-        environments. We know you will love it here.
+        Use your mouse or finger to move around and explore the settlement. You
+        can tap on some of the buildings to know more about them.
       </p>
       <button
         @click.prevent="initExplore"
@@ -101,12 +102,10 @@ defineExpose({
     position: relative;
     border-radius: $border-radius;
     padding: 45px 30px;
-    background-color: $color-blue;
     color: $color-white;
-    box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
-
     text-align: center;
     @include blueprint-background;
+    box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
 
     @include respond-to('large') {
       padding: 90px;

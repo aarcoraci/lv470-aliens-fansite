@@ -1,12 +1,24 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import SiteModal from '../components/SiteModal.vue';
+
+const userModal = ref<InstanceType<typeof SiteModal>>(null);
+
+const clickAbout = (): void => {
+  userModal.value.showModal();
+};
+const clickUser = (): void => {};
+</script>
 <template>
   <div class="navigation-panel">
-    <button class="navigation-panel-button">
+    <button class="navigation-panel-button" @click="clickAbout">
       <i class="icon user"></i>
     </button>
     <button class="navigation-panel-button">
       <i class="icon help"></i>
     </button>
   </div>
+  <site-modal ref="userModal"> Hello </site-modal>
 </template>
 
 <style lang="scss" scoped>
