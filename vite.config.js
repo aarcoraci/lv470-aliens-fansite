@@ -4,7 +4,6 @@ import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const basePath = mode === 'production' ? '/lv470-aliens-fansite/' : '/';
   return {
     plugins: [vue()],
     base: mode === 'production' ? '/lv470-aliens-fansite/' : '/',
