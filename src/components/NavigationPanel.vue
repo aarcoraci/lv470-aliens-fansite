@@ -48,6 +48,14 @@ defineExpose({
     <button class="navigation-panel-button" @click="clickAbout">
       <i class="icon help"></i>
     </button>
+    <a
+      href="https://github.com/aarcoraci/lv470-aliens-fansite"
+      class="navigation-panel-button"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <i class="icon github"></i>
+    </a>
   </div>
   <site-modal ref="userModal">
     <div class="modal-content">
@@ -148,10 +156,19 @@ defineExpose({
     border: 1px solid $color-white;
     position: relative;
     cursor: pointer;
+    transition-duration: 210ms;
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     @include respond-to('large') {
       width: 60px;
       height: 60px;
+    }
+
+    &:hover {
+      @include respond-to('large') {
+        transform: scale(0.9);
+      }
     }
 
     i.icon {
@@ -174,6 +191,9 @@ defineExpose({
       }
       &.help {
         background-image: url('~@/assets/img/help.svg');
+      }
+      &.github {
+        background-image: url('~@/assets/img/github.svg');
       }
     }
   }

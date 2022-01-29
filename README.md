@@ -1,7 +1,14 @@
-# Vue 3 + Vite
+# LV-470 - An Aliens fansite project
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is a fanpage made with several technologies I like plus some new ones I wanted to check.
+Feel free to download and take a look.
 
-## Recommended IDE Setup
+---
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+### about me
+
+I work as a software engineer for On 3 Technologies and I love doing visual and interactive projects.
+
+### contact
+
+If you are interested in our services please visit our[Website](https://on3tech.com/) website or send me an email at <angel@on3tech.com>
