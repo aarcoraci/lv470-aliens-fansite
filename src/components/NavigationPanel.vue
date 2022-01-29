@@ -70,16 +70,12 @@ defineExpose({
         practice for me to take a look on the technologies I used to built it.
       </p>
       <p>
-        I hope you find something interesting and maybe learn a bit from the
-        source code 😊.
-      </p>
-      <p>
         I'm part of
         <a href="https://on3tech.com/" target="_blank" rel="noopener noreferrer"
           >On 3 Technologies</a
         >
-        and we love to do projects like this. If you find this interesting let
-        me know:
+        and we love to do projects like this. If you find this interesting or if
+        you are looking to have something developed let me know:
         <a href="mailto:angel@on3tech.com" target="_blank">angel@on3tech.com</a
         >.
       </p>
