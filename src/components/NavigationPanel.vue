@@ -53,7 +53,7 @@ defineExpose({
     <div class="modal-content">
       <h4>About Me</h4>
       <p>
-        I'm Angel and I'm a software engineer with great passion for visual and
+        I'm Angel, a software engineer with great passion for visual and
         interactive projects. I've been programming since I was a teen while I
         was in high school.
       </p>
