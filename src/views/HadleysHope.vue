@@ -3,7 +3,7 @@ import { onMounted, onBeforeUnmount, ref } from 'vue';
 import * as TWEEN from '@tweenjs/tween.js';
 import Orchestrator from '../scene/hadleysHope/Orchestrator';
 
-import IntroOvlerlay from '../components/IntroOverlay.vue';
+import IntroOverlay from '../components/IntroOverlay.vue';
 import NavigationPanel from '../components/NavigationPanel.vue';
 
 import { Vector2 } from 'three';
@@ -15,7 +15,8 @@ let orchestrator: Orchestrator;
 let animationRequestId;
 
 const showIntro = ref(true);
-const introOverlay = ref<InstanceType<typeof IntroOvlerlay>>(null);
+const introOverlay = ref<InstanceType<typeof IntroOverlay>>(null);
+const navigationPanel = ref<InstanceType<typeof NavigationPanel>>(null);
 const mainScene = ref<HTMLElement>(null);
 const sidePanel = ref<HTMLElement>(null);
 
@@ -40,6 +41,11 @@ const createScene = async (targetDomElement: Element) => {
   targetDomElement.appendChild(orchestrator.renderer.domElement);
   introOverlay.value.removeLoadingCover();
   orchestrator.onBuildingFocused = buildingSelected;
+  orchestrator.onTransitionToRegularFinished = transitionToRegularSceneFinished;
+};
+
+const transitionToRegularSceneFinished = (): void => {
+  navigationPanel.value.showPanel();
 };
 
 const buildingSelected = (target: BaseSceneElement) => {
@@ -163,13 +169,13 @@ const initExperience = (): void => {
 
 <template>
   <div class="main">
-    <intro-ovlerlay
+    <intro-overlay
       @explore="initExperience"
       ref="introOverlay"
       v-if="showIntro"
     />
     <div div id="main-scene" class="main-scene" ref="mainScene"></div>
-    <navigation-panel />
+    <navigation-panel ref="navigationPanel" />
     <div class="side-panel" ref="sidePanel">
       <div class="top">
         <h3>{{ currentBuildingInfo.name }}</h3>

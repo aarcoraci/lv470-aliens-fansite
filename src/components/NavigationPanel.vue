@@ -1,16 +1,44 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { gsap, Back } from 'gsap';
 import SiteModal from '../components/SiteModal.vue';
 
+const navigationPanel = ref<HTMLElement>(null);
 const userModal = ref<InstanceType<typeof SiteModal>>(null);
+let timeline: GSAPTimeline | null = null;
 
 const clickAbout = (): void => {
   userModal.value.showModal();
 };
 const clickUser = (): void => {};
+
+const showPanel = (): void => {
+  timeline.play();
+};
+const hidePanel = (): void => {
+  timeline.reverse();
+};
+
+onMounted(() => {
+  gsap.set(navigationPanel.value, {
+    autoAlpha: 0,
+    top: '-5%'
+  });
+  timeline = gsap.timeline({ paused: true }).to(navigationPanel.value, {
+    duration: 0.29,
+    ease: Back.easeOut,
+    autoAlpha: 1,
+    top: '0%'
+  });
+});
+
+defineExpose({
+  showPanel,
+  hidePanel
+});
 </script>
 <template>
-  <div class="navigation-panel">
+  <div class="navigation-panel" ref="navigationPanel">
     <button class="navigation-panel-button" @click="clickAbout">
       <i class="icon user"></i>
     </button>

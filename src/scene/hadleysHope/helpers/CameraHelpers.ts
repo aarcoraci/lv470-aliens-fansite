@@ -60,6 +60,9 @@ abstract class CameraHelpers {
       })
       .onComplete(() => {
         orchestrator.createCameraControls();
+        if (orchestrator.onTransitionToRegularFinished) {
+          orchestrator.onTransitionToRegularFinished();
+        }
       });
 
     rotationTween.chain(zoomTween);

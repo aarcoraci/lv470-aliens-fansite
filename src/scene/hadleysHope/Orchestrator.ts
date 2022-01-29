@@ -52,7 +52,9 @@ class Orchestrator {
   private width: number;
   private height: number;
 
+  // callbacks
   onBuildingFocused: (target: BaseSceneElement) => void;
+  onTransitionToRegularFinished: () => void;
 
   constructor(width: number, height: number, devicePixelRatio: number) {
     // init renderer
