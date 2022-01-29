@@ -51,7 +51,7 @@ defineExpose({
   </div>
   <site-modal ref="userModal">
     <div class="modal-content">
-      <h3>About Me</h3>
+      <h4>About Me</h4>
       <p>
         I'm Angel and I'm a software engineer with great passion for visual and
         interactive projects. I've been programming since I was a teen while I
@@ -79,12 +79,39 @@ defineExpose({
   </site-modal>
   <site-modal ref="aboutModal">
     <div class="modal-content">
-      <h3>About This Site</h3>
+      <h4>About This Site</h4>
       <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat porro
-        eos, deserunt, voluptates optio amet libero, eveniet beatae laudantium
-        quidem ex a iste omnis sed. Eaque explicabo unde earum necessitatibus.
+        The site is the result of a personal challenge I decided I wanted to
+        share. The idea was to take a few technologies I like plus learn a few
+        others and undust some dormant skills and try to put something together.
       </p>
+      <p>
+        The site is an Aliens fanpage heavily inspired by the James Cameron
+        movie.
+      </p>
+      <h5>Technologies used</h5>
+      <div class="technologies-showcase">
+        <div class="tech-item">
+          <div class="logo three"></div>
+          three.js
+        </div>
+        <div class="tech-item">
+          <div class="logo ts"></div>
+          typescript
+        </div>
+        <div class="tech-item">
+          <div class="logo vue"></div>
+          vue
+        </div>
+        <div class="tech-item">
+          <div class="logo blender"></div>
+          blender
+        </div>
+        <div class="tech-item">
+          <div class="logo gsap"></div>
+          gsap
+        </div>
+      </div>
     </div>
   </site-modal>
 </template>
@@ -154,11 +181,52 @@ defineExpose({
 </style>
 <style lang="scss">
 .modal-content {
-  h3 {
-    @include typo-h5;
-  }
   p {
     margin-bottom: 15px;
+  }
+  .technologies-showcase {
+    display: flex;
+    margin-bottom: 30px;
+    & > * {
+      &:not(:last-child) {
+        margin-right: 15px;
+      }
+    }
+    .tech-item {
+      display: inline-block;
+      width: 70px;
+      height: 70px;
+      padding: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      .logo {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: center center;
+        margin-bottom: 5px;
+        &.three {
+          background-image: url('~@/assets/logos/logo_three.svg');
+        }
+        &.blender {
+          background-image: url('~@/assets/logos/logo_blender.svg');
+        }
+        &.vue {
+          background-image: url('~@/assets/logos/logo_vue.svg');
+        }
+        &.ts {
+          background-image: url('~@/assets/logos/logo_typescript.svg');
+        }
+        &.gsap {
+          background-image: url('~@/assets/logos/logo_gsap.svg');
+        }
+      }
+    }
   }
 }
 </style>
