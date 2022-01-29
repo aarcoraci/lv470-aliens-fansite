@@ -89,7 +89,7 @@ defineExpose({
     }
 
     &-footer {
-      margin-top: $padding;
+      margin-top: 50px;
       text-align: center;
     }
   }

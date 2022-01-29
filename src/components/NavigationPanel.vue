@@ -89,13 +89,13 @@ defineExpose({
     <div class="modal-content">
       <h4>About This Site</h4>
       <p>
-        The site is the result of a personal challenge I decided I wanted to
-        share. The idea was to take a few technologies I like plus learn a few
-        others and undust some dormant skills and try to put something together.
+        The site is the result of a personal challenge: I wanted to take a few
+        technologies I like plus learn a few others and undust some dormant
+        skills and try to put something together.
       </p>
       <p>
-        The site is an Aliens fanpage heavily inspired by the James Cameron
-        movie.
+        Regarding the project, it's an Aliens fanpage heavily inspired by the
+        James Cameron movie.
       </p>
       <h5>Technologies used</h5>
       <div class="technologies-showcase">
@@ -206,7 +206,6 @@ defineExpose({
   }
   .technologies-showcase {
     display: flex;
-    margin-bottom: 30px;
     flex-wrap: wrap;
     & > * {
       &:not(:last-child) {
