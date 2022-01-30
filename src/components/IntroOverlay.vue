@@ -50,20 +50,22 @@ defineExpose({
     <div class="intro container" ref="welcomePanel">
       <div class="wy-logo"></div>
       <h2>Welcome to LV&#8209;470</h2>
-      <p>
-        Weyland Yutani welcomes you to your new home. A small yet thriving
-        community awaits you at Mutta Station.
-      </p>
-      <p>
-        You have assigned a living unit at Mutta Station as a reward for your
-        hard years working as an <span class="highlight">[Operator]</span> at
-        <span class="highlight">[Fiorina Fury 223]</span>.
-      </p>
-      <p><strong>Get familiar with your environments:</strong></p>
-      <p>
-        Use your mouse or finger to move around and explore the settlement. You
-        can tap on some of the buildings to know more about them.
-      </p>
+      <div class="contents">
+        <p>
+          Weyland Yutani welcomes you to your new home. A small yet thriving
+          community awaits you at Mutta Station.
+        </p>
+        <p>
+          You have assigned a living unit at Mutta Station as a reward for your
+          hard years working as an <span class="highlight">[Operator]</span> at
+          <span class="highlight">[Fiorina Fury 223]</span>.
+        </p>
+        <p><strong>Get familiar with your environments:</strong></p>
+        <p>
+          Use your mouse or finger to move around and explore the settlement.
+          You can tap on some of the buildings to know more about them.
+        </p>
+      </div>
       <button
         @click.prevent="initExplore"
         class="button orange fixed-width"
@@ -82,7 +84,6 @@ defineExpose({
   left: 0;
   width: 100%;
   height: 100%;
-
   z-index: 15;
   display: flex;
   align-items: center;
@@ -106,6 +107,16 @@ defineExpose({
     text-align: center;
     @include blueprint-background;
     box-shadow: 0px 10px 20px -5px rgba(darken($color-blue, 4), 1);
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    align-items: center;
+
+    .contents {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-bottom: $padding;
+    }
 
     @include respond-to('large') {
       padding: 90px;

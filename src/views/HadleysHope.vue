@@ -250,6 +250,7 @@ const initExperience = (): void => {
     overflow-y: auto;
   }
   .bottom {
+    margin-top: $padding;
     text-align: right;
   }
 }

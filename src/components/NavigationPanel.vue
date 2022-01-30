@@ -204,6 +204,7 @@ defineExpose({
     display: flex;
     flex-wrap: wrap;
     & > * {
+      margin-bottom: 8px;
       &:not(:last-child) {
         margin-right: 15px;
       }
