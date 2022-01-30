@@ -49,7 +49,7 @@ defineExpose({
     <div class="loading-cover" ref="loadingCover"></div>
     <div class="intro container" ref="welcomePanel">
       <div class="wy-logo"></div>
-      <h2>Welcome to LV&#8209;470</h2>
+      <h3>Welcome to LV&#8209;470</h3>
       <div class="contents">
         <p>
           Weyland Yutani welcomes you to your new home. A small yet thriving
@@ -115,7 +115,6 @@ defineExpose({
     .contents {
       flex-grow: 1;
       overflow-y: auto;
-      padding-bottom: $padding;
     }
 
     @include respond-to('large') {
@@ -140,6 +139,9 @@ defineExpose({
         margin-bottom: 28px;
       }
     }
+    h3 {
+      line-height: 1.15;
+    }
 
     p {
       span {
@@ -153,7 +155,7 @@ defineExpose({
     .wy-logo {
       width: 100px;
       height: 30px;
-      margin: 0 auto;
+      margin: 0 auto 9px;
       background-image: url('~@/assets/img/wy-logo-variant.png');
       background-size: contain;
       background-repeat: no-repeat;
